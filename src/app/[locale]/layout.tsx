@@ -1,11 +1,10 @@
-import { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Raleway } from 'next/font/google';
 import { type ReactNode } from 'react';
 
-import { host, locales } from '@/i18n/config';
+import { locales } from '@/i18n/config';
 
 import '../globals.css';
 import { routing } from '@/i18n/routing';
@@ -41,7 +40,50 @@ export default async function RootLayout({
     <html lang="pt-br">
       <body className={`${raleway.variable}`}>
         <NextIntlClientProvider>
-          <main className={`max-w-screen-xl min-h-screen `}>{children}</main>
+          <header
+            style={{
+              position: 'fixed',
+              height: '72px',
+              background: 'blue',
+              top: 0,
+              left: 0,
+              width: '100%',
+            }}
+          ></header>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '112px',
+              height: '100vh',
+              background: 'red',
+            }}
+          ></div>
+          <main
+            style={{
+              margin: '72px 192px 0px 144px',
+              background: 'white',
+              position: 'relative',
+            }}
+            // className={`max-w-screen-xl min-h-screen`}
+          >
+            {children}
+            <div
+              className="ad_banner"
+              style={{
+                width: '192px',
+                height: '100vh',
+                background: 'grey',
+                position: 'fixed',
+                right: 0,
+                top: '72px',
+                padding: '16px',
+              }}
+            >
+              <p style={{ color: 'red' }}>anuncio caralho</p>
+            </div>
+          </main>
         </NextIntlClientProvider>
       </body>
     </html>
