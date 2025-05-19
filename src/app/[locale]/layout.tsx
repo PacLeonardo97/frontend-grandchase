@@ -5,6 +5,7 @@ import { Raleway } from 'next/font/google';
 import { type ReactNode } from 'react';
 
 import { locales } from '@/i18n/config';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 
 import '../globals.css';
 import { routing } from '@/i18n/routing';
@@ -39,52 +40,44 @@ export default async function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`${raleway.variable}`}>
-        <NextIntlClientProvider>
-          <header
-            style={{
-              position: 'fixed',
-              height: '72px',
-              background: 'blue',
-              top: 0,
-              left: 0,
-              width: '100%',
-            }}
-          ></header>
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '112px',
-              height: '100vh',
-              background: 'red',
-            }}
-          ></div>
-          <main
-            style={{
-              margin: '72px 192px 0px 144px',
-              background: 'white',
-              position: 'relative',
-            }}
-            // className={`max-w-screen-xl min-h-screen`}
-          >
-            {children}
-            <div
-              className="ad_banner"
+        <AppRouterCacheProvider>
+          <NextIntlClientProvider>
+            <header
               style={{
-                width: '192px',
-                height: '100vh',
-                background: 'grey',
                 position: 'fixed',
-                right: 0,
-                top: '72px',
-                padding: '16px',
+                height: '72px',
+                background: 'blue',
+                top: 0,
+                left: 0,
+                width: '100%',
               }}
+            ></header>
+            <main
+              style={{
+                margin: '72px 192px 0px 144px',
+                background: 'white',
+                position: 'relative',
+              }}
+              // className={`max-w-screen-xl min-h-screen`}
             >
-              <p style={{ color: 'red' }}>anuncio caralho</p>
-            </div>
-          </main>
-        </NextIntlClientProvider>
+              {children}
+              <div
+                className="ad_banner"
+                style={{
+                  width: '192px',
+                  height: '100vh',
+                  background: 'grey',
+                  position: 'fixed',
+                  right: 0,
+                  top: '72px',
+                  padding: '16px',
+                }}
+              >
+                <p style={{ color: 'red' }}>anuncio caralho</p>
+              </div>
+            </main>
+          </NextIntlClientProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
