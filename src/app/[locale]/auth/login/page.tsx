@@ -52,7 +52,7 @@ export default function Login() {
 
   return (
     <Layout>
-      <Container maxWidth="xs" sx={{ background: 'black' }}>
+      <Container maxWidth="xs">
         <Box
           sx={{
             mt: 8,
