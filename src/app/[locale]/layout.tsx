@@ -6,7 +6,7 @@ import { type ReactNode } from 'react';
 
 import { locales } from '@/i18n/config';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-
+import ToastProvider from '@/components/Toast';
 import '../globals.css';
 import { routing } from '@/i18n/routing';
 
@@ -42,16 +42,6 @@ export default async function RootLayout({
       <body className={`${raleway.variable}`}>
         <AppRouterCacheProvider>
           <NextIntlClientProvider>
-            <header
-              style={{
-                position: 'fixed',
-                height: '72px',
-                background: 'blue',
-                top: 0,
-                left: 0,
-                width: '100%',
-              }}
-            ></header>
             <main
               style={{
                 margin: '72px 192px 0px 144px',
@@ -60,7 +50,7 @@ export default async function RootLayout({
               }}
               // className={`max-w-screen-xl min-h-screen`}
             >
-              {children}
+              <ToastProvider>{children}</ToastProvider>
               <div
                 className="ad_banner"
                 style={{
