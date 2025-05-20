@@ -31,7 +31,8 @@
     "react-markdown": "^10.1.0",
     "react-slideshow-image": "^4.3.2",
     "react-toastify": "^11.0.5",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "sass": "^1.89.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -33,7 +33,7 @@ export default function Login() {
       const req = await api.post('/auth/forgot-password', {
         email,
       });
-      localStorage.setItem('@GC/access-token', req.data.jwt);
+      localStorage.setItem('@GC/access_token', req.data.jwt);
       toast.update(id, {
         render: 'email enviado, em alguns minutos veja seu email',
         theme: 'dark',

@@ -1,6 +1,7 @@
 'use client';
-import deepCLone from 'lodash.clonedeep';
 import { useState } from 'react';
+
+import deepCLone from 'lodash.clonedeep';
 
 import Layout from '@/components/Layout';
 import { mockCharsSkills } from '@/mock/charsSkills.mock';

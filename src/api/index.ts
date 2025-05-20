@@ -1,3 +1,5 @@
+'use client';
+
 import axios from 'axios';
 
 const api = axios.create({
@@ -12,12 +14,12 @@ export async function fetchRefreshToken() {
         refreshToken: localStorage.getItem('@GC/refresh_token'),
       },
     );
-    localStorage.setItem('@GC/access-token', req.data.accessToken);
-    localStorage.setItem('@GC/refresh-token', req.data.refreshToken);
+    localStorage.setItem('@GC/access_token', req.data.accessToken);
+    localStorage.setItem('@GC/refresh_token', req.data.refreshToken);
     return req.data.accessToken;
   } catch {
-    localStorage.removeItem('@GC/access-token');
-    localStorage.removeItem('@GC/refresh-token');
+    localStorage.removeItem('@GC/access_token');
+    localStorage.removeItem('@GC/refresh_token');
     window.location.href = '/login';
   }
 }
@@ -76,11 +78,13 @@ api.interceptors.response.use(
 );
 
 api.interceptors.request.use((req) => {
-  const token = localStorage.getItem('@GC/refresh-token');
+  const token = localStorage.getItem('@GC/refresh_token');
   if (token && !req.url?.endsWith('/api/auth/local')) {
     req.headers.Authorization = `Bearer ${token}`;
   }
   return req;
 });
+
+export const isLogged = !!localStorage.getItem('@GC/access_token');
 
 export default api;

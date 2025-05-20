@@ -46,30 +46,21 @@ export default async function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider>
             <NextIntlClientProvider>
-              <main
+              <ToastProvider>{children}</ToastProvider>
+              <div
+                className="ad_banner"
                 style={{
-                  margin: '72px 192px 0px 144px',
-                  background: 'white',
-                  position: 'relative',
+                  width: '192px',
+                  height: '100vh',
+                  background: 'grey',
+                  position: 'fixed',
+                  right: 0,
+                  top: '72px',
+                  padding: '16px',
                 }}
-                // className={`max-w-screen-xl min-h-screen`}
               >
-                <ToastProvider>{children}</ToastProvider>
-                <div
-                  className="ad_banner"
-                  style={{
-                    width: '192px',
-                    height: '100vh',
-                    background: 'grey',
-                    position: 'fixed',
-                    right: 0,
-                    top: '72px',
-                    padding: '16px',
-                  }}
-                >
-                  <p style={{ color: 'red' }}>anuncio caralho</p>
-                </div>
-              </main>
+                <p style={{ color: 'red' }}>anuncio caralho</p>
+              </div>
             </NextIntlClientProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>

@@ -25,16 +25,8 @@ export default function Layout({ children }: { children: ReactNode }) {
         }}
       ></header>
       <Drawer />
-      <main
-        style={{
-          margin: '72px 192px 0px 144px',
-          background: 'white',
-          position: 'relative',
-        }}
-        // className={`max-w-screen-xl min-h-screen`}
-      >
-        {children}
-      </main>
+
+      {children}
       <div
         className="ad_banner"
         style={{
