@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
@@ -13,14 +11,17 @@ import {
   Link as LinkMui,
   Typography,
 } from '@mui/material';
+import { isAxiosError } from 'axios';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+
 import api from '@/api';
 import TextField from '@/components/Form/Textfield';
-import { isAxiosError } from 'axios';
 import Layout from '@/components/Layout';
-import Link from 'next/link';
 
-export default function Login() {
+export default function Page() {
   const params = useParams<{ locale: string }>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -41,7 +42,9 @@ export default function Login() {
       router.push('/');
     } catch (error) {
       if (isAxiosError(error)) {
-        // toast(error.response?.data.message);
+        toast(error.response?.data.error.message, {
+          type: 'error',
+        });
       }
     }
   };
@@ -76,11 +79,10 @@ export default function Login() {
               required
               id="name"
               label="Nome"
-              type="name"
+              type="text"
               name="name"
-              autoComplete="name"
               autoFocus
-              value={email}
+              value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <TextField

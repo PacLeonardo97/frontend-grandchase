@@ -1,8 +1,9 @@
 'use client';
-import { mockCharsSkills } from '@/mock/charsSkills.mock';
-import { useState } from 'react';
 import deepCLone from 'lodash.clonedeep';
+import { useState } from 'react';
+
 import Layout from '@/components/Layout';
+import { mockCharsSkills } from '@/mock/charsSkills.mock';
 
 interface Etapa {
   maxValue: string;

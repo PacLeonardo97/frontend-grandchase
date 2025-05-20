@@ -1,14 +1,15 @@
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { Raleway } from 'next/font/google';
+import { notFound } from 'next/navigation';
 import { type ReactNode } from 'react';
 
-import { locales } from '@/i18n/config';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import ToastProvider from '@/components/Toast';
-import '../globals.css';
+import { locales } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
+
+import '../globals.css';
 
 type IProps = {
   children: ReactNode;
