@@ -1,3 +1,4 @@
+import '@/api/interceptor'; // isso deve ficar no topo
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { Raleway } from 'next/font/google';
@@ -11,6 +12,7 @@ import { locales } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
 
 import '../globals.css';
+import StoreProvider from '@/store/provider';
 import ThemeProvider from '@/theme';
 
 type IProps = {
@@ -46,21 +48,23 @@ export default async function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider>
             <NextIntlClientProvider>
-              <ToastProvider>{children}</ToastProvider>
-              <div
-                className="ad_banner"
-                style={{
-                  width: '192px',
-                  height: '100vh',
-                  background: 'grey',
-                  position: 'fixed',
-                  right: 0,
-                  top: '72px',
-                  padding: '16px',
-                }}
-              >
-                <p style={{ color: 'red' }}>anuncio caralho</p>
-              </div>
+              <StoreProvider>
+                <ToastProvider>{children}</ToastProvider>
+                <div
+                  className="ad_banner"
+                  style={{
+                    width: '192px',
+                    height: '100vh',
+                    background: 'grey',
+                    position: 'fixed',
+                    right: 0,
+                    top: '72px',
+                    padding: '16px',
+                  }}
+                >
+                  <p style={{ color: 'red' }}>anuncio caralho</p>
+                </div>
+              </StoreProvider>
             </NextIntlClientProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>

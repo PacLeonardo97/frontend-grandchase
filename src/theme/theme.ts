@@ -51,17 +51,5 @@ export const theme = createTheme({
         },
       },
     },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          '&:disabled': {
-            cursor: 'not-allowed !important',
-            pointerEvents: 'all',
-          },
-          textTransform: 'capitalize',
-          fontWeight: 600,
-        },
-      },
-    },
   },
 });

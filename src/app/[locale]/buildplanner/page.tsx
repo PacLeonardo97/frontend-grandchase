@@ -2,21 +2,23 @@
 
 import { useEffect } from 'react';
 
-import styled from './styled.module.scss';
-import api, { isLogged } from '@/api';
+// import styled from './styled.module.scss';
 import Layout from '@/components/Layout';
+import { fetchAllChars } from '@/store/char';
+import { useAppDispatch } from '@/store/hooks';
 
 export default function Page() {
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     (async () => {
-      // if (isLogged) {
-      const data = await api.get('/chars');
-      // }
+      dispatch(fetchAllChars());
     })();
-  }, []);
+  }, [dispatch]);
+
   return (
     <Layout>
-      <h5 className={styled.bory}>BuildPlanner</h5>
+      <h5>BuildPlanner</h5>
     </Layout>
   );
 }
