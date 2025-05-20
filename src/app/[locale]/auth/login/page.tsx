@@ -26,10 +26,12 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setLoading(true);
     try {
       const req = await api.post('/auth/local', {
         identifier: email,
@@ -43,6 +45,8 @@ export default function Login() {
           type: 'error',
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -115,6 +119,7 @@ export default function Login() {
               fullWidth
               variant="contained"
               sx={{ mt: 1, mb: 2 }}
+              disabled={loading}
             >
               Entrar
             </Button>
@@ -127,14 +132,14 @@ export default function Login() {
             >
               <LinkMui
                 component={Link}
-                href={`/${params.locale}/forgot-password`}
+                href={`/${params.locale}/auth/forgot-password`}
                 variant="body2"
               >
                 Esqueceu a senha?
               </LinkMui>
               <LinkMui
                 component={Link}
-                href={`/${params.locale}/register`}
+                href={`/${params.locale}/auth/register`}
                 variant="body2"
               >
                 Registrar

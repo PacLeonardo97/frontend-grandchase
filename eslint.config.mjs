@@ -21,7 +21,8 @@ const eslintConfig = [
           // example configuration
           newlinesBetween: 'always',
           groups: [
-            ['module', '/^@mui/'],
+            ['/^react/', '/^next/'],
+            [, 'module', '/^@mui/'],
             '/^@shared/',
             ['parent', 'sibling', 'index', '/^@/'],
           ],

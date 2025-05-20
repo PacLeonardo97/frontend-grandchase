@@ -1,13 +1,10 @@
 'use client';
 
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Button,
   Container,
   Grid,
-  InputAdornment,
   Link as LinkMui,
   Typography,
 } from '@mui/material';
@@ -21,31 +18,47 @@ import api from '@/api';
 import TextField from '@/components/Form/Textfield';
 import Layout from '@/components/Layout';
 
-export default function Page() {
+export default function Login() {
   const params = useParams<{ locale: string }>();
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setLoading(true);
+    const id = toast.loading('Email sendo enviado, espere um momento');
     try {
-      const req = await api.post('/auth/local/register', {
-        username: name,
+      const req = await api.post('/auth/forgot-password', {
         email,
-        password,
       });
-      localStorage.setItem('@GC/jwt', req.data.jwt);
+      localStorage.setItem('@GC/access-token', req.data.jwt);
+      toast.update(id, {
+        render: 'email enviado, em alguns minutos veja seu email',
+        theme: 'dark',
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        isLoading: false,
+      });
       router.push('/');
     } catch (error) {
       if (isAxiosError(error)) {
-        toast(error.response?.data.error.message, {
+        toast.update(id, {
+          render: error.response?.data.error.message,
+          theme: 'dark',
           type: 'error',
+          autoClose: 3000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          draggable: true,
+          isLoading: false,
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,26 +78,13 @@ export default function Page() {
             variant="h5"
             sx={{ color: '#78909C', alignSelf: 'self-start' }}
           >
-            Registrar-se
+            Esqueci minha senha
           </Typography>
           <Box
             component="form"
             onSubmit={handleSubmit}
             sx={{ mt: 1, width: '100%' }}
           >
-            <TextField
-              sx={{ mt: 3 }}
-              margin="normal"
-              placeholder="Seu nome"
-              required
-              id="name"
-              label="Nome"
-              type="text"
-              name="name"
-              autoFocus
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
             <TextField
               sx={{ mt: 3 }}
               margin="normal"
@@ -95,51 +95,39 @@ export default function Page() {
               type="email"
               name="email"
               autoComplete="email"
+              autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Senha"
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment
-                    position="start"
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => setShowPassword((oldValue) => !oldValue)}
-                  >
-                    {showPassword ? (
-                      <RemoveRedEyeIcon />
-                    ) : (
-                      <VisibilityOffIcon />
-                    )}
-                  </InputAdornment>
-                ),
-              }}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
+              disabled={loading}
               sx={{ mt: 1, mb: 2 }}
             >
               Entrar
             </Button>
-            <Grid container component="div">
+            <Grid
+              container
+              component="div"
+              sx={{
+                placeContent: 'space-between',
+              }}
+            >
               <LinkMui
                 component={Link}
-                href={`/${params.locale}/login`}
+                href={`/${params.locale}/auth/register`}
                 variant="body2"
               >
-                Login
+                Registrar-se
+              </LinkMui>
+              <LinkMui
+                component={Link}
+                href={`/${params.locale}/auth/login`}
+                variant="body2"
+              >
+                login
               </LinkMui>
             </Grid>
           </Box>

@@ -1,15 +1,17 @@
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { Raleway } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { type ReactNode } from 'react';
 
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+
 import ToastProvider from '@/components/Toast';
 import { locales } from '@/i18n/config';
 import { routing } from '@/i18n/routing';
 
 import '../globals.css';
+import ThemeProvider from '@/theme';
 
 type IProps = {
   children: ReactNode;
@@ -42,32 +44,34 @@ export default async function RootLayout({
     <html lang="pt-br">
       <body className={`${raleway.variable}`}>
         <AppRouterCacheProvider>
-          <NextIntlClientProvider>
-            <main
-              style={{
-                margin: '72px 192px 0px 144px',
-                background: 'white',
-                position: 'relative',
-              }}
-              // className={`max-w-screen-xl min-h-screen`}
-            >
-              <ToastProvider>{children}</ToastProvider>
-              <div
-                className="ad_banner"
+          <ThemeProvider>
+            <NextIntlClientProvider>
+              <main
                 style={{
-                  width: '192px',
-                  height: '100vh',
-                  background: 'grey',
-                  position: 'fixed',
-                  right: 0,
-                  top: '72px',
-                  padding: '16px',
+                  margin: '72px 192px 0px 144px',
+                  background: 'white',
+                  position: 'relative',
                 }}
+                // className={`max-w-screen-xl min-h-screen`}
               >
-                <p style={{ color: 'red' }}>anuncio caralho</p>
-              </div>
-            </main>
-          </NextIntlClientProvider>
+                <ToastProvider>{children}</ToastProvider>
+                <div
+                  className="ad_banner"
+                  style={{
+                    width: '192px',
+                    height: '100vh',
+                    background: 'grey',
+                    position: 'fixed',
+                    right: 0,
+                    top: '72px',
+                    padding: '16px',
+                  }}
+                >
+                  <p style={{ color: 'red' }}>anuncio caralho</p>
+                </div>
+              </main>
+            </NextIntlClientProvider>
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
