@@ -1,0 +1,35 @@
+.header{
+    $ml: 65px;
+
+    position: fixed;
+    height: 72px;
+    z-index: 2;
+    background-color: blue;
+    top: 0;
+    left: 0;
+    margin-left: $ml;
+    width: calc(100% - $ml);
+}
+
+.content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 40px;
+    
+    
+    div {
+        display: flex;
+    }
+}
+
+.title {
+    @media (min-width: 1360px) {
+        // margin-left: -(65px + 300px)!important;
+        position: absolute;
+        left: calc(50% - 65px);
+        transform: translate(-50%, 0);
+        margin-top: -12px!important;
+    }
+}

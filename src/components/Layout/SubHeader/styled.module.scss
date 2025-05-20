@@ -1,0 +1,11 @@
+
+.container {
+    $ml: 65px;
+    $adWidth: 192px;
+
+    height: 72px;
+    background-color: black;
+    width: calc(100% - $adWidth - $ml);
+    margin-left: $ml;
+    margin-top: 72px;
+}
