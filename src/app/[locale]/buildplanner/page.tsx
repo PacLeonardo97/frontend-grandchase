@@ -3,17 +3,16 @@
 import { useEffect, Fragment, useMemo } from 'react';
 
 import { CircularProgress } from '@mui/material';
-import { IconButton } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import api from '@/api';
+import CardEquip from './components/CardEquip';
+import styled from './styled.module.scss';
 import TextField from '@/components/Form/Textfield';
 import Layout from '@/components/Layout';
 import { EChar } from '@/enum/char.enum';
-import { ETypeEquips } from '@/enum/equips.enum';
-import type { IChar } from '@/interface/char';
+import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
 import { fetchAllChars } from '@/store/allChar';
-import { fetchChar } from '@/store/char';
+import { clearEquip, fetchChar } from '@/store/char';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export default function Page() {
@@ -21,14 +20,9 @@ export default function Page() {
   const chars = useAppSelector((state) => state.allChar);
   const charSelected = useAppSelector((state) => state.char);
   const allEquips = useMemo(() => {
-    return Object.keys(ETypeEquips);
+    return Object.keys(ETypeEquips) as ETypeEquips[];
   }, []);
   const allChar = useMemo(() => Object.keys(EChar), []);
-
-  // const charNotEnabled = useMemo(() => {
-  //   const qntty = chars.data?.map((item) => item.name);
-  //   return allChar.filter((char) => !qntty?.includes(char));
-  // }, [chars, allChar]);
 
   useEffect(() => {
     (async () => {
@@ -40,12 +34,13 @@ export default function Page() {
     const charClicked = chars.data?.find((item) => item.name === name);
     if (charClicked?.id) {
       await dispatch(fetchChar(charClicked?.id));
+      return;
     }
+    dispatch(clearEquip());
   };
 
   return (
     <Layout>
-      <IconButton onMouseOver={(e) => console.log(e)}>caralho</IconButton>
       <Autocomplete
         sx={{ width: 280, marginTop: '40px' }}
         disablePortal
@@ -73,16 +68,19 @@ export default function Page() {
           />
         )}
       />
-      {allEquips.map((equip) => (
-        <div key={equip}>
-          <div>
-            {equip}:{' '}
-            {charSelected.data?.equips?.find((item) => item.type === equip)
-              ? 'tem'
-              : 'não'}
-          </div>
-        </div>
-      ))}
+
+      <div className={styled.containerSkills}>
+        {sortEquip(allEquips).map((equip) => (
+          <Fragment key={equip}>
+            <CardEquip
+              equip={charSelected.data?.equips?.find(
+                (item) => item.type === equip,
+              )}
+              type={equip as ETypeEquips}
+            />
+          </Fragment>
+        ))}
+      </div>
     </Layout>
   );
 }

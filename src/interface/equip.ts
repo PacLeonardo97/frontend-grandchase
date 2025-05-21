@@ -5,4 +5,5 @@ export interface IEquips {
   type: ETypeEquips;
   equip_set: EEquipSet;
   rarity: ERarityItem;
+  img: string;
 }

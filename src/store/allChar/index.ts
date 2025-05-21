@@ -20,7 +20,7 @@ const initialState: charState = {
 };
 
 export const allCharSlice = createSlice({
-  name: 'char',
+  name: 'allChar',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
