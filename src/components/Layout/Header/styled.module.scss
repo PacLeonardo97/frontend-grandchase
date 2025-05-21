@@ -33,3 +33,14 @@
         margin-top: -12px!important;
     }
 }
+
+.userContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popover {
+    display: flex;
+    flex-direction: column;
+}
