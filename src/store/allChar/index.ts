@@ -3,42 +3,42 @@ import type { IChar } from '@/interface/char';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export interface charState {
-  data?: IChar;
+  data?: IChar[];
   loading: boolean;
   error: string;
 }
 
-export const fetchChar = createAsyncThunk('fetchChar', async (id: number) => {
-  const response = await api.get(`/chars/${id}`);
+export const fetchAllChars = createAsyncThunk('fetchAllChars', async () => {
+  const response = await api.get('/chars');
   return response.data;
 });
 
 const initialState: charState = {
-  data: {} as IChar,
+  data: [] as unknown as charState['data'],
   error: '',
   loading: false,
 };
 
-export const charSlice = createSlice({
+export const allCharSlice = createSlice({
   name: 'char',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchChar.pending, (state) => {
+      .addCase(fetchAllChars.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchChar.fulfilled, (state, action) => {
+      .addCase(fetchAllChars.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
       })
-      .addCase(fetchChar.rejected, (state, action) => {
+      .addCase(fetchAllChars.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.response?.data.error.message;
       });
   },
 });
 
-const charReducer = charSlice.reducer;
+const charReducer = allCharSlice.reducer;
 
 export default charReducer;

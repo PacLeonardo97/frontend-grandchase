@@ -76,7 +76,7 @@ export default function setUpInterceptor(store: AppStore) {
   api.interceptors.request.use((req) => {
     const state = store.getState();
     const token =
-      state.user.accessToken || localStorage.getItem('@GC/refresh_token');
+      state.user.accessToken || localStorage.getItem('@GC/access_token');
 
     if (token && !req.url?.endsWith('/api/auth/local')) {
       req.headers.Authorization = `Bearer ${token}`;

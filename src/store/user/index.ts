@@ -11,7 +11,7 @@ export interface userState {
 }
 
 export const fetchLogin = createAsyncThunk(
-  'user/fetchUserData',
+  'fetchLogin',
   async ({ email, password }: { email: string; password: string }) => {
     const data = await api.post('/auth/local', {
       identifier: email,
