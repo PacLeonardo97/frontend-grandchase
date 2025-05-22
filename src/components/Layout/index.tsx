@@ -1,9 +1,10 @@
 'use client';
 import { ReactNode } from 'react';
 
-import AdBanner from '../AdBanner';
+import AdBanner from './AdBanner';
 import Drawer from './drawer';
 import Header from './Header';
+import styled from './styled.module.scss';
 import SubHeader from './SubHeader';
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -13,15 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <SubHeader />
       <Drawer />
 
-      <main
-        style={{
-          margin: '0 192px 0 144px', // espaço lateral pro drawer e banner
-          background: 'white',
-          position: 'relative',
-        }}
-      >
-        {children}
-      </main>
+      <main className={styled.main}>{children}</main>
       <AdBanner />
     </>
   );

@@ -17,6 +17,7 @@ const ImageContainer = styledMui('span')(({ theme }) => ({
   position: 'relative',
   height: 120,
   width: 300,
+  borderRadius: '4px 0 0 4px',
   '&:hover, &.Mui-focusVisible': {
     zIndex: 1,
     '& .MuiImageBackdrop-root': {
@@ -34,6 +35,7 @@ const ImageSrc = styledMui('span')({
   right: 0,
   top: 0,
   bottom: 0,
+  borderRadius: '4px 0 0 4px',
   backgroundSize: 'cover',
   backgroundPosition: 'center 40%',
 });
@@ -44,6 +46,7 @@ const ImageBackdrop = styledMui('span')(({ theme }) => ({
   right: 0,
   top: 0,
   bottom: 0,
+  borderRadius: '4px 0 0 4px',
   backgroundColor: theme.palette.common.black,
   opacity: 0.4,
   transition: theme.transitions.create('opacity'),
@@ -52,7 +55,21 @@ const ImageBackdrop = styledMui('span')(({ theme }) => ({
 export default function ArticlesList() {
   return (
     <List style={{ padding: 0 }}>
-      <ListItem style={{ outline: '3px solid white', padding: 0 }}>
+      <ListItem
+        alignItems="flex-start"
+        sx={{
+          outline: '3px solid white',
+          borderRadius: 1,
+          padding: 0,
+          '&:hover': {
+            outlineColor: 'red!important',
+            transition: 'outline-color 0.4s',
+          },
+          '&:hover .MuiImageBackdrop-root': {
+            opacity: 0.15,
+          },
+        }}
+      >
         <ImageContainer>
           <ImageSrc
             style={{
@@ -61,13 +78,29 @@ export default function ArticlesList() {
           />
           <ImageBackdrop className="MuiImageBackdrop-root" />
         </ImageContainer>
-        <div>
-          <Typography fontSize={24} variant="h4">
-            Título
+        <div className={styled.authorContainer}>
+          <Typography variant="h4">Como virar o Bory em 1 dia</Typography>
+          <Typography variant="body1" className="ellipsis">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+            volutpat pharetra molestie. Maecenas rhoncus posuere dui. Donec
+            efficitur, odio vel dictum pellentesque, diam felis ornare enim, et
+            posuere purus odio in mi. Praesent consectetur consequat dolor, ut
+            suscipit purus pellentesque a. Lorem ipsum dolor sit amet,
+            consectetur adipiscing elit. Curabitur volutpat pharetra molestie.
+            Maecenas rhoncus posuere dui. Donec efficitur, odio vel dictum
+            pellentesque, diam felis ornare enim, et posuere purus odio in mi.
+            Praesent consectetur consequat dolor, ut suscipit purus pellentesque
+            a. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Curabitur volutpat pharetra molestie. Maecenas rhoncus posuere dui.
+            Donec efficitur, odio vel dictum pellentesque, diam felis ornare
+            enim, et posuere purus odio in mi. Praesent consectetur consequat
+            dolor, ut suscipit purus pellentesque a.
           </Typography>
           <div>
-            <Typography fontSize={18}>Autor</Typography>
-            <Typography fontSize={18}>Atualizado dia 02/02/2025</Typography>
+            <Typography variant="body2">
+              Autor: <span>Andrew Las Casas</span>
+            </Typography>
+            <Typography variant="body2">Atualizado dia 02/02/2025</Typography>
           </div>
         </div>
       </ListItem>

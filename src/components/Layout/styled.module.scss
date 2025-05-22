@@ -1,0 +1,9 @@
+.main {
+    margin: 172px 192px 0 144px;
+    background: white;
+    position: relative;
+
+    @media (max-width: 800px) {
+        margin: 172px 0 0 16px;    
+    }
+}

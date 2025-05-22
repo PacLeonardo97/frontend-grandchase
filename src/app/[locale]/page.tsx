@@ -100,9 +100,7 @@ export default function App() {
   return (
     <Layout>
       <div className={styled.container}>
-        <Typography fontSize={24} variant="h3">
-          Notícias mais recentes
-        </Typography>
+        <Typography variant="h3">Notícias mais recentes</Typography>
 
         <div className={styled.articlesContainer}>
           {images.map((image) => (
@@ -122,12 +120,10 @@ export default function App() {
           ))}
         </div>
 
-        <div>
-          <Typography fontSize={24} variant="h3">
-            Guias mais recentes
-          </Typography>
-          <ArticlesList />
-        </div>
+        <Typography marginTop={2} marginBottom={1} variant="h3">
+          Guias mais recentes
+        </Typography>
+        <ArticlesList />
       </div>
     </Layout>
   );

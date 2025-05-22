@@ -40,7 +40,7 @@ export default function Header() {
           <TextField size="small" variant="standard" />
         </div>
         <div>
-          <Typography fontSize={24} className={styled.title} variant="h2">
+          <Typography className={styled.title} variant="h2">
             MinMaxed
           </Typography>
         </div>

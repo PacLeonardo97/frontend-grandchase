@@ -1,7 +1,9 @@
+import styled from './styled.module.scss';
+
 export default function AdBanner() {
   return (
     <div
-      className="ad_banner"
+      className={styled.adContainer}
       style={{
         width: '192px',
         height: '100vh',
