@@ -1,5 +1,11 @@
 {
     "Home": {
         "principal": "principal PT"
+    },
+    "Equip": {
+        "pha_pho": "Fenix Fantasma",
+        "true_dragon": "Verdadeiro Dragão de Ferro",
+        "dragon": "Dragão de Ferro",
+        "void": "Vazio"
     }
 }

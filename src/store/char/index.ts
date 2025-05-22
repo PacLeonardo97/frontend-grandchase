@@ -15,6 +15,20 @@ export const fetchChar = createAsyncThunk('fetchChar', async (id: number) => {
   return response.data;
 });
 
+interface ICreateChar {
+  name: string;
+  level?: number;
+  total_atk?: number;
+}
+
+export const fetchCreateChar = createAsyncThunk(
+  'fetchCreateChar',
+  async (data: ICreateChar) => {
+    const response = await api.post(`/chars`, { ...data });
+    return response.data;
+  },
+);
+
 const initialState: charState = {
   data: {} as IChar,
   error: '',
@@ -49,6 +63,20 @@ export const charSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchChar.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.response?.data.error.message;
+      });
+
+    //fetchCreateChar
+    builder
+      .addCase(fetchCreateChar.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchCreateChar.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchCreateChar.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.response?.data.error.message;
       });

@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@types/negotiator": "^0.6.3",
     "@types/qs": "^6.9.18",
+    "@vercel/blob": "^1.0.2",
     "axios": "^1.9.0",
     "classnames": "^2.5.1",
     "lodash.clonedeep": "^4.5.0",

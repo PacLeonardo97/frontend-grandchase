@@ -1,5 +1,11 @@
 {
     "Home": {
         "principal": "Principal En"
+    },
+    "Equip": {
+        "pha_pho": "Phantom Phoenix",
+        "true_dragon": "True Iron Dragon",
+        "dragon": "Iron Dragon",
+        "void": "Void"
     }
 }

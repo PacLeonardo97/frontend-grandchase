@@ -12,7 +12,7 @@ import Layout from '@/components/Layout';
 import { EChar } from '@/enum/char.enum';
 import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
 import { fetchAllChars } from '@/store/allChar';
-import { clearEquip, fetchChar } from '@/store/char';
+import { fetchChar, fetchCreateChar } from '@/store/char';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export default function Page() {
@@ -30,13 +30,14 @@ export default function Page() {
     })();
   }, [dispatch]);
 
-  const handleChangeChar = async (name: string | null) => {
+  const handleChangeChar = async (name: string) => {
     const charClicked = chars.data?.find((item) => item.name === name);
+
     if (charClicked?.id) {
       await dispatch(fetchChar(charClicked?.id));
       return;
     }
-    dispatch(clearEquip());
+    await dispatch(fetchCreateChar({ name }));
   };
 
   return (
@@ -45,9 +46,8 @@ export default function Page() {
         sx={{ width: 280, marginTop: '40px' }}
         disablePortal
         options={allChar}
-        // getOptionLabel={(option) => option.name}
         loading={chars.loading}
-        onChange={(_, value) => handleChangeChar(value)}
+        onChange={(_, value) => handleChangeChar(value as string)}
         renderInput={(params) => (
           <TextField
             {...params}

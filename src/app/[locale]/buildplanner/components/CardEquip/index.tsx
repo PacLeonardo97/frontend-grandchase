@@ -2,7 +2,8 @@
 
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import { useState, type MouseEvent } from 'react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState, type MouseEvent } from 'react';
 
 import { Autocomplete, Box } from '@mui/material';
 import Popover from '@mui/material/Popover';
@@ -11,9 +12,15 @@ import styled from './styles.module.scss';
 import api from '@/api';
 import TextField from '@/components/Form/Textfield';
 import { ETypeEquips, EEquipSet } from '@/enum/equips.enum';
+import { getImageEquip } from '@/handler/blobStorage';
 import { IEquips } from '@/interface/equip';
 import { changeEquip } from '@/store/char';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
+
+interface IOptions {
+  label: string;
+  value: string;
+}
 
 interface IProps {
   equip: IEquips | undefined;
@@ -22,8 +29,20 @@ interface IProps {
 
 export default function CardEquip({ equip, type }: IProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+  const [selectedEquip, setSelectedEquip] = useState({} as IOptions);
   const charSelected = useAppSelector((state) => state.char);
   const dispatch = useAppDispatch();
+  const t = useTranslations('Equip');
+
+  useEffect(() => {
+    if (equip?.equip_set) {
+      setSelectedEquip({
+        value: equip.equip_set,
+        label: t(equip.equip_set),
+      } as IOptions);
+    }
+  }, [equip, t]);
+
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -38,12 +57,10 @@ export default function CardEquip({ equip, type }: IProps) {
     if (equip?.type === type) {
       const req = await api.put(`equips/${equip.id}`, data);
       dispatch(changeEquip(req.data));
-      console.log('data 1 ->', req.data);
       return;
-    } else {
-      const req = await api.post('equips', data);
-      dispatch(changeEquip(req.data));
     }
+    const req = await api.post('equips', data);
+    dispatch(changeEquip(req.data));
   };
 
   const handleClose = () => {
@@ -52,16 +69,14 @@ export default function CardEquip({ equip, type }: IProps) {
 
   return (
     <>
-      {equip?.type === type ? (
-        <div onClick={handleClick} className={styled.square}>
+      <div onClick={handleClick} className={styled.square}>
+        {equip?.type === type ? (
           <img
             style={{ borderRadius: 4 }}
-            src="https://i.imgur.com/FErjbNu.png"
+            src={getImageEquip(`${equip.img}.png`)}
           />
-        </div>
-      ) : (
-        <div onClick={handleClick} className={styled.square} />
-      )}
+        ) : null}
+      </div>
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -70,13 +85,21 @@ export default function CardEquip({ equip, type }: IProps) {
           vertical: 'bottom',
           horizontal: 'left',
         }}
+        aria-hidden={!Boolean(anchorEl)}
       >
         <Autocomplete
           sx={{ width: 300 }}
-          options={Object.keys(EEquipSet)}
-          defaultValue={equip?.equip_set}
+          options={Object.keys(EEquipSet).map((item) => ({
+            label: t(item),
+            value: item,
+          }))}
+          getOptionLabel={(option) => option.label}
+          disableClearable
+          value={selectedEquip}
           autoHighlight
-          onChange={(_, value) => handleChangeEquip(value as ETypeEquips)}
+          onChange={(_, value) => {
+            handleChangeEquip(value?.value as ETypeEquips);
+          }}
           renderOption={(props, option) => {
             const { key, ...optionProps } = props;
             return (
@@ -92,7 +115,7 @@ export default function CardEquip({ equip, type }: IProps) {
                   src="https://i.imgur.com/FErjbNu.png"
                   alt=""
                 />
-                {option}
+                {option.label}
               </Box>
             );
           }}
