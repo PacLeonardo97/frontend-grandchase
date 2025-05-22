@@ -42,6 +42,8 @@ const initialState: charState = {
   loading: false,
 };
 
+const equipDefault = Object.keys(ETypeEquips) as ETypeEquips[];
+
 export const charSlice = createSlice({
   name: 'char',
   initialState,
@@ -52,17 +54,15 @@ export const charSlice = createSlice({
       state.loading = false;
     },
     changeEquip(state, action: PayloadAction<IEquips>) {
-      const index = state.data?.equips.findIndex(
+      const index = state.data?.equips?.findIndex(
         (item) => item.type === action.payload.type,
       );
 
       if (index !== undefined && index !== -1) {
-        console.log('foo ->', state.data!.equips[index]);
         state.data!.equips[index] = action.payload;
       }
     },
     createDefaultEquip(state) {
-      const equipDefault = Object.keys(ETypeEquips) as ETypeEquips[];
       for (const element of equipDefault) {
         state.data?.equips.push({ type: element });
       }
@@ -75,7 +75,6 @@ export const charSlice = createSlice({
       })
       .addCase(fetchChar.fulfilled, (state, action) => {
         state.loading = false;
-        const equipDefault = Object.keys(ETypeEquips) as ETypeEquips[];
 
         state.data = {
           ...action.payload,
@@ -100,7 +99,15 @@ export const charSlice = createSlice({
       })
       .addCase(fetchCreateChar.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.data = {
+          ...action.payload,
+          equips: equipDefault.map((type) => {
+            const existingEquip = action.payload.equips?.find(
+              (e) => e.type === type,
+            );
+            return existingEquip ?? { type };
+          }),
+        };
       })
       .addCase(fetchCreateChar.rejected, (state, action) => {
         state.loading = false;
