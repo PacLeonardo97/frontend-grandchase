@@ -11,6 +11,7 @@ import TextField from '@/components/Form/Textfield';
 import Layout from '@/components/Layout';
 import { EChar } from '@/enum/char.enum';
 import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
+import { capitalizeFirstLetter } from '@/handler/capitalize';
 import { fetchAllChars } from '@/store/allChar';
 import { fetchChar, fetchCreateChar } from '@/store/char';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -69,7 +70,14 @@ export default function Page() {
         )}
       />
 
-      <div className={styled.containerSkills}>
+      <div
+        className={styled.containerSkills}
+        style={{
+          backgroundImage: `url(/${capitalizeFirstLetter(
+            charSelected.data?.name || 'Elesis',
+          )}.png)`,
+        }}
+      >
         {sortEquip(allEquips).map((equip) => (
           <Fragment key={equip}>
             <CardEquip

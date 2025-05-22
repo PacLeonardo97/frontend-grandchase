@@ -2,7 +2,9 @@
 import { useRef } from 'react';
 import { Provider } from 'react-redux';
 
-import { store, AppStore } from '.';
+import { PersistGate } from 'redux-persist/integration/react';
+
+import { store, AppStore, persistor } from '.';
 import setUpInterceptor from '@/api/interceptor';
 
 export default function StoreProvider({
@@ -17,5 +19,11 @@ export default function StoreProvider({
 
   setUpInterceptor(storeRef.current);
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return (
+    <Provider store={storeRef.current}>
+      <PersistGate loading={null} persistor={persistor}>
+        {children}
+      </PersistGate>
+    </Provider>
+  );
 }
