@@ -1,9 +1,5 @@
 'use client';
-import { useState } from 'react';
-
 import ButtonBase from '@mui/material/ButtonBase';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import { styled as styledMui } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
@@ -73,7 +69,7 @@ const ImageSrc = styledMui('span')({
   backgroundPosition: 'center 40%',
 });
 
-const Image = styledMui('span')(({ theme }) => ({
+const SpanImage = styledMui('span')(({ theme }) => ({
   position: 'absolute',
   left: 0,
   right: 0,
@@ -107,7 +103,7 @@ export default function App() {
             <ImageButton key={image.id}>
               <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
               <ImageBackdrop className="MuiImageBackdrop-root" />
-              <Image>
+              <SpanImage>
                 <Typography
                   component="span"
                   variant="subtitle1"
@@ -115,7 +111,7 @@ export default function App() {
                 >
                   {image.title}
                 </Typography>
-              </Image>
+              </SpanImage>
             </ImageButton>
           ))}
         </div>

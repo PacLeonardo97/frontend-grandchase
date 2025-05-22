@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -15,7 +16,6 @@ import {
 import allCharReducer from './allChar';
 import charReducer from './char';
 import userReducer from './user';
-import createIdbStorage from '@piotr-cz/redux-persist-idb-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 const rootReducer = combineReducers({

@@ -1,19 +1,13 @@
 'use client';
 
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import Avatar from '@mui/material/Avatar';
-import Badge, { badgeClasses } from '@mui/material/Badge';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import Popover from '@mui/material/Popover';
 import { styled as styledMui } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import styled from './styled.module.scss';
 
-const ImageContainer = styledMui('span')(({ theme }) => ({
+const ImageContainer = styledMui('span')({
   position: 'relative',
   height: 120,
   width: 300,
@@ -27,7 +21,7 @@ const ImageContainer = styledMui('span')(({ theme }) => ({
       opacity: 0,
     },
   },
-}));
+});
 
 const ImageSrc = styledMui('span')({
   position: 'absolute',
