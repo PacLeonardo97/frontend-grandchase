@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from '@/api';
 import type { IChar } from '@/interface/char';
 import { IEquips } from '@/interface/equip';
@@ -64,7 +65,8 @@ export const charSlice = createSlice({
       })
       .addCase(fetchChar.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.response?.data.error.message;
+        const err = action.error as any;
+        state.error = err.response?.data.error.message;
       });
 
     //fetchCreateChar
@@ -78,7 +80,8 @@ export const charSlice = createSlice({
       })
       .addCase(fetchCreateChar.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.response?.data.error.message;
+        const err = action.error as any;
+        state.error = err.response?.data.error.message;
       });
   },
 });

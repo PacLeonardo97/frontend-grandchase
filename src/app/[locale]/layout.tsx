@@ -1,3 +1,4 @@
+/* eslint-disable import-helpers/order-imports */
 import '@/api/interceptor'; // isso deve ficar no topo
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';

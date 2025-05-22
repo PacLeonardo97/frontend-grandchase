@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from '.';
 import type { AppStore } from '@/store';
 
@@ -21,6 +22,7 @@ async function fetchRefreshToken() {
 
 export default function setUpInterceptor(store: AppStore) {
   let isAlreadyFetchingToken = false;
+
   let subscribers: any[] = [];
 
   const onAccessTokenFetched = (access_token: string) => {

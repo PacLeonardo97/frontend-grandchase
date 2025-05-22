@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from '@/api';
 import type { IChar } from '@/interface/char';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
@@ -34,7 +35,8 @@ export const allCharSlice = createSlice({
       })
       .addCase(fetchAllChars.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.response?.data.error.message;
+        const err = action.error as any;
+        state.error = err.response?.data.error.message;
       });
   },
 });

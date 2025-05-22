@@ -1,33 +1,47 @@
 import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
+  typography: {
+    h1: {
+      fontSize: 24,
+    },
+    h2: {
+      fontSize: 24,
+    },
+    h3: {
+      fontSize: 22,
+    },
+    h4: {
+      fontSize: 20,
+    },
+    body1: {
+      fontSize: 16,
+    },
+    body2: {
+      // '&>span': {
+      //   color: 'red',
+      // },
+      fontSize: 12,
+    },
+  },
+
   components: {
     MuiCssBaseline: {
-      // styleOverrides: {
-      //   '*::-webkit-scrollbar': {
-      //     width: '8px',
-      //     height: '8px',
-      //   },
-      //   '*::-webkit-scrollbar-thumb': {
-      //     background: 'linear-gradient(13deg, #374151 14%,#374151 64%)',
-      //     borderRadius: '10px',
-      //   },
-      //   '*::-webkit-scrollbar-thumb:hover': {
-      //     background: 'linear-gradient(13deg, #374151 14%,#374151 64%)',
-      //   },
-      //   '*::-webkit-scrollbar-track': {
-      //     background: 'transparent',
-      //   },
-      //   '*::-webkit-scrollbar-corner': {
-      //     background: 'transparent',
-      //   },
-      // },
+      styleOverrides: {
+        '.ellipsis': {
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 2 /* Limits the text to 2 lines */,
+          overflow: 'hidden',
+        },
+      },
     },
     MuiPopover: {
       styleOverrides: {
         paper: {
           minWidth: 190,
           borderRadius: '8px',
+          // background: '#292929',
           padding: '8px',
           color: '#ffffff',
         },

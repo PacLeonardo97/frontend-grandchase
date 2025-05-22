@@ -1,117 +1,125 @@
 'use client';
-import { useState } from 'react';
+import ButtonBase from '@mui/material/ButtonBase';
+import { styled as styledMui } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
-import deepCLone from 'lodash.clonedeep';
-
+import styled from './styled.module.scss';
+import ArticlesList from '@/components/ArticlesList';
 import Layout from '@/components/Layout';
-import { mockCharsSkills } from '@/mock/charsSkills.mock';
 
-interface Etapa {
-  maxValue: string;
-  current: string;
-  dependsOn?: {
-    value: string;
-    target: string;
-  };
-}
+const images = [
+  {
+    id: 1,
+    url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
+    title: 'Melhores métodos para farmar nível Chaser',
+  },
+  {
+    id: 2,
+    url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
+    title: 'Guia de raids Void',
+  },
+  {
+    id: 3,
+    url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
+    title: 'Guia de classes do Nightreing',
+  },
+  {
+    id: 4,
+    url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
+    title: 'Melhores armas para cada classe',
+  },
+  {
+    id: 5,
+    url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
+    title: 'Melhores armas para cada classe',
+  },
+  {
+    id: 6,
+    url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
+    title: 'Melhores armas para cada classe',
+  },
+];
 
-type PersonagemData = Record<string, Etapa>;
+// TODO: criar pasta components para colocar esses componentes
+const ImageButton = styledMui(ButtonBase)(({ theme }) => ({
+  position: 'relative',
+  height: 200,
+  [theme.breakpoints.down('sm')]: {
+    width: '100% !important', // Overrides inline-style
+    height: 100,
+  },
+  '&:hover, &.Mui-focusVisible': {
+    zIndex: 1,
+    '& .MuiImageBackdrop-root': {
+      opacity: 0.15,
+    },
+    '& .MuiImageMarked-root': {
+      opacity: 0,
+    },
+  },
+}));
 
-type Data = Record<string, PersonagemData[]>;
+const ImageSrc = styledMui('span')({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center 40%',
+});
+
+const SpanImage = styledMui('span')(({ theme }) => ({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.common.white,
+}));
+
+const ImageBackdrop = styledMui('span')(({ theme }) => ({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  backgroundColor: theme.palette.common.black,
+  opacity: 0.4,
+  transition: theme.transitions.create('opacity'),
+}));
 
 export default function App() {
-  const [data, setData] = useState<Data>(mockCharsSkills);
-
-  const handleUpdate = (
-    personagem: string,
-    etapaKey: string,
-    operacao: 'increment' | 'decrement',
-  ) => {
-    setData((prev) => {
-      const newData = deepCLone(prev);
-      const etapas = newData[personagem][0];
-      const etapa = etapas[etapaKey];
-      const current = parseInt(etapa.current);
-
-      if (operacao === 'increment') {
-        etapa.current = String(current + 1);
-      } else if (operacao === 'decrement') {
-        etapa.current = String(current - 1);
-      }
-
-      return newData;
-    });
-  };
-
-  const canIncrement = (etapas: PersonagemData, etapa: Etapa): boolean => {
-    const current = parseInt(etapa.current);
-    const max = parseInt(etapa.maxValue);
-    if (current >= max) return false;
-
-    if (!etapa.dependsOn) return true;
-
-    const target = etapas[etapa.dependsOn.target];
-    return target?.current === etapa.dependsOn.value;
-  };
-
-  const canDecrement = (
-    etapas: PersonagemData,
-    etapaKey: string,
-    etapa: Etapa,
-  ): boolean => {
-    const current = parseInt(etapa.current);
-    if (current <= 0) return false;
-
-    const isBlocked = Object.entries(etapas).some(([_, e]) => {
-      return e.dependsOn?.target === etapaKey && parseInt(e.current) > 0;
-    });
-
-    return !isBlocked;
-  };
-
   return (
     <Layout>
-      <div style={{ padding: 20, background: 'black' }}>
-        {Object.entries(data).map(([personagem, etapasArray]) => {
-          const etapas = etapasArray[0]; // considerando só 1 objeto
-          return (
-            <div key={personagem} style={{ marginBottom: 20 }}>
-              <h2>{personagem}</h2>
-              {Object.entries(etapas).map(([etapaKey, etapa]) => {
-                const incrementDisabled = !canIncrement(etapas, etapa);
-                const decrementDisabled = !canDecrement(
-                  etapas,
-                  etapaKey,
-                  etapa,
-                );
+      <div className={styled.container}>
+        <Typography variant="h3">Notícias mais recentes</Typography>
 
-                return (
-                  <div key={etapaKey} style={{ marginBottom: 10 }}>
-                    <strong>Etapa {etapaKey}</strong> — Current: {etapa.current}{' '}
-                    / {etapa.maxValue}
-                    <br />
-                    <button
-                      onClick={() =>
-                        handleUpdate(personagem, etapaKey, 'increment')
-                      }
-                      disabled={incrementDisabled}
-                    >
-                      +
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleUpdate(personagem, etapaKey, 'decrement')
-                      }
-                      disabled={decrementDisabled}
-                    >
-                      -
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+        <div className={styled.articlesContainer}>
+          {images.map((image) => (
+            <ImageButton key={image.id}>
+              <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
+              <ImageBackdrop className="MuiImageBackdrop-root" />
+              <SpanImage>
+                <Typography
+                  component="span"
+                  variant="subtitle1"
+                  color="inherit"
+                >
+                  {image.title}
+                </Typography>
+              </SpanImage>
+            </ImageButton>
+          ))}
+        </div>
+
+        <Typography marginTop={2} marginBottom={1} variant="h3">
+          Guias mais recentes
+        </Typography>
+        <ArticlesList />
       </div>
     </Layout>
   );

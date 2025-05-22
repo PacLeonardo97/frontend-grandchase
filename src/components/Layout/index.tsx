@@ -1,46 +1,21 @@
 'use client';
 import { ReactNode } from 'react';
 
+import AdBanner from './AdBanner';
 import Drawer from './drawer';
+import Header from './Header';
+import styled from './styled.module.scss';
+import SubHeader from './SubHeader';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <main
-      style={{
-        margin: '72px 192px 0px 144px',
-        background: 'white',
-        position: 'relative',
-      }}
-      // className={`max-w-screen-xl min-h-screen`}
-    >
-      <header
-        style={{
-          position: 'fixed',
-          height: '72px',
-          zIndex: 2,
-          background: 'blue',
-          top: 0,
-          left: 0,
-          width: '100%',
-        }}
-      ></header>
+    <>
+      <Header />
+      <SubHeader />
       <Drawer />
 
-      {children}
-      <div
-        className="ad_banner"
-        style={{
-          width: '192px',
-          height: '100vh',
-          background: 'grey',
-          position: 'fixed',
-          right: 0,
-          top: '72px',
-          padding: '16px',
-        }}
-      >
-        <p style={{ color: 'red' }}>anuncio caralho</p>
-      </div>
-    </main>
+      <main className={styled.main}>{children}</main>
+      <AdBanner />
+    </>
   );
 }

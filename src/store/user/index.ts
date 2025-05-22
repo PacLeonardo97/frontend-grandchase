@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from '@/api';
 import type { IUser } from '@/interface/user';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
@@ -51,7 +52,8 @@ export const userSlice = createSlice({
         // state.user = {} as IUser;
         // state.accessToken = '';
         // state.refreshToken = '';
-        state.error = action.error.response?.data.error.message;
+        const err = action.error as any;
+        state.error = err.response?.data.error.message;
       });
   },
 });
