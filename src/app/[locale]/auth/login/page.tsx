@@ -18,27 +18,26 @@ import {
 } from '@mui/material';
 import { isAxiosError } from 'axios';
 
-import api from '@/api';
 import TextField from '@/components/Form/Textfield';
 import Layout from '@/components/Layout';
+import { useAppDispatch } from '@/store/hooks';
+import { fetchLogin } from '@/store/user';
 
 export default function Login() {
-  const params = useParams<{ locale: string }>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const params = useParams<{ locale: string }>();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     try {
-      const req = await api.post('/auth/local', {
-        identifier: email,
-        password,
-      });
-      localStorage.setItem('@GC/access_token', req.data.jwt);
+      await dispatch(fetchLogin({ email, password }));
       router.push('/');
     } catch (error) {
       if (isAxiosError(error)) {

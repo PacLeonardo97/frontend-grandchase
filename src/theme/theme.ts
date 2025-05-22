@@ -1,4 +1,4 @@
-import { createTheme, TypographyStyle } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
   typography: {
@@ -41,7 +41,7 @@ export const theme = createTheme({
         paper: {
           minWidth: 190,
           borderRadius: '8px',
-          background: '#292929',
+          // background: '#292929',
           padding: '8px',
           color: '#ffffff',
         },
@@ -61,18 +61,6 @@ export const theme = createTheme({
             cursor: 'not-allowed !important',
             pointerEvents: 'all',
           },
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          '&:disabled': {
-            cursor: 'not-allowed !important',
-            pointerEvents: 'all',
-          },
-          textTransform: 'capitalize',
-          fontWeight: 600,
         },
       },
     },
