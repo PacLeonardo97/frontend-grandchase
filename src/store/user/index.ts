@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { clearAllChar } from '../allChar';
+import { clearEquip } from '../char';
 import api from '@/api';
 import type { IUser } from '@/interface/user';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
@@ -6,7 +8,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 export interface userState {
   accessToken: string;
   refreshToken: string;
-  user: IUser;
+  data: IUser;
   loading: boolean;
   error: string;
 }
@@ -24,10 +26,19 @@ export const fetchLogin = createAsyncThunk(
   },
 );
 
+export const clearAllRedux = createAsyncThunk(
+  'auth/logout',
+  (_, { dispatch }) => {
+    dispatch(clearEquip());
+    dispatch(clearAllChar());
+    dispatch(logout());
+  },
+);
+
 const initialState: userState = {
   accessToken: '',
   refreshToken: '',
-  user: {} as IUser,
+  data: {} as IUser,
   error: '',
   loading: false,
 };
@@ -35,7 +46,14 @@ const initialState: userState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    logout(state) {
+      state.loading = false;
+      state.data = {} as IUser;
+      state.accessToken = '';
+      state.refreshToken = '';
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchLogin.pending, (state) => {
@@ -43,11 +61,12 @@ export const userSlice = createSlice({
       })
       .addCase(fetchLogin.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
+        state.data = action.payload.user;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
       })
       .addCase(fetchLogin.rejected, (state, action) => {
+        console.log('entrou aqui caralho', action.error);
         state.loading = false;
         // state.user = {} as IUser;
         // state.accessToken = '';
@@ -57,5 +76,7 @@ export const userSlice = createSlice({
       });
   },
 });
+
+export const { logout } = userSlice.actions;
 
 export default userSlice.reducer;

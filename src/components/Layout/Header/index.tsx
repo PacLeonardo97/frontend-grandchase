@@ -1,9 +1,10 @@
+import Link from 'next/link';
 import { useState } from 'react';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Badge, { badgeClasses } from '@mui/material/Badge';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
 import { styled as styleMui } from '@mui/material/styles';
@@ -11,6 +12,8 @@ import Typography from '@mui/material/Typography';
 
 import styled from './styled.module.scss';
 import TextField from '@/components/Form/Textfield';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { clearAllRedux } from '@/store/user';
 
 const NotificationBadge = styleMui(Badge)`
   & .${badgeClasses.badge} {
@@ -21,6 +24,8 @@ const NotificationBadge = styleMui(Badge)`
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.data);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -59,9 +64,10 @@ export default function Header() {
             onClick={handleClick}
             onMouseOver={handleClick}
           >
-            <Avatar>U</Avatar>
+            <Avatar>{user?.username?.at(0)?.toLocaleUpperCase() || 'C'}</Avatar>
           </IconButton>
           <Popover
+            sx={{ zIndex: 999 }}
             id={id}
             open={open}
             anchorEl={anchorEl}
@@ -71,11 +77,43 @@ export default function Header() {
               horizontal: 'left',
             }}
           >
-            <div className={styled.popover}>
-              <Button>Logar</Button>
+            {user?.id ? (
+              <div>
+                <Button
+                  fullWidth
+                  onClick={() => {
+                    dispatch(clearAllRedux());
+                  }}
+                >
+                  Sair
+                </Button>
+              </div>
+            ) : (
+              <div className={styled.popover}>
+                <Link
+                  href="/auth/login"
+                  onClick={() => {
+                    handleClose();
+                  }}
+                >
+                  <Typography variant="h4" style={{ color: 'black' }}>
+                    Login
+                  </Typography>
+                  <Button></Button>
+                </Link>
 
-              <Button>Registrar</Button>
-            </div>
+                <Link
+                  onClick={() => {
+                    handleClose();
+                  }}
+                  href="/auth/register"
+                >
+                  <Typography variant="h4" style={{ color: 'black' }}>
+                    Registrar
+                  </Typography>
+                </Link>
+              </div>
+            )}
           </Popover>
         </div>
       </div>
