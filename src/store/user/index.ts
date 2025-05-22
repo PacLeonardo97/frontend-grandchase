@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { clearAllChar } from '../allChar';
-import { clearEquip } from '../char';
+import { clearChar } from '../char';
 import api from '@/api';
 import type { IUser } from '@/interface/user';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
@@ -29,7 +29,7 @@ export const fetchLogin = createAsyncThunk(
 export const clearAllRedux = createAsyncThunk(
   'auth/logout',
   (_, { dispatch }) => {
-    dispatch(clearEquip());
+    dispatch(clearChar());
     dispatch(clearAllChar());
     dispatch(logout());
   },

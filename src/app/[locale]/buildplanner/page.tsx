@@ -13,7 +13,7 @@ import { EChar } from '@/enum/char.enum';
 import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
 import { capitalizeFirstLetter } from '@/handler/capitalize';
 import { fetchAllChars } from '@/store/allChar';
-import { fetchChar, fetchCreateChar } from '@/store/char';
+import { clearChar, fetchChar, fetchCreateChar } from '@/store/char';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export default function Page() {
@@ -29,6 +29,13 @@ export default function Page() {
     (async () => {
       dispatch(fetchAllChars());
     })();
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(clearChar());
+    return () => {
+      dispatch(clearChar());
+    };
   }, [dispatch]);
 
   const handleChangeChar = async (name: string) => {
@@ -72,11 +79,15 @@ export default function Page() {
 
       <div
         className={styled.containerSkills}
-        style={{
-          backgroundImage: `url(/${capitalizeFirstLetter(
-            charSelected.data?.name || 'Elesis',
-          )}.png)`,
-        }}
+        style={
+          charSelected.data?.name
+            ? {
+                backgroundImage: `url(/${capitalizeFirstLetter(
+                  charSelected.data?.name || 'Elesis',
+                )}.png)`,
+              }
+            : {}
+        }
       >
         {sortEquip(allEquips).map((equip) => (
           <Fragment key={equip}>

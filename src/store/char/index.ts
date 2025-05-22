@@ -40,7 +40,7 @@ export const charSlice = createSlice({
   name: 'char',
   initialState,
   reducers: {
-    clearEquip(state) {
+    clearChar(state) {
       state.data = {} as IChar;
       state.error = '';
       state.loading = false;
@@ -87,5 +87,5 @@ export const charSlice = createSlice({
 });
 
 const charReducer = charSlice.reducer;
-export const { clearEquip, changeEquip } = charSlice.actions;
+export const { clearChar, changeEquip } = charSlice.actions;
 export default charReducer;

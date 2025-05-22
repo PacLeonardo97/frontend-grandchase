@@ -33,7 +33,6 @@ export default function CardEquip({ equip, type }: IProps) {
   const charSelected = useAppSelector((state) => state.char);
   const dispatch = useAppDispatch();
   const t = useTranslations('Equip');
-
   useEffect(() => {
     if (equip?.equip_set) {
       setSelectedEquip({
@@ -44,6 +43,7 @@ export default function CardEquip({ equip, type }: IProps) {
   }, [equip, t]);
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+    if (!charSelected.data?.id) return;
     setAnchorEl(event.currentTarget);
   };
 
@@ -69,7 +69,11 @@ export default function CardEquip({ equip, type }: IProps) {
 
   return (
     <>
-      <div onClick={handleClick} className={styled.square}>
+      <div
+        onClick={handleClick}
+        className={styled.square}
+        data-char={!!charSelected.data?.id}
+      >
         {equip?.type === type ? (
           <img
             style={{ borderRadius: 4 }}
@@ -90,10 +94,12 @@ export default function CardEquip({ equip, type }: IProps) {
         <Autocomplete
           sx={{ width: 300 }}
           options={Object.keys(EEquipSet).map((item) => ({
-            label: t(item),
+            label: item ? t(item) : item,
             value: item,
           }))}
-          getOptionLabel={(option) => option.label}
+          getOptionLabel={(option) => {
+            return option.label || '';
+          }}
           disableClearable
           value={selectedEquip}
           autoHighlight
