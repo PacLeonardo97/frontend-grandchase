@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import api from '@/api';
+import { ETypeEquips } from '@/enum/equips.enum';
 import type { IChar } from '@/interface/char';
 import { IEquips } from '@/interface/equip';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
@@ -11,10 +12,14 @@ export interface charState {
   error: string;
 }
 
-export const fetchChar = createAsyncThunk('fetchChar', async (id: number) => {
-  const response = await api.get(`/chars/${id}`);
-  return response.data;
-});
+export const fetchChar = createAsyncThunk(
+  'fetchChar',
+  async (id: number, { dispatch }) => {
+    const response = await api.get(`/chars/${id}`);
+    dispatch(createDefaultEquip());
+    return response.data;
+  },
+);
 
 interface ICreateChar {
   name: string;
@@ -24,14 +29,15 @@ interface ICreateChar {
 
 export const fetchCreateChar = createAsyncThunk(
   'fetchCreateChar',
-  async (data: ICreateChar) => {
+  async (data: ICreateChar, { dispatch }) => {
     const response = await api.post(`/chars`, { ...data });
+    dispatch(createDefaultEquip());
     return response.data;
   },
 );
 
 const initialState: charState = {
-  data: {} as IChar,
+  data: { equips: [] } as unknown as IChar,
   error: '',
   loading: false,
 };
@@ -41,7 +47,7 @@ export const charSlice = createSlice({
   initialState,
   reducers: {
     clearChar(state) {
-      state.data = {} as IChar;
+      state.data = { equips: [] } as unknown as IChar;
       state.error = '';
       state.loading = false;
     },
@@ -49,8 +55,16 @@ export const charSlice = createSlice({
       const index = state.data?.equips.findIndex(
         (item) => item.type === action.payload.type,
       );
+
       if (index !== undefined && index !== -1) {
+        console.log('foo ->', state.data!.equips[index]);
         state.data!.equips[index] = action.payload;
+      }
+    },
+    createDefaultEquip(state) {
+      const equipDefault = Object.keys(ETypeEquips) as ETypeEquips[];
+      for (const element of equipDefault) {
+        state.data?.equips.push({ type: element });
       }
     },
   },
@@ -61,7 +75,17 @@ export const charSlice = createSlice({
       })
       .addCase(fetchChar.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        const equipDefault = Object.keys(ETypeEquips) as ETypeEquips[];
+
+        state.data = {
+          ...action.payload,
+          equips: equipDefault.map((type) => {
+            const existingEquip = action.payload.equips?.find(
+              (e) => e.type === type,
+            );
+            return existingEquip ?? { type };
+          }),
+        };
       })
       .addCase(fetchChar.rejected, (state, action) => {
         state.loading = false;
@@ -87,5 +111,5 @@ export const charSlice = createSlice({
 });
 
 const charReducer = charSlice.reducer;
-export const { clearChar, changeEquip } = charSlice.actions;
+export const { clearChar, changeEquip, createDefaultEquip } = charSlice.actions;
 export default charReducer;

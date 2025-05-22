@@ -33,6 +33,7 @@ export default function CardEquip({ equip, type }: IProps) {
   const charSelected = useAppSelector((state) => state.char);
   const dispatch = useAppDispatch();
   const t = useTranslations('Equip');
+
   useEffect(() => {
     if (equip?.equip_set) {
       setSelectedEquip({
@@ -40,6 +41,9 @@ export default function CardEquip({ equip, type }: IProps) {
         label: t(equip.equip_set),
       } as IOptions);
     }
+    return () => {
+      setSelectedEquip({ label: '', value: '' });
+    };
   }, [equip, t]);
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -54,7 +58,7 @@ export default function CardEquip({ equip, type }: IProps) {
       rarity: 'common',
       type,
     };
-    if (equip?.type === type) {
+    if (equip?.type === type && equip?.id) {
       const req = await api.put(`equips/${equip.id}`, data);
       dispatch(changeEquip(req.data));
       return;
@@ -74,7 +78,7 @@ export default function CardEquip({ equip, type }: IProps) {
         className={styled.square}
         data-char={!!charSelected.data?.id}
       >
-        {equip?.type === type ? (
+        {equip?.type === type && equip?.id ? (
           <img
             style={{ borderRadius: 4 }}
             src={getImageEquip(`${equip.img}.png`)}

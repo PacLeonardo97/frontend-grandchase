@@ -13,7 +13,12 @@ import { EChar } from '@/enum/char.enum';
 import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
 import { capitalizeFirstLetter } from '@/handler/capitalize';
 import { fetchAllChars } from '@/store/allChar';
-import { clearChar, fetchChar, fetchCreateChar } from '@/store/char';
+import {
+  clearChar,
+  createDefaultEquip,
+  fetchChar,
+  fetchCreateChar,
+} from '@/store/char';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export default function Page() {
@@ -39,6 +44,7 @@ export default function Page() {
   }, [dispatch]);
 
   const handleChangeChar = async (name: string) => {
+    dispatch(clearChar());
     const charClicked = chars.data?.find((item) => item.name === name);
 
     if (charClicked?.id) {

@@ -7,8 +7,6 @@ export enum ETypeEquips {
   cloak = 'cloak',
   weapon_j1 = 'weapon_j1',
   weapon_j2 = 'weapon_j2',
-  weapon_j3 = 'weapon_j3',
-  weapon_j4 = 'weapon_j4',
   circlet = 'circlet',
   mask = 'mask',
   wing = 'wing',
