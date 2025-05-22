@@ -1,14 +1,19 @@
-import { Metadata } from 'next';
+import '@/api/interceptor'; // isso deve ficar no topo
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { Raleway } from 'next/font/google';
+import { notFound } from 'next/navigation';
 import { type ReactNode } from 'react';
 
-import { host, locales } from '@/i18n/config';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+
+import ToastProvider from '@/components/Toast';
+import { locales } from '@/i18n/config';
+import { routing } from '@/i18n/routing';
 
 import '../globals.css';
-import { routing } from '@/i18n/routing';
+import StoreProvider from '@/store/provider';
+import ThemeProvider from '@/theme';
 
 type IProps = {
   children: ReactNode;
@@ -40,9 +45,29 @@ export default async function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`${raleway.variable}`}>
-        <NextIntlClientProvider>
-          <main className={`max-w-screen-xl min-h-screen `}>{children}</main>
-        </NextIntlClientProvider>
+        <AppRouterCacheProvider>
+          <ThemeProvider>
+            <NextIntlClientProvider>
+              <StoreProvider>
+                <ToastProvider>{children}</ToastProvider>
+                <div
+                  className="ad_banner"
+                  style={{
+                    width: '192px',
+                    height: '100vh',
+                    background: 'grey',
+                    position: 'fixed',
+                    right: 0,
+                    top: '72px',
+                    padding: '16px',
+                  }}
+                >
+                  <p style={{ color: 'red' }}>anuncio caralho</p>
+                </div>
+              </StoreProvider>
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
