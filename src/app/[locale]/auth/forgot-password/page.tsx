@@ -31,10 +31,9 @@ export default function Login() {
     setLoading(true);
     const id = toast.loading('Email sendo enviado, espere um momento');
     try {
-      const req = await api.post('/auth/forgot-password', {
+      await api.post('/auth/forgot-password', {
         email,
       });
-      localStorage.setItem('@GC/access_token', req.data.jwt);
       toast.update(id, {
         render: 'email enviado, em alguns minutos veja seu email',
         theme: 'dark',

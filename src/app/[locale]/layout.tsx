@@ -1,5 +1,4 @@
 /* eslint-disable import-helpers/order-imports */
-import '@/api/interceptor'; // isso deve ficar no topo
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { Raleway } from 'next/font/google';
@@ -46,10 +45,10 @@ export default async function RootLayout({
   return (
     <html lang="pt-br">
       <body className={`${raleway.variable}`}>
-        <AppRouterCacheProvider>
-          <ThemeProvider>
-            <NextIntlClientProvider>
-              <StoreProvider>
+        <StoreProvider>
+          <AppRouterCacheProvider>
+            <ThemeProvider>
+              <NextIntlClientProvider>
                 <ToastProvider>{children}</ToastProvider>
                 <div
                   className="ad_banner"
@@ -65,10 +64,10 @@ export default async function RootLayout({
                 >
                   <p style={{ color: 'red' }}>anuncio caralho</p>
                 </div>
-              </StoreProvider>
-            </NextIntlClientProvider>
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+              </NextIntlClientProvider>
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </StoreProvider>
       </body>
     </html>
   );

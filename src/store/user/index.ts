@@ -20,8 +20,7 @@ export const fetchLogin = createAsyncThunk(
       identifier: email,
       password,
     });
-    localStorage.setItem('@GC/access_token', data.data.accessToken);
-    localStorage.setItem('@GC/refresh_token', data.data.refreshToken);
+
     return data.data;
   },
 );
@@ -53,6 +52,10 @@ export const userSlice = createSlice({
       state.accessToken = '';
       state.refreshToken = '';
     },
+    userRefreshToken(state, payload) {
+      state.accessToken = payload.payload.accessToken;
+      state.refreshToken = payload.payload.refreshToken;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -66,17 +69,13 @@ export const userSlice = createSlice({
         state.refreshToken = action.payload.refreshToken;
       })
       .addCase(fetchLogin.rejected, (state, action) => {
-        console.log('entrou aqui caralho', action.error);
         state.loading = false;
-        // state.user = {} as IUser;
-        // state.accessToken = '';
-        // state.refreshToken = '';
         const err = action.error as any;
         state.error = err.response?.data.error.message;
       });
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, userRefreshToken } = userSlice.actions;
 
 export default userSlice.reducer;

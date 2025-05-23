@@ -1,10 +1,10 @@
 'use client';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { Provider } from 'react-redux';
 
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { store, AppStore, persistor } from '.';
+import { store, persistor } from '.';
 import setUpInterceptor from '@/api/interceptor';
 
 export default function StoreProvider({
@@ -12,17 +12,18 @@ export default function StoreProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const storeRef = useRef<AppStore>(null);
-  if (!storeRef.current) {
-    storeRef.current = store;
-  }
-
-  setUpInterceptor(storeRef.current);
-
+  const [interceptorReady, setInterceptorReady] = useState(false);
   return (
-    <Provider store={storeRef.current}>
-      <PersistGate loading={null} persistor={persistor}>
-        {children}
+    <Provider store={store}>
+      <PersistGate
+        loading={null}
+        persistor={persistor}
+        onBeforeLift={() => {
+          setUpInterceptor(store);
+          setInterceptorReady(true);
+        }}
+      >
+        {interceptorReady && children}
       </PersistGate>
     </Provider>
   );

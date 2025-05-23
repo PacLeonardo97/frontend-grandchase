@@ -36,13 +36,13 @@ export default function Page() {
     event.preventDefault();
     setLoading(true);
     try {
-      const req = await api.post('/auth/local/register', {
+      await api.post('/auth/local/register', {
         username: name,
         email,
         password,
       });
-      localStorage.setItem('@GC/jwt', req.data.jwt);
-      router.push('/');
+
+      router.push('/login');
     } catch (error) {
       if (isAxiosError(error)) {
         toast(error.response?.data.error.message, {

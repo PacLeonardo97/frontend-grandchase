@@ -1,30 +1,14 @@
+'use client';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import api from '.';
 import type { AppStore } from '@/store';
-
-async function fetchRefreshToken() {
-  try {
-    const req = await api.post<{ accessToken: string; refreshToken: string }>(
-      '/users-permissions/refresh_token',
-      {
-        refreshToken: localStorage.getItem('@GC/refresh_token'),
-      },
-    );
-    localStorage.setItem('@GC/access_token', req.data.accessToken);
-    localStorage.setItem('@GC/refresh_token', req.data.refreshToken);
-    return req.data.accessToken;
-  } catch {
-    localStorage.removeItem('@GC/access_token');
-    localStorage.removeItem('@GC/refresh_token');
-    window.location.href = '/login';
-  }
-}
+import { logout, userRefreshToken } from '@/store/user';
 
 export default function setUpInterceptor(store: AppStore) {
   let isAlreadyFetchingToken = false;
 
   let subscribers: any[] = [];
-
+  const state = store.getState();
   const onAccessTokenFetched = (access_token: string) => {
     subscribers = subscribers.filter((callback) => callback(access_token));
   };
@@ -76,13 +60,32 @@ export default function setUpInterceptor(store: AppStore) {
   );
 
   api.interceptors.request.use((req) => {
-    const state = store.getState();
-    const token =
-      state.user.accessToken || localStorage.getItem('@GC/access_token');
-
+    const token = state.user.accessToken;
     if (token && !req.url?.endsWith('/api/auth/local')) {
       req.headers.Authorization = `Bearer ${token}`;
     }
     return req;
   });
+
+  async function fetchRefreshToken() {
+    try {
+      const req = await api.post<{ accessToken: string; refreshToken: string }>(
+        '/users-permissions/refresh_token',
+        {
+          refreshToken: state.user.refreshToken,
+        },
+      );
+      store.dispatch(
+        userRefreshToken({
+          accessToken: req.data.accessToken,
+          refreshToken: req.data.refreshToken,
+        }),
+      );
+
+      return req.data.accessToken;
+    } catch {
+      store.dispatch(logout());
+      window.location.href = '/login';
+    }
+  }
 }
