@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import _ from 'lodash';
+
 import type { RootState } from '../';
 import api from '@/api';
 import { EChar, EClassChar } from '@/enum/char.enum';
@@ -14,14 +16,17 @@ export const fetchAllChars = createAsyncThunk(
   'fetchAllChars',
   async (_, { getState }) => {
     const state = getState() as RootState;
-    if (!state.user.accessToken) throw Error('No Access Token');
+    if (!state.user.accessToken) return;
     const response = await api.get('/chars');
     return response.data;
   },
 );
 
 const initialState: charState = {
-  data: [] as unknown as charState['data'],
+  data: Object.keys(EChar).map((name: any) => ({
+    name,
+    class_char: EClassChar.class_1,
+  })),
   error: '',
   loading: false,
 };
@@ -50,15 +55,14 @@ export const allCharSlice = createSlice({
         fetchAllChars.fulfilled,
         (state, action: PayloadAction<IChar[]>) => {
           state.loading = false;
-          state.data = Object.keys(EChar).map((name: any) => {
-            const charExist = action.payload?.find(
-              (payload) => name === payload.name,
-            );
-            return charExist
-              ? charExist
-              : { name, class_char: EClassChar.class_1 };
-          });
-
+          console.log('aqui caraio');
+          if (!state.data?.length) {
+            state.data = Object.keys(EChar).map((name: any) => ({
+              name,
+              class_char: EClassChar.class_1,
+            }));
+          }
+          state.data = _.merge(state.data, action.payload);
           state.error = '';
         },
       )

@@ -1,6 +1,8 @@
+'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { type Dispatch, type SetStateAction, useState } from 'react';
 
+import DehazeIcon from '@mui/icons-material/Dehaze';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -22,7 +24,11 @@ const NotificationBadge = styleMui(Badge)`
   }
 `;
 
-export default function Header() {
+interface IProps {
+  setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function Header({ setOpenDrawer }: IProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.data);
@@ -65,6 +71,18 @@ export default function Header() {
             onMouseOver={handleClick}
           >
             <Avatar>{user?.username?.at(0)?.toLocaleUpperCase() || 'C'}</Avatar>
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              setOpenDrawer((oldState) => !oldState);
+            }}
+            sx={(theme) => ({
+              [theme.breakpoints.up('sm')]: {
+                display: 'none',
+              },
+            })}
+          >
+            <DehazeIcon />
           </IconButton>
           <Popover
             sx={{ zIndex: 999 }}

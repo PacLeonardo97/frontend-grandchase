@@ -45,7 +45,7 @@ export default function Page() {
   const tChar = useTranslations('Char');
 
   const OptionClassChar = useMemo(() => {
-    const classes = getClassByChar(charSelected.data!.name);
+    const classes = getClassByChar(charSelected.data?.name as EChar);
     if (charSelected.data?.name) {
       return classes.map((item) => ({
         value: item,
@@ -77,11 +77,12 @@ export default function Page() {
   }, [dispatch]);
 
   const handleChangeChar = async (name: string) => {
+    dispatch(clearChar());
     const charClicked = allChars.data?.find(
       (item) => item.name === name,
     ) as IChar;
 
-    if (charClicked?.id || !user.accessToken) {
+    if (charClicked?.name || !user.accessToken) {
       await dispatch(fetchChar(charClicked));
       return;
     }

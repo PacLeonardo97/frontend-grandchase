@@ -55,7 +55,7 @@ export default function CardEquip({ equip, type }: IProps) {
       `${charSelected.data?.name}_${equip?.type}_${equip_set}`.toLowerCase();
     const data = {
       equip_set: equip_set,
-      charId: charSelected.data!.id,
+      charId: charSelected.data?.id,
       rarity: ERarityItem.common,
       type,
       img,
