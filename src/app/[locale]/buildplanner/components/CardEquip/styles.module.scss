@@ -4,12 +4,14 @@
   height: 60px;
   border-radius: 4px;
   background-color: #919aa8;
+
   &[data-char="false"] {
     cursor: not-allowed;
   }
   &[data-char="true"] {
     cursor: pointer;
   }
+
   img {
     width: 100%;
     height: 100%;

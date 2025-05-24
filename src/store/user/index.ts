@@ -64,6 +64,7 @@ export const userSlice = createSlice({
       })
       .addCase(fetchLogin.fulfilled, (state, action) => {
         state.loading = false;
+
         state.data = action.payload.user;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;

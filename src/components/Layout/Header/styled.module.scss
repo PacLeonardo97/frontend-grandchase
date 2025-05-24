@@ -1,14 +1,17 @@
 .header{
     $ml: 65px;
-
     position: fixed;
     height: 72px;
     z-index: 2;
     background-color: blue;
     top: 0;
-    left: 0;
-    margin-left: $ml;
+    left: $ml;
     width: calc(100% - $ml);
+
+     @media (max-width: 800px) {
+        left:0;
+        width: 100%;
+    }
 }
 
 .content {

@@ -7,6 +7,7 @@ export interface IUser {
   confirmed: boolean;
   blocked: boolean;
   createdAt: string;
+  chaser_level: number;
   updatedAt: string;
   publishedAt: string;
 }
