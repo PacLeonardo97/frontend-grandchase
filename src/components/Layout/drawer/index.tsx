@@ -53,13 +53,7 @@ interface DrawerProps {
 const DrawerComponent = styled(MuiDrawer, {
   // shouldForwardProp: (prop) => prop !== 'open',
 })<DrawerProps>(({ theme, open }) => {
-  console.log('componentdrawer', open);
   return {
-    [theme.breakpoints.down('sm')]: {
-      // '& .MuiDrawer-paper': {
-      //   width: '100%',
-      // },
-    },
     [theme.breakpoints.up('sm')]: {
       height: `100%`,
       flexShrink: 0,
@@ -112,7 +106,6 @@ interface IProps {
 
 export default function Drawer({ openDrawer, setOpenDrawer }: IProps) {
   const matches = useMediaQuery('(max-width:800px)');
-  console.log(' openDrawer- >', openDrawer);
   return (
     <DrawerComponent
       variant={matches ? undefined : 'permanent'}
