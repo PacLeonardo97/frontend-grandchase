@@ -6,6 +6,7 @@ import api from '@/api';
 import { EChar, EClassChar } from '@/enum/char.enum';
 import type { IChar } from '@/interface/char';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 export interface charState {
   data?: IChar[];
   loading: boolean;
@@ -55,7 +56,7 @@ export const allCharSlice = createSlice({
         fetchAllChars.fulfilled,
         (state, action: PayloadAction<IChar[]>) => {
           state.loading = false;
-          console.log('aqui caraio');
+
           if (!state.data?.length) {
             state.data = Object.keys(EChar).map((name: any) => ({
               name,
