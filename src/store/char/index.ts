@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { RootState } from '../';
 import api from '@/api';
 import { ETypeEquips } from '@/enum/equips.enum';
 import type { IChar } from '@/interface/char';
 import { IEquips } from '@/interface/equip';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-
 export interface charState {
   data?: IChar;
   loading: boolean;
@@ -14,25 +14,39 @@ export interface charState {
 
 export const fetchChar = createAsyncThunk(
   'fetchChar',
-  async (id: number, { dispatch }) => {
-    const response = await api.get(`/chars/${id}`);
+  async (data: IChar, { dispatch, getState }) => {
+    const state = getState() as RootState;
+    if (!state.user.accessToken) return data;
+    const req = await api.get(`/chars/${data.id}`);
     dispatch(createDefaultEquip());
-    return response.data;
+    return req.data;
+  },
+);
+
+export const fetchPutChar = createAsyncThunk(
+  'fetchPutChar',
+  async ({ id, ...data }: ICreateChar & { id?: number }, { getState }) => {
+    const state = getState() as RootState;
+    if (!state.user.accessToken) return;
+    const req = await api.put(`/chars/${id}`, { ...data });
+    return req.data;
   },
 );
 
 interface ICreateChar {
-  name: string;
+  name?: string;
   level?: number;
   total_atk?: number;
 }
 
 export const fetchCreateChar = createAsyncThunk(
   'fetchCreateChar',
-  async (data: ICreateChar, { dispatch }) => {
-    const response = await api.post(`/chars`, { ...data });
+  async (data: ICreateChar, { dispatch, getState }) => {
+    const state = getState() as RootState;
+    if (!state.user.accessToken) return data;
+    const req = await api.post(`/chars`, { ...data });
     dispatch(createDefaultEquip());
-    return response.data;
+    return req.data;
   },
 );
 
@@ -59,13 +73,16 @@ export const charSlice = createSlice({
       );
 
       if (index !== undefined && index !== -1) {
-        state.data!.equips[index] = action.payload;
+        state.data!.equips![index] = action.payload;
       }
     },
     createDefaultEquip(state) {
       for (const element of equipDefault) {
-        state.data?.equips.push({ type: element });
+        state.data?.equips?.push({ type: element });
       }
+    },
+    updateChar(state, action: PayloadAction<IChar>) {
+      state.data = { ...state.data, ...action.payload };
     },
   },
   extraReducers: (builder) => {
@@ -73,17 +90,18 @@ export const charSlice = createSlice({
       .addCase(fetchChar.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchChar.fulfilled, (state, action) => {
+      .addCase(fetchChar.fulfilled, (state, action: PayloadAction<IChar>) => {
         state.loading = false;
-
+        const equips = equipDefault.map((type) => {
+          const existingEquip = action.payload?.equips?.find(
+            (e) => e.type === type,
+          );
+          return existingEquip ?? { type };
+        });
+        console.log('equips -->', equips);
         state.data = {
           ...action.payload,
-          equips: equipDefault.map((type) => {
-            const existingEquip = action.payload.equips?.find(
-              (e) => e.type === type,
-            );
-            return existingEquip ?? { type };
-          }),
+          equips,
         };
       })
       .addCase(fetchChar.rejected, (state, action) => {
@@ -97,19 +115,48 @@ export const charSlice = createSlice({
       .addCase(fetchCreateChar.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchCreateChar.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = {
-          ...action.payload,
-          equips: equipDefault.map((type) => {
-            const existingEquip = action.payload.equips?.find(
-              (e) => e.type === type,
-            );
-            return existingEquip ?? { type };
-          }),
-        };
-      })
+      .addCase(
+        fetchCreateChar.fulfilled,
+        (state, action: PayloadAction<IChar>) => {
+          state.loading = false;
+          state.data = {
+            ...action.payload,
+            equips: equipDefault.map((type) => {
+              const existingEquip = action?.payload?.equips?.find(
+                (e) => e.type === type,
+              );
+              return existingEquip ?? { type };
+            }),
+          };
+        },
+      )
       .addCase(fetchCreateChar.rejected, (state, action) => {
+        state.loading = false;
+        const err = action.error as any;
+        state.error = err.response?.data.error.message;
+      });
+
+    //fetchPutChar
+    builder
+      .addCase(fetchPutChar.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        fetchPutChar.fulfilled,
+        (state, action: PayloadAction<IChar>) => {
+          state.loading = false;
+          state.data = {
+            ...action.payload,
+            equips: equipDefault.map((type) => {
+              const existingEquip = action.payload?.equips?.find(
+                (e) => e.type === type,
+              );
+              return existingEquip ?? { type };
+            }),
+          };
+        },
+      )
+      .addCase(fetchPutChar.rejected, (state, action) => {
         state.loading = false;
         const err = action.error as any;
         state.error = err.response?.data.error.message;
@@ -118,5 +165,6 @@ export const charSlice = createSlice({
 });
 
 const charReducer = charSlice.reducer;
-export const { clearChar, changeEquip, createDefaultEquip } = charSlice.actions;
+export const { clearChar, changeEquip, createDefaultEquip, updateChar } =
+  charSlice.actions;
 export default charReducer;

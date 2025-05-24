@@ -2,11 +2,11 @@
     display: grid;
     grid-template-columns: 57% 19% 0%;
     width: 400px;
-    
-    background-size: contain;
     gap: 16px;
-    margin: 16px 24px 0px 0px;
     background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+
     @media (max-width:800px ) {
         grid-template-columns: 48% 18% 0%;
     }

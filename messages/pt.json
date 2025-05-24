@@ -6,6 +6,31 @@
         "pha_pho": "Fenix Fantasma",
         "true_dragon": "Verdadeiro Dragão de Ferro",
         "dragon": "Dragão de Ferro",
-        "void": "Vazio"
+        "void": "Vazio",
+        "helm": "Capacete",
+        "top": "Top",
+        "lower_armor": "Lower Armor",
+        "gloves": "Gloves",
+        "shoes": "Shoes",
+        "cloak": "Cloak",
+        "weapon_j1": "Weapon 1",
+        "weapon_j2": "Weapon 2",
+        "circlet": "Circlet",
+        "mask": "Mask",
+        "wing": "Wing",
+        "stompers": "Stompers",
+        "shield": "Shield",
+        "ring": "Ring",
+        "necklace": "Necklace",
+        "anklet": "Anklet",
+        "earring1": "Earring 1",
+        "earring2": "Earring 2"
+    },
+    "Char": {
+        "class_1": "Primeira Classe",
+        "class_2": "Segunda Classe",
+        "class_3": "Terceira Classe",
+        "class_4": "Quarta Classe",
+        "class_5": "Despertar"
     }
 }

@@ -6,6 +6,31 @@
         "pha_pho": "Phantom Phoenix",
         "true_dragon": "True Iron Dragon",
         "dragon": "Iron Dragon",
-        "void": "Void"
+        "void": "Void",
+        "helm": "Helm",
+        "top": "Top",
+        "lower_armor": "Lower Armor",
+        "gloves": "Gloves",
+        "shoes": "Shoes",
+        "cloak": "Cloak",
+        "weapon_j1": "Weapon 1",
+        "weapon_j2": "Weapon 2",
+        "circlet": "Circlet",
+        "mask": "Mask",
+        "wing": "Wing",
+        "stompers": "Stompers",
+        "shield": "Shield",
+        "ring": "Ring",
+        "necklace": "Necklace",
+        "anklet": "Anklet",
+        "earring1": "Earring 1",
+        "earring2": "Earring 2"
+    },
+    "Char": {
+        "class_1": "First Class",
+        "class_2": "Second Class",
+        "class_3": "third Class",
+        "class_4": "Fourth Class",
+        "class_5": "Awakening"
     }
 }
