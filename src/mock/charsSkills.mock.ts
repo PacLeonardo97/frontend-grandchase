@@ -1,52 +1,107 @@
-export const mockCharsSkills = {
-  elesis: [
+import { EChar } from '@/enum/char.enum';
+
+export interface ICharSkill {
+  [skillName: string]: {
+    maxValue: string;
+    qnttyPoints: string;
+    current: string;
+    img: string;
+    dependsOn?: {
+      target: string;
+      value: string;
+    };
+  };
+}
+
+export type ICharsSkills = {
+  [char in EChar]?: ICharSkill[];
+};
+
+export const mockCharsSkills: ICharsSkills = {
+  [EChar.Elesis]: [
     {
-      '1': {
-        maxValue: '3',
-        current: '3',
+      Combo_Com_5_golpes: {
+        maxValue: '1',
+        current: '0',
+        qnttyPoints: '0',
+        img: '',
       },
-      '2': {
-        maxValue: '3',
-        current: '3',
-      },
-      '3': {
-        maxValue: '4',
-        current: '1',
+      Combo_De_4_golpes: {
+        maxValue: '1',
+        qnttyPoints: '2',
+        current: '0',
+        img: '',
         dependsOn: {
-          target: '1',
-          value: '3',
+          target: 'Combo_Com_5_golpes',
+          value: '1',
         },
       },
-      '4': {
-        maxValue: '5',
+      Corrida: {
+        maxValue: '1',
+        qnttyPoints: '0',
         current: '0',
+        img: '',
+      },
+      Pulo_e_corrida: {
+        maxValue: '1',
+        qnttyPoints: '2',
+        current: '0',
+        img: '',
         dependsOn: {
-          target: '2',
-          value: '3',
+          target: 'Corrida',
+          value: '1',
         },
       },
-      '5': {
-        maxValue: '5',
+      Combo_Aereo_Nv_1: {
+        maxValue: '1',
+        qnttyPoints: '0',
         current: '0',
+        img: '',
+      },
+      Investida: {
+        maxValue: '1',
+        qnttyPoints: '1',
+        current: '0',
+        img: '',
         dependsOn: {
-          target: '2',
-          value: '3',
+          target: 'Combo_Aereo_Nv_1',
+          value: '1',
         },
       },
-    },
-  ],
-  Lire: [
-    {
-      '1': {
-        maxValue: '3',
-        current: '3',
-      },
-      '2': {
-        maxValue: '3',
+      Ataque_Duplo_Aereo: {
+        maxValue: '1',
+        qnttyPoints: '1',
         current: '0',
+        img: '',
         dependsOn: {
-          value: '3',
-          target: '1',
+          target: 'Investida',
+          value: '1',
+        },
+      },
+      Combo_Aereo_Nv_2: {
+        maxValue: '1',
+        qnttyPoints: '2',
+        current: '0',
+        img: '',
+        dependsOn: {
+          target: 'Ataque_Duplo_Aereo',
+          value: '1',
+        },
+      },
+      Ataque_Critico_Nv_1: {
+        maxValue: '1',
+        qnttyPoints: '0',
+        current: '0',
+        img: '',
+      },
+      Critico_Nv_2: {
+        maxValue: '1',
+        qnttyPoints: '2',
+        current: '0',
+        img: '',
+        dependsOn: {
+          target: 'Ataque_Critico_Nv_1',
+          value: '1',
         },
       },
     },

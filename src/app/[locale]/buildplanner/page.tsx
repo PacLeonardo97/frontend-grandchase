@@ -7,6 +7,7 @@ import { Box, CircularProgress } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import CardEquip from './components/CardEquip';
+import SkillTree from './components/SkillTree';
 import styled from './styled.module.scss';
 import Select from '@/components/Form/Select';
 import TextField from '@/components/Form/Textfield';
@@ -118,6 +119,7 @@ export default function Page() {
           disablePortal
           options={allChar}
           loading={allChars.loading}
+          disableClearable
           onChange={(_, value) => handleChangeChar(value as string)}
           renderInput={(params) => (
             <TextField
@@ -189,61 +191,64 @@ export default function Page() {
           )}
         />
       </div>
-      <Box
-        padding={1}
-        maxWidth={420}
-        borderRadius={1}
-        sx={{ background: '#7B7575' }}
-      >
-        <div
-          className={styled.containerSkills}
-          style={
-            charSelected.data?.name
-              ? {
-                  backgroundImage: `url(/char/${capitalizeFirstLetter(
-                    charSelected.data?.name || 'Elesis',
-                  )}_${charSelected.data?.class_char}.png)`,
-                }
-              : {}
-          }
-        >
-          {sortEquip(allEquips).map((equip) => (
-            <Fragment key={equip}>
-              <CardEquip
-                equip={charSelected.data?.equips?.find(
-                  (item) => item.type === equip,
-                )}
-                type={equip as ETypeEquips}
-              />
-            </Fragment>
-          ))}
-        </div>
+      <Box sx={{ display: 'flex', gap: '16px' }}>
         <Box
-          justifyContent="space-between"
-          marginTop={2}
-          sx={{ display: 'flex' }}
+          padding={1}
+          maxWidth={420}
+          borderRadius={1}
+          sx={{ background: '#7B7575' }}
         >
-          <Box width={80}>
-            <Select
-              disabled={!charSelected.data?.name}
-              list={
-                charSelected.data?.name
-                  ? levelChar
-                  : [{ label: '1', value: '1' }]
-              }
-              value={charSelected.data?.level || '1'}
-              id="level_char"
-              onChange={(e) => {
-                handleChangeLevel(Number(e.target.value));
-              }}
-              label="Nivel"
-            />
-          </Box>
+          <div
+            className={styled.containerSkills}
+            style={
+              charSelected.data?.name
+                ? {
+                    backgroundImage: `url(/char/${capitalizeFirstLetter(
+                      charSelected.data?.name || 'Elesis',
+                    )}_${charSelected.data?.class_char}.png)`,
+                  }
+                : {}
+            }
+          >
+            {sortEquip(allEquips).map((equip) => (
+              <Fragment key={equip}>
+                <CardEquip
+                  equip={charSelected.data?.equips?.find(
+                    (item) => item.type === equip,
+                  )}
+                  type={equip as ETypeEquips}
+                />
+              </Fragment>
+            ))}
+          </div>
+          <Box
+            justifyContent="space-between"
+            marginTop={2}
+            sx={{ display: 'flex' }}
+          >
+            <Box width={80}>
+              <Select
+                disabled={!charSelected.data?.name}
+                list={
+                  charSelected.data?.name
+                    ? levelChar
+                    : [{ label: '1', value: '1' }]
+                }
+                value={charSelected.data?.level || '1'}
+                id="level_char"
+                onChange={(e) => {
+                  handleChangeLevel(Number(e.target.value));
+                }}
+                label="Nivel"
+              />
+            </Box>
 
-          <Box width={120}>
-            <TextField label="Nivel Chase" value={user.data.chaser_level} />
+            <Box width={120}>
+              <TextField label="Nivel Chase" value={user.data.chaser_level} />
+            </Box>
           </Box>
         </Box>
+        {charSelected.data?.name ? <SkillTree /> : null}
       </Box>
     </>
   );

@@ -32,5 +32,12 @@
         "class_3": "third Class",
         "class_4": "Fourth Class",
         "class_5": "Awakening"
+    },
+    "Skills": {
+        "class_1": "1º",
+        "class_2": "2º",
+        "class_3": "3º",
+        "class_4": "4º",
+        "class_5": "Awakening"
     }
 }

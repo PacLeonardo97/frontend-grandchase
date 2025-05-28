@@ -32,5 +32,12 @@
         "class_3": "Terceira Classe",
         "class_4": "Quarta Classe",
         "class_5": "Despertar"
+    },
+    "Skills": {
+        "class_1": "1º",
+        "class_2": "2º",
+        "class_3": "3º",
+        "class_4": "4º",
+        "class_5": "Despertar"
     }
 }

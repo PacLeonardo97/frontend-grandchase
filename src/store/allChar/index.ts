@@ -4,6 +4,7 @@ import _ from 'lodash';
 import type { RootState } from '../';
 import api from '@/api';
 import { EChar, EClassChar } from '@/enum/char.enum';
+import { getPointsByChar } from '@/helper/char';
 import type { IChar } from '@/interface/char';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -24,10 +25,7 @@ export const fetchAllChars = createAsyncThunk(
 );
 
 const initialState: charState = {
-  data: Object.keys(EChar).map((name: any) => ({
-    name,
-    class_char: EClassChar.class_1,
-  })),
+  data: [],
   error: '',
   loading: false,
 };
@@ -43,7 +41,7 @@ export const allCharSlice = createSlice({
     },
     changeDataByCharSelected(state, action: PayloadAction<IChar>) {
       state.data = state.data?.map((item) => {
-        return item.name === action.payload.name ? action.payload : item;
+        return item.name === action.payload?.name ? action.payload : item;
       });
     },
   },
@@ -58,9 +56,11 @@ export const allCharSlice = createSlice({
           state.loading = false;
 
           if (!state.data?.length) {
-            state.data = Object.keys(EChar).map((name: any) => ({
-              name,
+            console.log('entrou aqui');
+            state.data = Object.keys(EChar).map((name) => ({
+              name: name as EChar,
               class_char: EClassChar.class_1,
+              total_points: getPointsByChar(name as EChar).qnty,
             }));
           }
           state.data = _.merge(state.data, action.payload);
