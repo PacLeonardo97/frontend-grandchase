@@ -56,7 +56,6 @@ export const allCharSlice = createSlice({
           state.loading = false;
 
           if (!state.data?.length) {
-            console.log('entrou aqui');
             state.data = Object.keys(EChar).map((name) => ({
               name: name as EChar,
               class_char: EClassChar.class_1,

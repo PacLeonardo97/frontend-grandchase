@@ -1,11 +1,11 @@
-import { type ICharSkill } from '@/mock/charsSkills.mock';
+import type { ISkill, ICharSkills } from '@/interface/skill';
 
-type PersonagemData = Record<string, ICharSkill[0]>;
+type PersonagemData = Record<string, ISkill>;
 
 export const canDecrementSkill = (
   skillName: string,
   etapas: PersonagemData,
-  etapa: ICharSkill[0],
+  etapa: ISkill,
 ): boolean => {
   const current = parseInt(etapa.current);
   if (current <= 0) return false;
@@ -19,7 +19,7 @@ export const canDecrementSkill = (
 
 export const canIncrementSkill = (
   allSkills: PersonagemData,
-  currentSkill: ICharSkill[0],
+  currentSkill: ISkill,
   allPoints: number,
   currentAllPoints: number,
 ): boolean => {
@@ -40,17 +40,14 @@ export const canIncrementSkill = (
   return target?.current === currentSkill.dependsOn.value;
 };
 
-export function getTotalCurrent(skillsData: ICharSkill[]): number {
+export function getTotalCurrent(skillsData: ICharSkills): number {
+  if (!skillsData) return 0;
+
   return Object.values(skillsData)
-    .flat()
-    .reduce((total, skillGroup) => {
-      return (
-        total +
-        Object.values(skillGroup).reduce(
-          (sum, skill) =>
-            sum + Number(skill.current) * Number(skill.qnttyPoints),
-          0,
-        )
-      );
+    .flatMap((skillsGroup) => Object.values(skillsGroup || {}))
+    .reduce((total, skill) => {
+      const current = Number(skill.current);
+      const points = Number(skill.qnttyPoints);
+      return total + current * points;
     }, 0);
 }

@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import _ from 'lodash';
+
 import { type RootState } from '../';
 import api from '@/api';
 import { ETypeEquips } from '@/enum/equips.enum';
 import type { IChar } from '@/interface/char';
 import { IEquips } from '@/interface/equip';
+import { ICharSkills } from '@/interface/skill';
+import { mockCharsSkills } from '@/mock/charsSkills.mock';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface charState {
-  data?: IChar;
+  data: IChar;
   loading: boolean;
   error: string;
 }
@@ -33,13 +37,22 @@ export const fetchChar = createAsyncThunk(
   'fetchChar',
   async (data: IChar, { getState }) => {
     const state = getState() as RootState;
-    if (!state.user.accessToken) return data;
+    const localEquips = state.char.data?.equips;
+    const localSkills = state.allChar.data?.find(
+      (item) => item.name === data.name,
+    )?.skills;
+
+    const oldData = {
+      equips: localEquips as IEquips[],
+      skills: localSkills as ICharSkills,
+    };
+
+    if (!state.user.accessToken) return { ...data, ...oldData };
+
     const req = await api.get<IChar>(`/chars/${data.id}`);
     const localEquipsAllChars = state.allChar.data?.find(
       (item) => item.name === req.data.name,
     )?.equips;
-    const localEquips = state.char.data?.equips;
-
     return {
       ...req.data,
       equips: mergeEquips(
@@ -58,11 +71,8 @@ interface ICreateChar {
 
 export const fetchCreateChar = createAsyncThunk(
   'fetchCreateChar',
-  async (data: ICreateChar, { getState }) => {
-    const state = getState() as RootState;
-    if (!state.user.accessToken) return data;
+  async (data: ICreateChar) => {
     const req = await api.post(`/chars`, { ...data });
-
     return req.data;
   },
 );
@@ -70,10 +80,8 @@ const equipDefault = Object.keys(ETypeEquips) as ETypeEquips[];
 
 const initialState: charState = {
   data: {
-    equips: equipDefault.map((item) => ({
-      type: item,
-    })),
-  } as IChar,
+    equips: [],
+  } as unknown as IChar,
   error: '',
   loading: false,
 };
@@ -84,6 +92,7 @@ export const charSlice = createSlice({
   reducers: {
     clearChar(state) {
       state.data = {
+        skills: {},
         equips: equipDefault.map((item) => ({
           type: item,
         })),
@@ -105,8 +114,8 @@ export const charSlice = createSlice({
         state.data!.equips![index] = action.payload;
       }
     },
-    updateChar(state, action: PayloadAction<IChar>) {
-      state.data = { ...state.data, ...action.payload };
+    updateChar(state, action: PayloadAction<Partial<IChar>>) {
+      state.data = _.merge(state.data, action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -116,7 +125,7 @@ export const charSlice = createSlice({
       })
       .addCase(fetchChar.fulfilled, (state, action: PayloadAction<IChar>) => {
         state.loading = false;
-        if (!state.data!.equips?.length) {
+        if (!state.data?.equips?.length) {
           state.data!.equips = equipDefault.map((type) => {
             const existingEquip = action?.payload?.equips?.find(
               (e) => e.type === type,
@@ -124,7 +133,16 @@ export const charSlice = createSlice({
             return existingEquip ?? { type };
           });
         }
-        state.data = action.payload;
+        const hasSkillPayload = !!(
+          action.payload.skills && Object.keys(action.payload.skills).length
+        );
+        const hasSkillState = !!Object.keys(state.data.skills).length;
+
+        if (!hasSkillPayload && !hasSkillState) {
+          state.data.skills = mockCharsSkills;
+        }
+
+        state.data = _.merge(state.data, action.payload);
         state.error = '';
       })
       .addCase(fetchChar.rejected, (state, action) => {

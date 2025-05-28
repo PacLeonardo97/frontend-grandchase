@@ -79,6 +79,7 @@ export default function Page() {
 
   const handleChangeChar = async (name: string) => {
     dispatch(clearChar());
+    // await wait(0);
     const charClicked = allChars.data?.find(
       (item) => item.name === name,
     ) as IChar;
@@ -92,7 +93,7 @@ export default function Page() {
 
   useEffect(() => {
     dispatch(changeDataByCharSelected(charSelected?.data as IChar));
-  }, [charSelected, dispatch]);
+  }, [charSelected?.data, dispatch]);
 
   const handleChangeClass = (className: EClassChar) => {
     const oldState = charSelected.data as IChar;
@@ -116,7 +117,6 @@ export default function Page() {
       >
         <Autocomplete
           sx={{ width: 140 }}
-          disablePortal
           options={allChar}
           loading={allChars.loading}
           disableClearable
@@ -152,7 +152,7 @@ export default function Page() {
               : { value: '', label: '' }
           }
           onChange={(_, value) => handleChangeClass(value?.value as EClassChar)}
-          disablePortal
+          disableClearable
           options={OptionClassChar}
           disabled={!charSelected.data?.name}
           loading={allChars.loading}
@@ -248,7 +248,7 @@ export default function Page() {
             </Box>
           </Box>
         </Box>
-        {charSelected.data?.name ? <SkillTree /> : null}
+        {charSelected.data.name ? <SkillTree /> : null}
       </Box>
     </>
   );

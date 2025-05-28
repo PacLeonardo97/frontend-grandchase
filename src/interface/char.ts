@@ -1,11 +1,13 @@
 import type { IEquips } from './equip';
+import { ICharSkills } from './skill';
 import { EChar, EClassChar } from '@/enum/char.enum';
 
 export interface IChar {
   id?: number;
   name: EChar;
-  total_points?: number;
   equips?: IEquips[];
+  skills: ICharSkills;
+  total_points?: number;
   level?: number;
   total_atk?: number;
   attack?: number;
