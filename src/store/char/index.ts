@@ -4,10 +4,10 @@ import _ from 'lodash';
 import { type RootState } from '../';
 import api from '@/api';
 import { ETypeEquips } from '@/enum/equips.enum';
+import { getMockFromChar } from '@/helper/skill';
 import type { IChar } from '@/interface/char';
 import { IEquips } from '@/interface/equip';
 import { ICharSkills } from '@/interface/skill';
-import { mockCharsSkills } from '@/mock/charsSkills.mock';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
@@ -139,7 +139,11 @@ export const charSlice = createSlice({
         const hasSkillState = !!Object.keys(state.data.skills).length;
 
         if (!hasSkillPayload && !hasSkillState) {
-          state.data.skills = mockCharsSkills;
+          console.log('state.data.name ->');
+
+          state.data.skills = getMockFromChar(
+            state.data.name || action.payload.name,
+          );
         }
 
         state.data = _.merge(state.data, action.payload);

@@ -1,12 +1,14 @@
 import { Typography } from '@mui/material';
 import Popover from '@mui/material/Popover';
 
-import { ICharSkill } from '@/mock/charsSkills.mock';
+import type { ISkill } from '@/interface/skill';
+
+// import { ICharSkill } from '@/mock/charsSkills.mock';
 
 interface IProps {
   handlePopoverClose: () => void;
   anchorEl: HTMLElement | null;
-  currentSkill: ICharSkill[0];
+  currentSkill: ISkill;
 }
 
 export default function PopoverSkill({
@@ -17,6 +19,7 @@ export default function PopoverSkill({
   return (
     <Popover
       open={Boolean(anchorEl)}
+      disableScrollLock
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'top',

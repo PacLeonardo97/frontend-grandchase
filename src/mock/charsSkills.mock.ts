@@ -1,7 +1,7 @@
 import { EClassChar } from '@/enum/char.enum';
 import type { ICharSkills } from '@/interface/skill';
 
-export const mockCharsSkills: ICharSkills = {
+export const mockElesisSkill: ICharSkills = {
   [EClassChar.class_1]: {
     Combo_Com_5_golpes: {
       maxValue: '1',

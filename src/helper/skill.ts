@@ -1,4 +1,6 @@
+import { EChar } from '@/enum/char.enum';
 import type { ISkill, ICharSkills } from '@/interface/skill';
+import { mockElesisSkill } from '@/mock/charsSkills.mock';
 
 type PersonagemData = Record<string, ISkill>;
 
@@ -50,4 +52,32 @@ export function getTotalCurrent(skillsData: ICharSkills): number {
       const points = Number(skill.qnttyPoints);
       return total + current * points;
     }, 0);
+}
+
+export function getMockFromChar(char: EChar) {
+  return {
+    Elesis: mockElesisSkill,
+    Lire: mockElesisSkill,
+    Arme: mockElesisSkill,
+    Lass: mockElesisSkill,
+    Ryan: mockElesisSkill,
+    Ronan: mockElesisSkill,
+    Amy: mockElesisSkill,
+    Jin: mockElesisSkill,
+    Sieghart: mockElesisSkill,
+    Mari: mockElesisSkill,
+    Dio: mockElesisSkill,
+    Zero: mockElesisSkill,
+    Rey: mockElesisSkill,
+    Lupus: mockElesisSkill,
+    Lin: mockElesisSkill,
+    Azin: mockElesisSkill,
+    Holy: mockElesisSkill,
+    Edel: mockElesisSkill,
+    Veigas: mockElesisSkill,
+    Decane: mockElesisSkill,
+    AI: mockElesisSkill,
+    Kallia: mockElesisSkill,
+    Uno: mockElesisSkill,
+  }[char];
 }

@@ -79,7 +79,7 @@ export default function Page() {
 
   const handleChangeChar = async (name: string) => {
     dispatch(clearChar());
-    // await wait(0);
+
     const charClicked = allChars.data?.find(
       (item) => item.name === name,
     ) as IChar;

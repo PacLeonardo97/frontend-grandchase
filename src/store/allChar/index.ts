@@ -60,6 +60,7 @@ export const allCharSlice = createSlice({
               name: name as EChar,
               class_char: EClassChar.class_1,
               total_points: getPointsByChar(name as EChar).qnty,
+              skills: {},
             }));
           }
           state.data = _.merge(state.data, action.payload);

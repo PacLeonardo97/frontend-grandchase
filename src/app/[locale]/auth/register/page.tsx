@@ -20,7 +20,6 @@ import { isAxiosError } from 'axios';
 
 import api from '@/api';
 import TextField from '@/components/Form/Textfield';
-import Layout from '@/components/Layout';
 
 export default function Page() {
   const params = useParams<{ locale: string }>();
