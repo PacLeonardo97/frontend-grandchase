@@ -1,7 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
 import { useTranslations } from 'next-intl';
 import { useEffect, useState, type MouseEvent } from 'react';
 
@@ -10,8 +9,8 @@ import Popover from '@mui/material/Popover';
 
 import styled from './styles.module.scss';
 import TextField from '@/components/Form/Textfield';
+import Image from '@/components/Image';
 import { ETypeEquips, EEquipSet, ERarityItem } from '@/enum/equips.enum';
-import { getImageEquip } from '@/handler/blobStorage';
 import { IEquips } from '@/interface/equip';
 import { changeEquip } from '@/store/char';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -77,9 +76,12 @@ export default function CardEquip({ equip, type }: IProps) {
           data-char={!!charSelected.data?.name}
         >
           {equip?.img ? (
-            <img
+            <Image
+              width={64}
+              height={60}
+              alt={equip?.img}
               style={{ borderRadius: 4 }}
-              src={getImageEquip(equip?.img ? `${equip?.img}.png` : '')}
+              src={equip?.img ? `/${equip?.img}.png` : ''}
             />
           ) : null}
         </div>

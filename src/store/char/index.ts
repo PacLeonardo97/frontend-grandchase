@@ -25,7 +25,6 @@ function mergeEquips(localEquips: IEquips[] = [], apiEquips: IEquips[] = []) {
     return localMatch?.img && localMatch ? localMatch : apiEquip;
   });
 
-  // Depois, adicionamos os equips locais que não existem na API (extras)
   const extraLocalEquips = localEquips.filter((localEquip) => {
     return !apiEquips.some((apiEquip) => apiEquip.type === localEquip.type);
   });
@@ -47,7 +46,7 @@ export const fetchChar = createAsyncThunk(
       skills: localSkills as ICharSkills,
     };
 
-    if (!state.user.accessToken) return { ...data, ...oldData };
+    if (!state.user.accessToken) return { ...oldData, ...data };
 
     const req = await api.get<IChar>(`/chars/${data.id}`);
     const localEquipsAllChars = state.allChar.data?.find(
@@ -139,8 +138,6 @@ export const charSlice = createSlice({
         const hasSkillState = !!Object.keys(state.data.skills).length;
 
         if (!hasSkillPayload && !hasSkillState) {
-          console.log('state.data.name ->');
-
           state.data.skills = getMockFromChar(
             state.data.name || action.payload.name,
           );

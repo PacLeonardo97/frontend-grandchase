@@ -13,9 +13,9 @@ import Select from '@/components/Form/Select';
 import TextField from '@/components/Form/Textfield';
 import { EChar, EClassChar } from '@/enum/char.enum';
 import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
-import { createEmptyArray } from '@/handler/array';
-import { capitalizeFirstLetter } from '@/handler/capitalize';
-import { getClassByChar } from '@/handler/char';
+import { createEmptyArray } from '@/helper/array';
+import { capitalizeFirstLetter } from '@/helper/capitalize';
+import { getClassByChar } from '@/helper/char';
 import { IChar } from '@/interface/char';
 import { changeDataByCharSelected, fetchAllChars } from '@/store/allChar';
 import {
@@ -104,6 +104,15 @@ export default function Page() {
       }),
     );
   };
+
+  // const imageBackground = useMemo(
+  //   () =>
+  //     getImageBackgroundChar(
+  //       charSelected.data?.name,
+  //       charSelected.data?.class_char,
+  //     ),
+  //   [charSelected.data?.class_char, charSelected.data?.name],
+  // );
 
   return (
     <>
@@ -205,7 +214,7 @@ export default function Page() {
                 ? {
                     backgroundImage: `url(/char/${capitalizeFirstLetter(
                       charSelected.data?.name || 'Elesis',
-                    )}_${charSelected.data?.class_char}.png)`,
+                    )}_${charSelected.data?.class_char}.webp)`,
                   }
                 : {}
             }

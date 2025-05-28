@@ -3,8 +3,6 @@ import Popover from '@mui/material/Popover';
 
 import type { ISkill } from '@/interface/skill';
 
-// import { ICharSkill } from '@/mock/charsSkills.mock';
-
 interface IProps {
   handlePopoverClose: () => void;
   anchorEl: HTMLElement | null;
