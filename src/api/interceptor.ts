@@ -1,6 +1,9 @@
 'use client';
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Cookies from 'js-cookie';
+
 import api from '.';
+import { EParams } from '@/enum/params.enum';
 import type { AppStore } from '@/store';
 import { logout, userRefreshToken } from '@/store/user';
 
@@ -64,6 +67,16 @@ export default function setUpInterceptor(store: AppStore) {
     if (token && !req.url?.endsWith('/api/auth/local')) {
       req.headers.Authorization = `Bearer ${token}`;
     }
+    const urlWithParams = req.url?.includes('?');
+    const cookieLocale = Cookies.get('NEXT_LOCALE');
+
+    const withLocale = `locale=${
+      EParams[cookieLocale as keyof typeof cookieLocale]
+    }`;
+
+    if (!urlWithParams) req.url = `${req.url}?${withLocale}`;
+    else req.url = `${req.url}&${withLocale}`;
+
     return req;
   });
 
