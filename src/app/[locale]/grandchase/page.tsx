@@ -11,32 +11,32 @@ const images = [
   {
     id: 1,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Melhores métodos para farmar nível Chaser',
+    title: 'Patch 28/05/2025',
   },
   {
     id: 2,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Guia de raids Void',
+    title: 'Eventos de junho',
   },
   {
     id: 3,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Guia de classes do Nightreing',
+    title: 'Novo sistema de loadouts',
   },
   {
     id: 4,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Melhores armas para cada classe',
+    title: 'Bory chega no GC',
   },
   {
     id: 5,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Melhores armas para cada classe',
+    title: 'Ataque DDoS e recompensas',
   },
   {
     id: 6,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Melhores armas para cada classe',
+    title: 'Próximos SR',
   },
 ];
 
@@ -119,7 +119,7 @@ export default function App() {
         <Typography marginTop={2} marginBottom={1} variant="h3">
           Guias mais recentes
         </Typography>
-        <ArticlesList category="" />
+        <ArticlesList category="Grand Chase" />
       </div>
     </Layout>
   );

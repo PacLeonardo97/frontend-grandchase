@@ -1,5 +1,6 @@
 'use client';
-import { ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react';
 
 import AdBanner from './AdBanner';
 import Drawer from './drawer';

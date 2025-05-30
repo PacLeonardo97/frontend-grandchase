@@ -1,4 +1,6 @@
 'use client';
+import Link from 'next/link';
+
 import ButtonBase from '@mui/material/ButtonBase';
 import { styled as styledMui } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -11,32 +13,47 @@ const images = [
   {
     id: 1,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Melhores métodos para farmar nível Chaser',
+    title: 'Nível Chaser',
   },
   {
     id: 2,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Guia de raids Void',
+    title: 'Chegando até o nível 85',
   },
   {
     id: 3,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Guia de classes do Nightreing',
+    title: 'Farms de XP',
   },
   {
     id: 4,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Melhores armas para cada classe',
+    title: 'Cartas',
   },
   {
     id: 5,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Melhores armas para cada classe',
+    title: 'Raids do Vazio',
   },
   {
     id: 6,
     url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
-    title: 'Melhores armas para cada classe',
+    title: 'Eventos',
+  },
+  {
+    id: 7,
+    url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
+    title: 'Mundo Harrier',
+  },
+  {
+    id: 8,
+    url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
+    title: 'Runas',
+  },
+  {
+    id: 9,
+    url: 'https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp',
+    title: 'Sistemas de Recompensas (SR)',
   },
 ];
 
@@ -96,30 +113,27 @@ export default function App() {
   return (
     <Layout>
       <div className={styled.container}>
-        <Typography variant="h3">Notícias mais recentes</Typography>
+        <Typography variant="h3">Guias Jogo</Typography>
 
-        <div className={styled.articlesContainer}>
+        <div className={styled.mainArticlesContainer}>
           {images.map((image) => (
             <ImageButton key={image.id}>
-              <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
-              <ImageBackdrop className="MuiImageBackdrop-root" />
-              <SpanImage>
-                <Typography
-                  component="span"
-                  variant="subtitle1"
-                  color="inherit"
-                >
-                  {image.title}
-                </Typography>
-              </SpanImage>
+              <Link href="/pt/grandchase/guides/bory">
+                <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
+                <ImageBackdrop className="MuiImageBackdrop-root" />
+                <SpanImage>
+                  <Typography
+                    component="span"
+                    variant="subtitle1"
+                    color="inherit"
+                  >
+                    {image.title}
+                  </Typography>
+                </SpanImage>
+              </Link>
             </ImageButton>
           ))}
         </div>
-
-        <Typography marginTop={2} marginBottom={1} variant="h3">
-          Guias mais recentes
-        </Typography>
-        <ArticlesList category="" />
       </div>
     </Layout>
   );

@@ -1,0 +1,15 @@
+.container {
+    padding: 20px;
+    background: yellow;
+}
+
+.mainArticlesContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    color: white;
+
+    @media (max-width: 800px) {
+        grid-template-columns: 1fr;
+    }
+}

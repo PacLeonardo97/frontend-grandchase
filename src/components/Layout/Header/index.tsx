@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Button } from '@mui/material';
