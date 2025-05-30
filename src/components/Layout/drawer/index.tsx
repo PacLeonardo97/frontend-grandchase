@@ -1,7 +1,9 @@
+'use client';
+import { type Dispatch, type SetStateAction } from 'react';
+
 import MailIcon from '@mui/icons-material/Mail';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
+import { useMediaQuery } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -48,87 +50,92 @@ interface DrawerProps {
   open: boolean;
 }
 
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})<DrawerProps>(({ theme, open }) => ({
-  height: `100%`,
-  flexShrink: 0,
-  whiteSpace: 'nowrap',
-  boxSizing: 'border-box',
-  ...(open
-    ? {
-        ...openedMixin(theme),
-        '& .MuiDrawer-paper': openedMixin(theme),
-        '.toggle-button': {
-          opacity: 1,
-          transitionDelay: `0.2s`,
-        },
-        '+ .toggle-button': {
-          opacity: 0,
-          '&:not([open]):active': {
-            pointerEvents: `none`,
-          },
-        },
-      }
-    : {
-        ...closedMixin(theme),
-        '& .MuiDrawer-paper': closedMixin(theme),
-        '.toggle-button': { opacity: 0 },
-        '+ .toggle-button': { opacity: 1 },
-        '&:hover ': {
-          ...openedMixin(theme),
-          '& .MuiDrawer-paper': openedMixin(theme),
-          '.toggle-button': {
-            opacity: 1,
-            left: drawerWidth,
-            transitionDelay: `0.2s`,
-            svg: {
-              transform: `rotate(180deg)`,
+const DrawerComponent = styled(MuiDrawer, {
+  // shouldForwardProp: (prop) => prop !== 'open',
+})<DrawerProps>(({ theme, open }) => {
+  return {
+    [theme.breakpoints.up('sm')]: {
+      height: `100%`,
+      flexShrink: 0,
+      whiteSpace: 'nowrap',
+      boxSizing: 'border-box',
+      ...(open
+        ? {
+            ...openedMixin(theme),
+            '& .MuiDrawer-paper': openedMixin(theme),
+            '.toggle-button': {
+              opacity: 1,
+              transitionDelay: `0.2s`,
             },
-          },
-          '+ .toggle-button': {
-            opacity: 0,
-          },
-        },
-      }),
-}));
+            '+ .toggle-button': {
+              opacity: 0,
+              '&:not([open]):active': {
+                pointerEvents: `none`,
+              },
+            },
+          }
+        : {
+            ...closedMixin(theme),
+            '& .MuiDrawer-paper': closedMixin(theme),
+            '.toggle-button': { opacity: 0 },
+            '+ .toggle-button': { opacity: 1 },
+            '&:hover ': {
+              ...openedMixin(theme),
+              '& .MuiDrawer-paper': openedMixin(theme),
+              '.toggle-button': {
+                opacity: 1,
+                left: drawerWidth,
+                transitionDelay: `0.2s`,
+                svg: {
+                  transform: `rotate(180deg)`,
+                },
+              },
+              '+ .toggle-button': {
+                opacity: 0,
+              },
+            },
+          }),
+    },
+  };
+});
 
-export default function MiniDrawer() {
+interface IProps {
+  openDrawer: boolean;
+  setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function Drawer({ openDrawer, setOpenDrawer }: IProps) {
+  const matches = useMediaQuery('(max-width:800px)');
   return (
-    <Box
-      sx={{
-        display: 'flex',
-      }}
+    <DrawerComponent
+      variant={matches ? undefined : 'permanent'}
+      onClose={() => setOpenDrawer(false)}
+      open={openDrawer}
     >
-      <CssBaseline />
-      <Box>
-        <Drawer variant="permanent" open={false}>
-          <Toolbar />
-          <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: 3,
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
-      </Box>
-    </Box>
+      <Toolbar />
+      <List>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: 3,
+                  justifyContent: 'center',
+                }}
+              >
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </DrawerComponent>
   );
 }

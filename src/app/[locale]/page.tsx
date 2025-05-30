@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 
 import styled from './styled.module.scss';
 import ArticlesList from '@/components/ArticlesList';
-import Layout from '@/components/Layout';
 
 const images = [
   {
@@ -94,7 +93,7 @@ const ImageBackdrop = styledMui('span')(({ theme }) => ({
 
 export default function App() {
   return (
-    <Layout>
+    <>
       <div className={styled.container}>
         <Typography variant="h3">Notícias mais recentes</Typography>
 
@@ -121,6 +120,6 @@ export default function App() {
         </Typography>
         <ArticlesList category="" />
       </div>
-    </Layout>
+    </>
   );
 }

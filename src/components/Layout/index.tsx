@@ -1,6 +1,5 @@
 'use client';
-import { usePathname } from 'next/navigation';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import AdBanner from './AdBanner';
 import Drawer from './drawer';
@@ -9,11 +8,12 @@ import styled from './styled.module.scss';
 import SubHeader from './SubHeader';
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const [openDrawer, setOpenDrawer] = useState(false);
   return (
     <>
-      <Header />
+      <Header setOpenDrawer={setOpenDrawer} />
       <SubHeader />
-      <Drawer />
+      <Drawer setOpenDrawer={setOpenDrawer} openDrawer={openDrawer} />
 
       <main className={styled.main}>{children}</main>
       <AdBanner />

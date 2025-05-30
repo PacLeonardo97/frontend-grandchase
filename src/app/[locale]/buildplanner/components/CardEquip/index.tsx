@@ -1,18 +1,16 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
 import { useTranslations } from 'next-intl';
 import { useEffect, useState, type MouseEvent } from 'react';
 
-import { Autocomplete, Box } from '@mui/material';
+import { Autocomplete, Box, Tooltip } from '@mui/material';
 import Popover from '@mui/material/Popover';
 
 import styled from './styles.module.scss';
-import api from '@/api';
 import TextField from '@/components/Form/Textfield';
-import { ETypeEquips, EEquipSet } from '@/enum/equips.enum';
-import { getImageEquip } from '@/handler/blobStorage';
+import Image from '@/components/Image';
+import { ETypeEquips, EEquipSet, ERarityItem } from '@/enum/equips.enum';
 import { IEquips } from '@/interface/equip';
 import { changeEquip } from '@/store/char';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -47,101 +45,106 @@ export default function CardEquip({ equip, type }: IProps) {
   }, [equip, t]);
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
-    if (!charSelected.data?.id) return;
+    if (!charSelected.data?.name) return;
     setAnchorEl(event.currentTarget);
   };
 
-  const handleChangeEquip = async (equip_set: ETypeEquips) => {
+  const handleChangeEquip = async (equip_set: EEquipSet) => {
+    const img =
+      `${charSelected.data?.name}_${equip?.type}_${equip_set}`.toLowerCase();
     const data = {
       equip_set: equip_set,
       charId: charSelected.data?.id,
-      rarity: 'common',
+      rarity: ERarityItem.common,
       type,
+      img,
     };
-    if (equip?.type === type && equip?.id) {
-      const req = await api.put(`equips/${equip.id}`, data);
-      dispatch(changeEquip(req.data));
-      return;
-    }
-    const req = await api.post('equips', data);
-    dispatch(changeEquip(req.data));
+    dispatch(changeEquip(data));
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  const typeTranslate = equip?.type ? t.raw(equip?.type as string) : '';
   return (
     <>
-      <div
-        onClick={handleClick}
-        className={styled.square}
-        data-char={!!charSelected.data?.id}
-      >
-        {equip?.type === type && equip?.id ? (
-          <img
-            style={{ borderRadius: 4 }}
-            src={getImageEquip(`${equip.img}.png`)}
-          />
-        ) : null}
-      </div>
-      <Popover
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        aria-hidden={!Boolean(anchorEl)}
-      >
-        <Autocomplete
-          sx={{ width: 300 }}
-          options={Object.keys(EEquipSet).map((item) => ({
-            label: item ? t(item) : item,
-            value: item,
-          }))}
-          getOptionLabel={(option) => {
-            return option.label || '';
-          }}
-          disableClearable
-          value={selectedEquip}
-          autoHighlight
-          onChange={(_, value) => {
-            handleChangeEquip(value?.value as ETypeEquips);
-          }}
-          renderOption={(props, option) => {
-            const { key, ...optionProps } = props;
-            return (
-              <Box
-                key={key}
-                component="li"
-                sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-                {...optionProps}
-              >
-                <img
-                  loading="lazy"
-                  width="20"
-                  src="https://i.imgur.com/FErjbNu.png"
-                  alt=""
-                />
-                {option.label}
-              </Box>
-            );
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Escolha o equipamento"
-              slotProps={{
-                htmlInput: {
-                  ...params.inputProps,
-                },
-              }}
+      <Tooltip title={typeTranslate}>
+        <div
+          onClick={handleClick}
+          className={styled.square}
+          data-char={!!charSelected.data?.name}
+        >
+          {equip?.img ? (
+            <Image
+              width={64}
+              height={60}
+              alt={equip?.img}
+              style={{ borderRadius: 4 }}
+              src={equip?.img ? `/${equip?.img}.png` : ''}
             />
-          )}
-        />
-      </Popover>
+          ) : null}
+        </div>
+      </Tooltip>
+      {Boolean(anchorEl) ? (
+        <Popover
+          open={Boolean(anchorEl)}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          aria-hidden={!Boolean(anchorEl)}
+        >
+          <Autocomplete
+            sx={{ width: 300 }}
+            options={Object.keys(EEquipSet).map((item) => ({
+              label: item ? t(item) : item,
+              value: item,
+            }))}
+            getOptionLabel={(option) => {
+              return option.label || '';
+            }}
+            disableClearable
+            value={selectedEquip}
+            autoHighlight
+            onChange={(_, value) => {
+              handleChangeEquip(value?.value as EEquipSet);
+            }}
+            renderOption={(props, option) => {
+              const { key, ...optionProps } = props;
+              return (
+                <Box
+                  key={key}
+                  component="li"
+                  sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                  {...optionProps}
+                >
+                  <img
+                    loading="lazy"
+                    width="20"
+                    src="https://i.imgur.com/FErjbNu.png"
+                    alt=""
+                  />
+                  {option.label}
+                </Box>
+              );
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={typeTranslate}
+                slotProps={{
+                  htmlInput: {
+                    ...params.inputProps,
+                  },
+                }}
+              />
+            )}
+          />
+        </Popover>
+      ) : null}
     </>
   );
 }
