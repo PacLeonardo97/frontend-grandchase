@@ -94,33 +94,27 @@ const ImageBackdrop = styledMui('span')(({ theme }) => ({
 
 export default function App() {
   return (
-    <Layout>
-      <div className={styled.container}>
-        <Typography variant="h3">Notícias mais recentes</Typography>
+    <div className={styled.container}>
+      <Typography variant="h3">Notícias mais recentes</Typography>
 
-        <div className={styled.articlesContainer}>
-          {images.map((image) => (
-            <ImageButton key={image.id}>
-              <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
-              <ImageBackdrop className="MuiImageBackdrop-root" />
-              <SpanImage>
-                <Typography
-                  component="span"
-                  variant="subtitle1"
-                  color="inherit"
-                >
-                  {image.title}
-                </Typography>
-              </SpanImage>
-            </ImageButton>
-          ))}
-        </div>
-
-        <Typography marginTop={2} marginBottom={1} variant="h3">
-          Guias mais recentes
-        </Typography>
-        <ArticlesList category="Grand Chase" />
+      <div className={styled.articlesContainer}>
+        {images.map((image) => (
+          <ImageButton key={image.id}>
+            <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
+            <ImageBackdrop className="MuiImageBackdrop-root" />
+            <SpanImage>
+              <Typography component="span" variant="subtitle1" color="inherit">
+                {image.title}
+              </Typography>
+            </SpanImage>
+          </ImageButton>
+        ))}
       </div>
-    </Layout>
+
+      <Typography marginTop={2} marginBottom={1} variant="h3">
+        Guias mais recentes
+      </Typography>
+      <ArticlesList category="Grand Chase" />
+    </div>
   );
 }

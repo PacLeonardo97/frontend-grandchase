@@ -13,10 +13,8 @@ export default function App() {
   const params = useParams();
 
   return (
-    <Layout>
-      <div className={styled.container}>
-        <ArticleRenderer content="blabla" />
-      </div>
-    </Layout>
+    <div className={styled.container}>
+      <ArticleRenderer content="blabla" />
+    </div>
   );
 }
