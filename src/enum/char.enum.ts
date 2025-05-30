@@ -23,3 +23,11 @@ export enum EChar {
   Kallia = 'Kallia',
   Uno = 'Uno',
 }
+
+export enum EClassChar {
+  class_1 = 'class_1',
+  class_2 = 'class_2',
+  class_3 = 'class_3',
+  class_4 = 'class_4',
+  class_5 = 'class_5',
+}

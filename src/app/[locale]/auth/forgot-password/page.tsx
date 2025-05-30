@@ -17,7 +17,6 @@ import { isAxiosError } from 'axios';
 
 import api from '@/api';
 import TextField from '@/components/Form/Textfield';
-import Layout from '@/components/Layout';
 
 export default function Login() {
   const params = useParams<{ locale: string }>();
@@ -63,76 +62,74 @@ export default function Login() {
   };
 
   return (
-    <Layout>
-      <Container maxWidth="xs">
-        <Box
-          sx={{
-            mt: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
+    <Container maxWidth="xs">
+      <Box
+        sx={{
+          mt: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography
+          component="h1"
+          variant="h5"
+          sx={{ color: '#78909C', alignSelf: 'self-start' }}
         >
-          <Typography
-            component="h1"
-            variant="h5"
-            sx={{ color: '#78909C', alignSelf: 'self-start' }}
+          Esqueci minha senha
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ mt: 1, width: '100%' }}
+        >
+          <TextField
+            sx={{ mt: 3 }}
+            margin="normal"
+            placeholder="email@email.com"
+            required
+            id="email"
+            label="Email"
+            type="email"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            disabled={loading}
+            sx={{ mt: 1, mb: 2 }}
           >
-            Esqueci minha senha
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ mt: 1, width: '100%' }}
+            Entrar
+          </Button>
+          <Grid
+            container
+            component="div"
+            sx={{
+              placeContent: 'space-between',
+            }}
           >
-            <TextField
-              sx={{ mt: 3 }}
-              margin="normal"
-              placeholder="email@email.com"
-              required
-              id="email"
-              label="Email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              disabled={loading}
-              sx={{ mt: 1, mb: 2 }}
+            <LinkMui
+              component={Link}
+              href={`/${params.locale}/auth/register`}
+              variant="body2"
             >
-              Entrar
-            </Button>
-            <Grid
-              container
-              component="div"
-              sx={{
-                placeContent: 'space-between',
-              }}
+              Registrar-se
+            </LinkMui>
+            <LinkMui
+              component={Link}
+              href={`/${params.locale}/auth/login`}
+              variant="body2"
             >
-              <LinkMui
-                component={Link}
-                href={`/${params.locale}/auth/register`}
-                variant="body2"
-              >
-                Registrar-se
-              </LinkMui>
-              <LinkMui
-                component={Link}
-                href={`/${params.locale}/auth/login`}
-                variant="body2"
-              >
-                login
-              </LinkMui>
-            </Grid>
-          </Box>
+              login
+            </LinkMui>
+          </Grid>
         </Box>
-      </Container>
-    </Layout>
+      </Box>
+    </Container>
   );
 }

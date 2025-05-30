@@ -41,9 +41,7 @@ export const theme = createTheme({
         paper: {
           minWidth: 190,
           borderRadius: '8px',
-          // background: '#292929',
           padding: '8px',
-          color: '#ffffff',
         },
       },
     },

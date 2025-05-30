@@ -1,6 +1,8 @@
+'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { type Dispatch, type SetStateAction, useState } from 'react';
 
+import DehazeIcon from '@mui/icons-material/Dehaze';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -10,6 +12,7 @@ import Popover from '@mui/material/Popover';
 import { styled as styleMui } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
+import LanguageSwitcher from '../ChangeLang';
 import styled from './styled.module.scss';
 import TextField from '@/components/Form/Textfield';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -22,7 +25,11 @@ const NotificationBadge = styleMui(Badge)`
   }
 `;
 
-export default function Header() {
+interface IProps {
+  setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function Header({ setOpenDrawer }: IProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.data);
@@ -50,6 +57,7 @@ export default function Header() {
           </Typography>
         </div>
 
+        <LanguageSwitcher />
         <div className={styled.userContainer}>
           <IconButton style={{ marginRight: 16 }}>
             <NotificationsIcon />
@@ -66,6 +74,19 @@ export default function Header() {
           >
             <Avatar>{user?.username?.at(0)?.toLocaleUpperCase() || 'C'}</Avatar>
           </IconButton>
+          <IconButton
+            onClick={() => {
+              setOpenDrawer((oldState) => !oldState);
+            }}
+            sx={(theme) => ({
+              [theme.breakpoints.up('sm')]: {
+                display: 'none',
+              },
+            })}
+          >
+            <DehazeIcon />
+          </IconButton>
+
           <Popover
             sx={{ zIndex: 999 }}
             id={id}
