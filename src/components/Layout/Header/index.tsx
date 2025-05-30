@@ -12,6 +12,7 @@ import Popover from '@mui/material/Popover';
 import { styled as styleMui } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
+import LanguageSwitcher from '../ChangeLang';
 import styled from './styled.module.scss';
 import TextField from '@/components/Form/Textfield';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -56,6 +57,7 @@ export default function Header({ setOpenDrawer }: IProps) {
           </Typography>
         </div>
 
+        <LanguageSwitcher />
         <div className={styled.userContainer}>
           <IconButton style={{ marginRight: 16 }}>
             <NotificationsIcon />
@@ -84,6 +86,7 @@ export default function Header({ setOpenDrawer }: IProps) {
           >
             <DehazeIcon />
           </IconButton>
+
           <Popover
             sx={{ zIndex: 999 }}
             id={id}

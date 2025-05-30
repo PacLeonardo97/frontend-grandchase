@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, Fragment, useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 
 import { Box, CircularProgress } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -15,16 +15,8 @@ import { EChar, EClassChar } from '@/enum/char.enum';
 import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
 import { createEmptyArray } from '@/helper/array';
 import { capitalizeFirstLetter } from '@/helper/capitalize';
-import { getClassByChar } from '@/helper/char';
-import { IChar } from '@/interface/char';
-import { changeDataByCharSelected, fetchAllChars } from '@/store/allChar';
-import {
-  clearChar,
-  fetchChar,
-  fetchCreateChar,
-  updateChar,
-} from '@/store/char';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import useBuildPlanner from '@/hooks/gc/buildplanner';
+import { useAppSelector } from '@/store/hooks';
 
 const levelChar = createEmptyArray(85).map((item) => ({
   label: `${item}`,
@@ -32,7 +24,14 @@ const levelChar = createEmptyArray(85).map((item) => ({
 }));
 
 export default function Page() {
-  const dispatch = useAppDispatch();
+  const tChar = useTranslations('Char');
+
+  const {
+    OptionClassChar,
+    handleChangeLevel,
+    handleChangeChar,
+    handleChangeClass,
+  } = useBuildPlanner();
 
   const allChars = useAppSelector((state) => state.allChar);
   const user = useAppSelector((state) => state.user);
@@ -42,77 +41,6 @@ export default function Page() {
     return Object.keys(ETypeEquips) as ETypeEquips[];
   }, []);
   const allChar = useMemo(() => Object.keys(EChar), []);
-
-  const tChar = useTranslations('Char');
-
-  const OptionClassChar = useMemo(() => {
-    const classes = getClassByChar(charSelected.data?.name as EChar);
-    if (charSelected.data?.name) {
-      return classes.map((item) => ({
-        value: item,
-        label: tChar.raw(item),
-      }));
-    }
-    return [];
-  }, [charSelected.data, tChar]);
-
-  const handleChangeLevel = async (level: number) => {
-    const oldState = charSelected.data as IChar;
-    dispatch(
-      updateChar({
-        ...oldState,
-        level,
-      }),
-    );
-  };
-
-  useEffect(() => {
-    dispatch(fetchAllChars());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(clearChar());
-    return () => {
-      dispatch(clearChar());
-    };
-  }, [dispatch]);
-
-  const handleChangeChar = async (name: string) => {
-    dispatch(clearChar());
-
-    const charClicked = allChars.data?.find(
-      (item) => item.name === name,
-    ) as IChar;
-
-    if (charClicked?.name || !user.accessToken) {
-      await dispatch(fetchChar(charClicked));
-      return;
-    }
-    await dispatch(fetchCreateChar({ name }));
-  };
-
-  useEffect(() => {
-    dispatch(changeDataByCharSelected(charSelected?.data as IChar));
-  }, [charSelected?.data, dispatch]);
-
-  const handleChangeClass = (className: EClassChar) => {
-    const oldState = charSelected.data as IChar;
-    dispatch(
-      updateChar({
-        ...oldState,
-        class_char: className,
-      }),
-    );
-  };
-
-  // const imageBackground = useMemo(
-  //   () =>
-  //     getImageBackgroundChar(
-  //       charSelected.data?.name,
-  //       charSelected.data?.class_char,
-  //     ),
-  //   [charSelected.data?.class_char, charSelected.data?.name],
-  // );
 
   return (
     <>

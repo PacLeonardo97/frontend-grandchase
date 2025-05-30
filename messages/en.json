@@ -2,6 +2,10 @@
     "Home": {
         "principal": "Principal En"
     },
+    "ChangeLang": {
+        "en": "English",
+        "pt": "portuguese"
+    },
     "Equip": {
         "pha_pho": "Phantom Phoenix",
         "true_dragon": "True Iron Dragon",
