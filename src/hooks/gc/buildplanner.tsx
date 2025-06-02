@@ -1,92 +1,56 @@
-import { useTranslations } from 'next-intl';
-import { useEffect, useMemo } from 'react';
+'use client';
 
+import { useTranslations } from 'next-intl';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+
+import { useCharByName } from '../allChars/useCharByName';
+import { useUpdateChar } from '../allChars/useUpdateChar';
 import { type EChar, type EClassChar } from '@/enum/char.enum';
 import { getClassByChar } from '@/helper/char';
 import type { IChar } from '@/interface/char';
-import { changeDataByCharSelected, fetchAllChars } from '@/store/allChar';
-import {
-  clearChar,
-  fetchChar,
-  fetchCreateChar,
-  updateChar,
-} from '@/store/char';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export default function useBuildPlanner() {
-  const dispatch = useAppDispatch();
-  const allChars = useAppSelector((state) => state.allChar);
-  const charSelected = useAppSelector((state) => state.char);
-  const user = useAppSelector((state) => state.user);
+  const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const charName = searchParams.get('charName');
+  const { mutate: updateChar } = useUpdateChar();
+  const charSelect = useCharByName();
 
   const tChar = useTranslations('Char');
 
   const OptionClassChar = useMemo(() => {
-    const classes = getClassByChar(charSelected.data?.name as EChar);
-    if (charSelected.data?.name) {
+    const ActualChar = charSelect(charName as string);
+    const classes = getClassByChar(ActualChar?.name as EChar);
+    if (ActualChar?.name) {
       return classes.map((item) => ({
         value: item,
         label: tChar.raw(item),
       }));
     }
     return [];
-  }, [charSelected.data, tChar]);
+  }, [charName, charSelect, tChar]);
 
   const handleChangeLevel = async (level: number) => {
-    const oldState = charSelected.data as IChar;
-    dispatch(
-      updateChar({
-        ...oldState,
-        level,
-      }),
-    );
+    updateChar({ name: charName, level } as IChar);
   };
 
   const handleChangeChar = async (name: string) => {
-    dispatch(clearChar());
-
-    const charClicked = allChars.data?.find(
-      (item) => item.name === name,
-    ) as IChar;
-
-    if (!charClicked?.id && user.accessToken) {
-      await dispatch(fetchCreateChar({ name }));
-      return;
-    }
-    if (charClicked?.name || !user.accessToken) {
-      await dispatch(fetchChar(charClicked));
-    }
+    router.replace(`buildplanner?charName=${name}`);
+    updateChar({ name } as IChar);
   };
 
   const handleChangeClass = (className: EClassChar) => {
-    const oldState = charSelected.data as IChar;
-    dispatch(
-      updateChar({
-        ...oldState,
-        class_char: className,
-      }),
-    );
+    updateChar({ name: charName, class_char: className } as IChar);
   };
-
-  useEffect(() => {
-    dispatch(fetchAllChars());
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(clearChar());
-    return () => {
-      dispatch(clearChar());
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(changeDataByCharSelected(charSelected?.data as IChar));
-  }, [charSelected?.data, dispatch]);
+  useEffect(() => setIsClient(true), []);
 
   return {
     OptionClassChar,
     handleChangeLevel,
     handleChangeChar,
     handleChangeClass,
+    isClient,
   };
 }

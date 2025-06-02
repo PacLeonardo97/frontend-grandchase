@@ -15,8 +15,8 @@ import Typography from '@mui/material/Typography';
 import LanguageSwitcher from '../ChangeLang';
 import styled from './styled.module.scss';
 import TextField from '@/components/Form/Textfield';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { clearAllRedux } from '@/store/user';
+import { useLogout } from '@/hooks/login/useLogout';
+import { useUser } from '@/hooks/login/useUser';
 
 const NotificationBadge = styleMui(Badge)`
   & .${badgeClasses.badge} {
@@ -31,8 +31,8 @@ interface IProps {
 
 export default function Header({ setOpenDrawer }: IProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user.data);
+  const { data: user } = useUser();
+  const logout = useLogout();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -71,7 +71,9 @@ export default function Header({ setOpenDrawer }: IProps) {
             aria-haspopup="true"
             onMouseEnter={handleClick}
           >
-            <Avatar>{user?.username?.at(0)?.toLocaleUpperCase() || 'C'}</Avatar>
+            <Avatar>
+              {user?.user.username?.at(0)?.toLocaleUpperCase() || 'C'}
+            </Avatar>
           </IconButton>
           <IconButton
             onClick={() => {
@@ -104,12 +106,12 @@ export default function Header({ setOpenDrawer }: IProps) {
             >
               <LanguageSwitcher />
 
-              {user?.id ? (
+              {user?.user.id ? (
                 <div className={styled.popover}>
                   <Button
                     fullWidth
                     onClick={() => {
-                      dispatch(clearAllRedux());
+                      logout();
                     }}
                   >
                     Sair

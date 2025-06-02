@@ -11,3 +11,9 @@ export interface IUser {
   updatedAt: string;
   publishedAt: string;
 }
+
+export interface IUserState {
+  accessToken: string;
+  refreshToken: string;
+  user: IUser;
+}

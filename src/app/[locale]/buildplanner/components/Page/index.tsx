@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { Fragment, useMemo } from 'react';
 
 import { Box, CircularProgress } from '@mui/material';
@@ -15,8 +16,10 @@ import { EChar, EClassChar } from '@/enum/char.enum';
 import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
 import { createEmptyArray } from '@/helper/array';
 import { capitalizeFirstLetter } from '@/helper/capitalize';
+import { useAllChars } from '@/hooks/allChars/useAllChars';
+import { useCharByName } from '@/hooks/allChars/useCharByName';
 import useBuildPlanner from '@/hooks/gc/buildplanner';
-import { useAppSelector } from '@/store/hooks';
+import { useUser } from '@/hooks/login/useUser';
 
 const levelChar = createEmptyArray(85).map((item) => ({
   label: `${item}`,
@@ -33,9 +36,12 @@ export default function PageBuildPlanner() {
     handleChangeClass,
   } = useBuildPlanner();
 
-  const allChars = useAppSelector((state) => state.allChar);
-  const user = useAppSelector((state) => state.user);
-  const charSelected = useAppSelector((state) => state.char);
+  const { isLoading } = useAllChars();
+  const { data: user } = useUser();
+  const searchParams = useSearchParams();
+  const charName = searchParams.get('charName') as string;
+  const charByName = useCharByName();
+  const charSelected = charByName(charName);
 
   const allEquips = useMemo(() => {
     return Object.keys(ETypeEquips) as ETypeEquips[];
@@ -55,7 +61,8 @@ export default function PageBuildPlanner() {
         <Autocomplete
           sx={{ width: 140 }}
           options={allChar}
-          loading={allChars.loading}
+          value={charName || ''}
+          loading={isLoading}
           disableClearable
           onChange={(_, value) => handleChangeChar(value as string)}
           renderInput={(params) => (
@@ -67,7 +74,7 @@ export default function PageBuildPlanner() {
                   ...params.InputProps,
                   endAdornment: (
                     <Fragment>
-                      {allChars.loading ? (
+                      {isLoading ? (
                         <CircularProgress color="inherit" size={20} />
                       ) : null}
                       {params.InputProps.endAdornment}
@@ -81,18 +88,18 @@ export default function PageBuildPlanner() {
         <Autocomplete
           sx={{ width: 216, marginLeft: '40px' }}
           value={
-            charSelected.data?.class_char
+            charSelected?.class_char
               ? {
-                  label: tChar.raw(charSelected.data?.class_char as string),
-                  value: charSelected.data?.class_char as string,
+                  label: tChar.raw(charSelected?.class_char as string),
+                  value: charSelected?.class_char as string,
                 }
               : { value: '', label: '' }
           }
           onChange={(_, value) => handleChangeClass(value?.value as EClassChar)}
           disableClearable
           options={OptionClassChar}
-          disabled={!charSelected.data?.name}
-          loading={allChars.loading}
+          disabled={!charSelected?.name}
+          loading={isLoading}
           renderOption={(props, option) => {
             const { key, ...optionProps } = props;
 
@@ -116,7 +123,7 @@ export default function PageBuildPlanner() {
                   ...params.InputProps,
                   endAdornment: (
                     <Fragment>
-                      {allChars.loading ? (
+                      {isLoading ? (
                         <CircularProgress color="inherit" size={20} />
                       ) : null}
                       {params.InputProps.endAdornment}
@@ -138,20 +145,16 @@ export default function PageBuildPlanner() {
         >
           <div
             className={styled.containerSkills}
-            style={
-              charSelected.data?.name
-                ? {
-                    backgroundImage: `url(/char/${capitalizeFirstLetter(
-                      charSelected.data?.name || 'Elesis',
-                    )}_${charSelected.data?.class_char}.webp)`,
-                  }
-                : {}
-            }
+            style={{
+              backgroundImage: `url(/char/${capitalizeFirstLetter(
+                charSelected?.name || '',
+              )}_${charSelected?.class_char}.webp)`,
+            }}
           >
             {sortEquip(allEquips).map((equip) => (
               <Fragment key={equip}>
                 <CardEquip
-                  equip={charSelected.data?.equips?.find(
+                  equip={charSelected?.equips?.find(
                     (item) => item.type === equip,
                   )}
                   type={equip as ETypeEquips}
@@ -166,13 +169,9 @@ export default function PageBuildPlanner() {
           >
             <Box width={80}>
               <Select
-                disabled={!charSelected.data?.name}
-                list={
-                  charSelected.data?.name
-                    ? levelChar
-                    : [{ label: '1', value: '1' }]
-                }
-                value={charSelected.data?.level || '1'}
+                disabled={!charSelected?.name}
+                list={levelChar}
+                value={charSelected?.level || '1'}
                 id="level_char"
                 onChange={(e) => {
                   handleChangeLevel(Number(e.target.value));
@@ -182,11 +181,11 @@ export default function PageBuildPlanner() {
             </Box>
 
             <Box width={120}>
-              <TextField label="Nivel Chase" value={user.data.chaser_level} />
+              <TextField label="Nivel Chase" value={user?.user?.chaser_level} />
             </Box>
           </Box>
         </Box>
-        {charSelected.data.name ? <SkillTree /> : null}
+        {charSelected?.name ? <SkillTree /> : null}
       </Box>
     </>
   );

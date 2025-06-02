@@ -1,8 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -21,27 +21,36 @@ import {
   canIncrementSkill,
   getTotalCurrent,
 } from '@/helper/skill';
-import { ISkill } from '@/interface/skill';
-import { updateChar } from '@/store/char';
-import { useAppSelector } from '@/store/hooks';
+import { useCharByName } from '@/hooks/allChars/useCharByName';
+import { useUpdateChar } from '@/hooks/allChars/useUpdateChar';
+import type { IChar } from '@/interface/char';
+import { ICharSkills, ISkill } from '@/interface/skill';
 
 export default function SkillTree() {
-  const dispatch = useDispatch();
+  const [isClient, setIsClient] = useState(false);
+  const [stSelected, setStSelected] = useState(EClassChar.class_1);
+
   const t = useTranslations('Skills');
 
-  const charSelected = useAppSelector((state) => state.char.data);
-  const [stSelected, setStSelected] = useState(EClassChar.class_1);
-  const skillTreeSelected = useAppSelector(
-    (state) => state.char.data.skills?.[stSelected],
+  const searchParams = useSearchParams();
+  const charName = searchParams.get('charName') as string;
+  const charByName = useCharByName();
+  const charSelected = charByName(charName);
+
+  const skillTreeSelected = useMemo(
+    () => charSelected?.skills?.[stSelected],
+    [charSelected?.skills, stSelected],
   );
+  const { mutate: updateChar } = useUpdateChar();
+
   const [anchorEl, setAnchorEl] = useState({
     anchor: null as HTMLElement | null,
     currentSkill: {} as ISkill,
     className: '',
   });
   const getAllPoints = useMemo(
-    () => getTotalCurrent(charSelected.skills),
-    [charSelected.skills],
+    () => getTotalCurrent(charSelected?.skills as ICharSkills),
+    [charSelected?.skills],
   );
   const qnttClassesChar = useMemo(() => {
     if (charSelected?.name) return getClassByChar(charSelected?.name);
@@ -58,12 +67,10 @@ export default function SkillTree() {
     } else if (operacao === 'decrement') {
       current = String(Number(current) - 1);
     }
-
-    dispatch(
-      updateChar({
-        skills: { [stSelected]: { [skillName]: { current } } },
-      }),
-    );
+    updateChar({
+      name: charName,
+      skills: { [stSelected]: { [skillName]: { current } } },
+    } as IChar);
   };
 
   const handlePopoverOpen = (
@@ -82,16 +89,23 @@ export default function SkillTree() {
     setStSelected(newValue);
   };
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Typography variant="h4">
-          Quantidade de pontos: {getAllPoints}/{charSelected?.total_points_st}
+          Quantidade de pontos:
+          {isClient ? ` ${getAllPoints}/${charSelected?.total_points_st}` : ''}
         </Typography>
         <Tabs onChange={handleChange} value={stSelected || 'class_1'}>
-          {qnttClassesChar.map((classes) => (
-            <Tab key={classes} label={t.raw(classes)} value={classes} />
-          ))}
+          {isClient
+            ? qnttClassesChar.map((classes) => (
+                <Tab key={classes} label={t.raw(classes)} value={classes} />
+              ))
+            : null}
         </Tabs>
         <Box
           sx={{

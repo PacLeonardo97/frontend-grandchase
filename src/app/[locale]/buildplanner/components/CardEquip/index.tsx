@@ -2,6 +2,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, type MouseEvent } from 'react';
 
 import { Autocomplete, Box, Tooltip } from '@mui/material';
@@ -11,9 +12,9 @@ import styled from './styles.module.scss';
 import TextField from '@/components/Form/Textfield';
 import Image from '@/components/Image';
 import { ETypeEquips, EEquipSet, ERarityItem } from '@/enum/equips.enum';
+import { useCharByName } from '@/hooks/allChars/useCharByName';
+import { useUpdateChar } from '@/hooks/allChars/useUpdateChar';
 import { IEquips } from '@/interface/equip';
-import { changeEquip } from '@/store/char';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 interface IOptions {
   label: string;
@@ -26,10 +27,15 @@ interface IProps {
 }
 
 export default function CardEquip({ equip, type }: IProps) {
+  const [isClient, setIsClient] = useState(false);
+
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [selectedEquip, setSelectedEquip] = useState({} as IOptions);
-  const charSelected = useAppSelector((state) => state.char);
-  const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const charName = searchParams.get('charName') as string;
+  const charByName = useCharByName();
+  const charSelected = charByName(charName);
+  const { mutate: updateChar } = useUpdateChar();
   const t = useTranslations('Equip');
 
   useEffect(() => {
@@ -45,38 +51,52 @@ export default function CardEquip({ equip, type }: IProps) {
   }, [equip, t]);
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
-    if (!charSelected.data?.name) return;
+    if (!charSelected?.name) return;
     setAnchorEl(event.currentTarget);
   };
 
   const handleChangeEquip = async (equip_set: EEquipSet) => {
     const img =
-      `${charSelected.data?.name}_${equip?.type}_${equip_set}`.toLowerCase();
+      `${charSelected?.name}_${equip?.type}_${equip_set}`.toLowerCase();
     const data = {
       equip_set: equip_set,
-      charId: charSelected.data?.id,
+      charId: charSelected?.id,
       rarity: ERarityItem.common,
       type,
       img,
     };
-    dispatch(changeEquip(data));
+    const equips = charSelected?.equips?.map((item) =>
+      item.type === data.type
+        ? {
+            ...data,
+          }
+        : item,
+    );
+
+    updateChar({ name: charSelected?.name, equips });
+    setSelectedEquip({
+      value: data.equip_set,
+      label: t(data.equip_set),
+    } as IOptions);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  useEffect(() => setIsClient(true), []);
+
   const typeTranslate = equip?.type ? t.raw(equip?.type as string) : '';
   return (
     <>
-      <Tooltip title={typeTranslate}>
+      <Tooltip title={isClient ? typeTranslate : ''}>
         <div
           onClick={handleClick}
           className={styled.square}
-          data-char={!!charSelected.data?.name}
-          data-label={typeTranslate}
+          data-char={isClient && !!charSelected?.name}
+          data-label={isClient && typeTranslate}
         >
-          {equip?.img ? (
+          {isClient && equip?.img ? (
             <Image
               width={64}
               height={60}

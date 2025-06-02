@@ -48,7 +48,6 @@ export function getTotalCurrent(skillsData: ICharSkills): number {
   return Object.values(skillsData)
     .flatMap((skillsGroup) => Object.values(skillsGroup || {}))
     .reduce((total, skill) => {
-      console.log('skill ->', skill);
       const current = Number(skill.current);
       const points = Number(skill.qnttyPoints);
       return total + current * points;

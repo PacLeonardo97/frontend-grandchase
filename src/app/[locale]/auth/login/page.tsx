@@ -17,8 +17,7 @@ import {
 } from '@mui/material';
 
 import TextField from '@/components/Form/Textfield';
-import { useAppDispatch } from '@/store/hooks';
-import { fetchLogin } from '@/store/user';
+import { useLogin } from '@/hooks/login/useLogin';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -27,19 +26,21 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-  const dispatch = useAppDispatch();
+  const login = useLogin();
   const params = useParams<{ locale: string }>();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     try {
-      const reqFetch = await dispatch(fetchLogin({ email, password }));
-      if (fetchLogin.rejected.match(reqFetch)) {
-        setPassword('');
-        return;
-      }
-      router.push('/');
+      login.mutate(
+        { email, password },
+        {
+          onSuccess: () => {
+            router.push('/');
+          },
+        },
+      );
     } finally {
       setLoading(false);
     }

@@ -4,7 +4,7 @@ import { type ReactNode } from 'react';
 
 import Layout from '@/components/Layout';
 import { locales } from '@/i18n/config';
-import StoreProvider from '@/store/provider';
+import ProviderTanStack from '@/providers/tanstack';
 import ThemeProvider from '@/theme';
 
 import './globals.css';
@@ -32,10 +32,10 @@ export default function RootLayout({ children }: Readonly<IProps>) {
       <body className={`${raleway.variable}`}>
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
-            <StoreProvider>
+            <ProviderTanStack>
               <Layout />
               <main className="main">{children}</main>
-            </StoreProvider>
+            </ProviderTanStack>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
