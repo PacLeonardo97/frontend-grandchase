@@ -43,7 +43,6 @@ export default function Header({ setOpenDrawer }: IProps) {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
   return (
     <header className={styled.header}>
@@ -57,7 +56,6 @@ export default function Header({ setOpenDrawer }: IProps) {
           </Typography>
         </div>
 
-        <LanguageSwitcher />
         <div className={styled.userContainer}>
           <IconButton style={{ marginRight: 16 }}>
             <NotificationsIcon />
@@ -68,9 +66,10 @@ export default function Header({ setOpenDrawer }: IProps) {
             />
           </IconButton>
           <IconButton
-            aria-describedby={id}
             onClick={handleClick}
-            onMouseOver={handleClick}
+            aria-owns={open ? 'mouse-over-popover' : undefined}
+            aria-haspopup="true"
+            onMouseEnter={handleClick}
           >
             <Avatar>{user?.username?.at(0)?.toLocaleUpperCase() || 'C'}</Avatar>
           </IconButton>
@@ -89,8 +88,8 @@ export default function Header({ setOpenDrawer }: IProps) {
 
           <Popover
             sx={{ zIndex: 999 }}
-            id={id}
             open={open}
+            aria-hidden={!open}
             anchorEl={anchorEl}
             onClose={handleClose}
             anchorOrigin={{
@@ -98,43 +97,51 @@ export default function Header({ setOpenDrawer }: IProps) {
               horizontal: 'left',
             }}
           >
-            {user?.id ? (
-              <div>
-                <Button
-                  fullWidth
-                  onClick={() => {
-                    dispatch(clearAllRedux());
-                  }}
-                >
-                  Sair
-                </Button>
-              </div>
-            ) : (
-              <div className={styled.popover}>
-                <Link
-                  href="/auth/login"
-                  onClick={() => {
-                    handleClose();
-                  }}
-                >
-                  <Typography variant="h4" style={{ color: 'black' }}>
-                    Login
-                  </Typography>
-                  <Button></Button>
-                </Link>
+            <div
+              onPointerLeave={() => {
+                handleClose();
+              }}
+            >
+              <LanguageSwitcher />
 
-                <Link
-                  onClick={() => {
-                    handleClose();
-                  }}
-                  href="/auth/register"
-                >
-                  <Typography variant="h4" style={{ color: 'black' }}>
-                    Registrar
-                  </Typography>
-                </Link>
-              </div>
-            )}
+              {user?.id ? (
+                <div className={styled.popover}>
+                  <Button
+                    fullWidth
+                    onClick={() => {
+                      dispatch(clearAllRedux());
+                    }}
+                  >
+                    Sair
+                  </Button>
+                </div>
+              ) : (
+                <div className={styled.popover}>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => {
+                      handleClose();
+                    }}
+                  >
+                    <Typography variant="h4" style={{ color: 'black' }}>
+                      Login
+                    </Typography>
+                    <Button></Button>
+                  </Link>
+
+                  <Link
+                    onClick={() => {
+                      handleClose();
+                    }}
+                    href="/auth/register"
+                  >
+                    <Typography variant="h4" style={{ color: 'black' }}>
+                      Registrar
+                    </Typography>
+                  </Link>
+                </div>
+              )}
+            </div>
           </Popover>
         </div>
       </div>

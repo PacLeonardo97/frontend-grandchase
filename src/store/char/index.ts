@@ -7,7 +7,6 @@ import { ETypeEquips } from '@/enum/equips.enum';
 import { getMockFromChar } from '@/helper/skill';
 import type { IChar } from '@/interface/char';
 import { IEquips } from '@/interface/equip';
-import { ICharSkills } from '@/interface/skill';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
@@ -36,26 +35,22 @@ export const fetchChar = createAsyncThunk(
   'fetchChar',
   async (data: IChar, { getState }) => {
     const state = getState() as RootState;
-    const localEquips = state.char.data?.equips;
-    const localSkills = state.allChar.data?.find(
+    const localData = state.allChar.data?.find(
       (item) => item.name === data.name,
-    )?.skills;
+    );
 
-    const oldData = {
-      equips: localEquips as IEquips[],
-      skills: localSkills as ICharSkills,
-    };
-
-    if (!state.user.accessToken) return { ...oldData, ...data };
+    if (!state.user.accessToken) return { ...localData, ...data };
 
     const req = await api.get<IChar>(`/chars/${data.id}`);
     const localEquipsAllChars = state.allChar.data?.find(
       (item) => item.name === req.data.name,
     )?.equips;
+
+    const mergeData = _.merge(localData, req.data);
     return {
-      ...req.data,
+      ...mergeData,
       equips: mergeEquips(
-        localEquipsAllChars?.length ? localEquipsAllChars : localEquips,
+        localEquipsAllChars?.length ? localEquipsAllChars : localData?.equips,
         req.data.equips ?? [],
       ),
     };
@@ -71,10 +66,11 @@ interface ICreateChar {
 export const fetchCreateChar = createAsyncThunk(
   'fetchCreateChar',
   async (data: ICreateChar) => {
-    const req = await api.post(`/chars`, { ...data });
+    const req = await api.post(`/chars`, data);
     return req.data;
   },
 );
+
 const equipDefault = Object.keys(ETypeEquips) as ETypeEquips[];
 
 const initialState: charState = {
@@ -138,9 +134,10 @@ export const charSlice = createSlice({
         const hasSkillState = !!Object.keys(state.data.skills).length;
 
         if (!hasSkillPayload && !hasSkillState) {
-          state.data.skills = getMockFromChar(
+          const skills = getMockFromChar(
             state.data.name || action.payload.name,
           );
+          state.data.skills = skills;
         }
 
         state.data = _.merge(state.data, action.payload);

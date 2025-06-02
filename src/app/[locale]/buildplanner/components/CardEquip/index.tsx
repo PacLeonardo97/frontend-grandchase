@@ -74,6 +74,7 @@ export default function CardEquip({ equip, type }: IProps) {
           onClick={handleClick}
           className={styled.square}
           data-char={!!charSelected.data?.name}
+          data-label={typeTranslate}
         >
           {equip?.img ? (
             <Image

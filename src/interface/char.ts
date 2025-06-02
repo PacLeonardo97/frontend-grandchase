@@ -7,7 +7,7 @@ export interface IChar {
   name: EChar;
   equips?: IEquips[];
   skills: ICharSkills;
-  total_points?: number;
+  total_points_st?: number;
   level?: number;
   total_atk?: number;
   attack?: number;

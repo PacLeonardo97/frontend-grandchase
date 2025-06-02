@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -16,7 +15,6 @@ import {
   Link as LinkMui,
   Typography,
 } from '@mui/material';
-import { isAxiosError } from 'axios';
 
 import TextField from '@/components/Form/Textfield';
 import { useAppDispatch } from '@/store/hooks';
@@ -36,14 +34,12 @@ export default function Login() {
     event.preventDefault();
     setLoading(true);
     try {
-      await dispatch(fetchLogin({ email, password }));
-      router.push('/');
-    } catch (error) {
-      if (isAxiosError(error)) {
-        toast(error.response?.data.error.message, {
-          type: 'error',
-        });
+      const reqFetch = await dispatch(fetchLogin({ email, password }));
+      if (fetchLogin.rejected.match(reqFetch)) {
+        setPassword('');
+        return;
       }
+      router.push('/');
     } finally {
       setLoading(false);
     }

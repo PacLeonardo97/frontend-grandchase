@@ -4,13 +4,16 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Button, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { Typography, IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import _ from 'lodash';
 
 import PopoverSkill from './PopoverSkill';
+import Image from '@/components/Image';
 import { EClassChar } from '@/enum/char.enum';
 import { getClassByChar } from '@/helper/char';
 import {
@@ -34,6 +37,7 @@ export default function SkillTree() {
   const [anchorEl, setAnchorEl] = useState({
     anchor: null as HTMLElement | null,
     currentSkill: {} as ISkill,
+    className: '',
   });
   const getAllPoints = useMemo(
     () => getTotalCurrent(charSelected.skills),
@@ -65,12 +69,13 @@ export default function SkillTree() {
   const handlePopoverOpen = (
     event: React.MouseEvent<HTMLElement>,
     currentSkill: ISkill,
+    className: string,
   ) => {
-    setAnchorEl({ anchor: event.currentTarget, currentSkill });
+    setAnchorEl({ anchor: event.currentTarget, currentSkill, className });
   };
 
   const handlePopoverClose = () => {
-    setAnchorEl({ anchor: null, currentSkill: {} as ISkill });
+    setAnchorEl({ anchor: null, currentSkill: {} as ISkill, className: '' });
   };
 
   const handleChange = (_event: React.SyntheticEvent, newValue: EClassChar) => {
@@ -81,7 +86,7 @@ export default function SkillTree() {
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Typography variant="h4">
-          Quantidade de pontos: {getAllPoints}/{charSelected?.total_points}
+          Quantidade de pontos: {getAllPoints}/{charSelected?.total_points_st}
         </Typography>
         <Tabs onChange={handleChange} value={stSelected || 'class_1'}>
           {qnttClassesChar.map((classes) => (
@@ -91,9 +96,9 @@ export default function SkillTree() {
         <Box
           sx={{
             marginTop: '8px',
-            display: 'grid',
+            display: 'flex',
+            flexWrap: 'wrap',
             gap: '8px',
-            gridTemplateColumns: 'repeat(3, 1fr)',
           }}
         >
           {skillTreeSelected &&
@@ -102,7 +107,7 @@ export default function SkillTree() {
                 const incrementDisabled = !canIncrementSkill(
                   skillTreeSelected,
                   currentSkill,
-                  charSelected?.total_points as number,
+                  charSelected?.total_points_st as number,
                   getAllPoints,
                 );
 
@@ -121,7 +126,9 @@ export default function SkillTree() {
                     }
                     aria-hidden={!Boolean(anchorEl.anchor)}
                     aria-haspopup="true"
-                    onMouseEnter={(e) => handlePopoverOpen(e, currentSkill)}
+                    onMouseEnter={(e) =>
+                      handlePopoverOpen(e, currentSkill, className)
+                    }
                     onMouseLeave={handlePopoverClose}
                     key={className}
                     sx={{
@@ -130,36 +137,54 @@ export default function SkillTree() {
                         currentSkill.current === currentSkill.maxValue
                           ? '#fecb00'
                           : 'red',
-                      maxWidth: '240px',
+                      maxWidth: '80px',
                     }}
                   >
-                    <Typography>{className.replaceAll('_', ' ')}</Typography>
-                    <Typography>Current: {currentSkill.current}</Typography>
-                    <Typography> Max Value: {currentSkill.maxValue}</Typography>
-                    <Button
-                      onClick={() => handleUpdate(className, 'increment')}
-                      disabled={incrementDisabled}
+                    <Image
+                      width={56}
+                      height={56}
+                      alt={currentSkill?.img}
+                      style={{ borderRadius: 4, justifySelf: 'center' }}
+                      // Alterar essa porra de src depois
+                      src={
+                        '/NoImage.svg'
+                        // currentSkill?.img ? `/${currentSkill?.img}.webp` : ''
+                      }
+                    />
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-around',
+                      }}
                     >
-                      Aumentar
-                    </Button>
-                    <Button
-                      onClick={() => handleUpdate(className, 'decrement')}
-                      disabled={decrementDisabled}
-                    >
-                      diminuir
-                    </Button>
-                    {anchorEl.anchor ? (
-                      <PopoverSkill
-                        anchorEl={anchorEl.anchor}
-                        currentSkill={anchorEl.currentSkill}
-                        handlePopoverClose={handlePopoverClose}
-                      />
-                    ) : null}
+                      <IconButton
+                        sx={{ padding: 0 }}
+                        onClick={() => handleUpdate(className, 'increment')}
+                        disabled={incrementDisabled}
+                      >
+                        <AddIcon fontSize="small" />
+                      </IconButton>
+                      <IconButton
+                        sx={{ padding: 0 }}
+                        onClick={() => handleUpdate(className, 'decrement')}
+                        disabled={decrementDisabled}
+                      >
+                        <RemoveIcon fontSize="small" />
+                      </IconButton>
+                    </div>
                   </Box>
                 );
               },
             )}
         </Box>
+        {anchorEl.anchor ? (
+          <PopoverSkill
+            className={anchorEl.className}
+            anchorEl={anchorEl.anchor}
+            currentSkill={anchorEl.currentSkill}
+            handlePopoverClose={handlePopoverClose}
+          />
+        ) : null}
       </Box>
     </>
   );

@@ -59,7 +59,7 @@ export const allCharSlice = createSlice({
             state.data = Object.keys(EChar).map((name) => ({
               name: name as EChar,
               class_char: EClassChar.class_1,
-              total_points: getPointsByChar(name as EChar).qnty,
+              total_points_st: getPointsByChar(name as EChar).qnty,
               skills: {},
             }));
           }

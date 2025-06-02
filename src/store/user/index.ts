@@ -1,27 +1,45 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { toast } from 'react-toastify';
+
+import { isAxiosError } from 'axios';
+
 import { clearAllChar } from '../allChar';
 import { clearChar } from '../char';
 import api from '@/api';
 import type { IUser } from '@/interface/user';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  SerializedError,
+} from '@reduxjs/toolkit';
 
 export interface userState {
   accessToken: string;
   refreshToken: string;
   data: IUser;
   loading: boolean;
-  error: string;
+  error: SerializedError;
 }
 
 export const fetchLogin = createAsyncThunk(
   'fetchLogin',
-  async ({ email, password }: { email: string; password: string }) => {
-    const data = await api.post('/auth/local', {
-      identifier: email,
-      password,
-    });
-
-    return data.data;
+  async (
+    { email, password }: { email: string; password: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const data = await api.post('/auth/local', {
+        identifier: email,
+        password,
+      });
+      return data.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        toast(error.response?.data.error.message, {
+          type: 'error',
+        });
+        return rejectWithValue(error.response?.data || 'Erro desconhecido');
+      }
+    }
   },
 );
 
@@ -38,7 +56,12 @@ const initialState: userState = {
   accessToken: '',
   refreshToken: '',
   data: {} as IUser,
-  error: '',
+  error: {
+    name: '',
+    message: '',
+    stack: '',
+    code: '',
+  },
   loading: false,
 };
 
@@ -71,8 +94,7 @@ export const userSlice = createSlice({
       })
       .addCase(fetchLogin.rejected, (state, action) => {
         state.loading = false;
-        const err = action.error as any;
-        state.error = err.response?.data.error.message;
+        state.error = action.error;
       });
   },
 });

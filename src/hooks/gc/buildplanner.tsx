@@ -49,11 +49,13 @@ export default function useBuildPlanner() {
       (item) => item.name === name,
     ) as IChar;
 
-    if (charClicked?.name || !user.accessToken) {
-      await dispatch(fetchChar(charClicked));
+    if (!charClicked?.id && user.accessToken) {
+      await dispatch(fetchCreateChar({ name }));
       return;
     }
-    await dispatch(fetchCreateChar({ name }));
+    if (charClicked?.name || !user.accessToken) {
+      await dispatch(fetchChar(charClicked));
+    }
   };
 
   const handleChangeClass = (className: EClassChar) => {

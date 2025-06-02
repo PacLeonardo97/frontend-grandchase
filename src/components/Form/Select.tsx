@@ -11,11 +11,20 @@ interface IProps extends BaseSelectProps {
 export default function Select({ list, id, label, ...props }: IProps) {
   return (
     <FormControl variant="outlined" fullWidth>
-      <InputLabel id={id}>{label}</InputLabel>
-      <SelectMui label={label} labelId={id} {...props}>
+      <InputLabel htmlFor={`${id}_input`} id={`${id}_label`}>
+        {label}
+      </InputLabel>
+      <SelectMui
+        inputProps={{
+          id: `${id}_input`,
+        }}
+        label={label}
+        labelId={`${id}_label`}
+        {...props}
+      >
         {list.map((item) => (
           <MenuItem key={item.value} value={item.value}>
-            {item.value}
+            {item.label}
           </MenuItem>
         ))}
       </SelectMui>
