@@ -3,10 +3,12 @@
 import _ from 'lodash';
 
 import api from '@/api';
+import { waitForCacheRestore } from '@/helper/chacheRestore';
 import { getMockFromChar } from '@/helper/skill';
 import { IChar } from '@/interface/char';
 import type { IEquips } from '@/interface/equip';
 import { IUserState } from '@/interface/user';
+import { useCacheRestored } from '@/providers/tanstack';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 function mergeEquips(localEquips: IEquips[] = [], apiEquips: IEquips[] = []) {
@@ -26,31 +28,35 @@ function mergeEquips(localEquips: IEquips[] = [], apiEquips: IEquips[] = []) {
 
 export const useUpdateChar = () => {
   const queryClient = useQueryClient();
+  const user = queryClient.getQueryData<IUserState>(['user']);
+  const isRestored = useCacheRestored();
 
   return useMutation({
+    mutationKey: ['getChar'],
     mutationFn: async (data: Partial<IChar>): Promise<IChar> => {
+      await waitForCacheRestore(() => isRestored);
+
       const allChars = queryClient.getQueryData<IChar[]>(['allChars']);
       const localData = allChars?.find((char) => char.name === data.name);
-      const user = queryClient.getQueryData<IUserState>(['user']);
+      const mergeData = _.merge(localData, data);
 
-      if (!user?.accessToken) return _.merge(localData, data) as IChar;
+      if (!user?.accessToken) return mergeData as IChar;
 
-      if (!data.id || !localData?.id) {
+      if (!mergeData.id) {
         const res = await api.post<IChar>(`/chars`, data);
-        return res.data;
+        const newData = _.merge(res.data, mergeData);
+        return newData;
       }
 
-      const response = await api.get<IChar>(`/chars/${data.id}`);
-      const remoteData = response.data;
+      const res = await api.get<IChar>(`/chars/${mergeData.id}`);
+      const remoteData = res.data;
 
       const localEquips =
         allChars?.find((char) => char.name === remoteData.name)?.equips ??
         localData?.equips;
 
-      const mergedData = _.merge(localData, remoteData);
-
       return {
-        ...mergedData,
+        ...mergeData,
         equips: mergeEquips(
           localEquips?.length ? localEquips : [],
           remoteData.equips ?? [],
@@ -61,8 +67,10 @@ export const useUpdateChar = () => {
     onSuccess: (mergedChar: IChar) => {
       queryClient.setQueryData<IChar[]>(['allChars'], (oldChars) => {
         if (!oldChars) return [mergedChar];
+        const newChars = oldChars.map((char) => {
+          console.log('char.name: ', char.name);
+          console.log('mergedChar.name: ', mergedChar.name);
 
-        return oldChars.map((char) => {
           if (char.name === mergedChar.name) {
             const hasSkillPayload = !!(
               mergedChar.skills && Object.keys(mergedChar.skills).length
@@ -71,16 +79,24 @@ export const useUpdateChar = () => {
 
             if (!hasSkillPayload && !hasSkillState) {
               const skills = getMockFromChar(char.name || mergedChar.name);
-              return {
-                ...char,
-                skills,
-              };
+              const foo = { ...char, ...mergedChar, skills };
+              console.log('foo ->', foo);
+              return foo;
             }
-            return mergedChar;
+            console.log('mergedChar 2 ->', mergedChar);
+            console.log('char 2 ->', char);
+            return { ...char, ...mergedChar };
           }
           return char;
         });
+        console.log('newChars ->', newChars);
+
+        return newChars;
       });
+    },
+    onError: (error) => {
+      // queryClient.invalidateQueries({ queryKey: ['getChar'] });
+      console.log('error', error);
     },
   });
 };

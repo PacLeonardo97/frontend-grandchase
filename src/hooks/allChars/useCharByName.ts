@@ -7,6 +7,7 @@ export const useCharByName = () => {
   const queryClient = useQueryClient();
   return (name: string) => {
     const allChars = queryClient.getQueryData<IChar[]>(['allChars']);
+    console.log('allChars ->', allChars);
     return allChars?.find((char) => char.name === name);
   };
 };

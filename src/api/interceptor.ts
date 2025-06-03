@@ -59,6 +59,7 @@ export default function setUpInterceptor(queryClient: QueryClient) {
     },
   );
   const user = queryClient.getQueryData<IUserState>(['user']);
+
   api.interceptors.request.use((req) => {
     const token = user?.accessToken;
     if (token && !req.url?.endsWith('/api/auth/local')) {

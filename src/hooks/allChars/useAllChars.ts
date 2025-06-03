@@ -2,12 +2,12 @@
 
 import _ from 'lodash';
 
+import { useUser } from '../login/useUser';
 import api from '@/api';
 import { EChar, EClassChar } from '@/enum/char.enum';
 import { ETypeEquips } from '@/enum/equips.enum';
 import { getPointsByChar } from '@/helper/char';
 import type { IChar } from '@/interface/char';
-import { IUserState } from '@/interface/user';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 const equipDefault = Object.keys(ETypeEquips) as ETypeEquips[];
@@ -24,17 +24,21 @@ const initializeChars = Object.keys(EChar).map((name) => ({
 
 export const useAllChars = () => {
   const queryClient = useQueryClient();
-  const user = queryClient.getQueryData<IUserState>(['user']);
-
+  const { data: user, isPending } = useUser();
   return useQuery<IChar[]>({
     queryKey: ['allChars'],
     queryFn: async () => {
-      const allChars = queryClient.getQueryData<IChar[]>(['allChars']);
-
-      if (!user?.accessToken) return _.merge(initializeChars, allChars);
-      const response = await api.get('/chars');
-      return _.merge(initializeChars, response.data); // mesma lógica do redux
+      try {
+        const allChars = queryClient.getQueryData<IChar[]>(['allChars']);
+        const data = _.merge(initializeChars, allChars);
+        if (!user?.accessToken) return data;
+        const response = await api.get('/chars');
+        return _.merge(data, response.data); // mesma lógica do redux
+      } catch {
+        queryClient.invalidateQueries({ queryKey: ['allChars'] });
+      }
     },
-    staleTime: Infinity,
+    enabled: !isPending, // só executa quando isRestored for true
+    staleTime: 0,
   });
 };

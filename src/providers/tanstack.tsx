@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, type ReactNode, useEffect } from 'react';
+import { createContext, type ReactNode, useContext, useState } from 'react';
 
 import { get, set, del } from 'idb-keyval';
 
 import setUpInterceptor from '@/api/interceptor';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   PersistedClient,
   Persister,
-  persistQueryClient,
+  PersistQueryClientProvider,
 } from '@tanstack/react-query-persist-client';
 
 export function createIDBPersister(
@@ -28,27 +28,34 @@ export function createIDBPersister(
   } as Persister;
 }
 
+const CacheRestoredContext = createContext(false);
+export const useCacheRestored = () => useContext(CacheRestoredContext);
+
 export default function ProviderTanStack({
   children,
 }: {
   children: ReactNode;
 }) {
+  const [isRestored, setIsRestored] = useState(false);
   const [queryClient] = useState(() => new QueryClient());
-  const [isClient, setIsClient] = useState(false);
-  if (isClient) {
-    setUpInterceptor(queryClient);
-    persistQueryClient({
-      queryClient,
-      persister: createIDBPersister(),
-      maxAge: Infinity,
-      dehydrateOptions: {
-        shouldDehydrateMutation: () => false,
-      },
-    });
-  }
-  useEffect(() => setIsClient(true), []);
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <CacheRestoredContext.Provider value={isRestored}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{
+          persister: createIDBPersister(),
+          maxAge: Infinity,
+        }}
+        onSuccess={async () => {
+          setIsRestored(true);
+          setUpInterceptor(queryClient);
+        }}
+      >
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </PersistQueryClientProvider>
+    </CacheRestoredContext.Provider>
   );
 }
