@@ -34,6 +34,24 @@ export const theme = createTheme({
           WebkitLineClamp: 2 /* Limits the text to 2 lines */,
           overflow: 'hidden',
         },
+        '.main': {
+          margin: '172px 192px 0 144px',
+          background: 'white',
+          position: 'relative',
+          paddingBottom: '40px',
+          ['@media (max-width: 800px)']: {
+            margin: '172px 0 0 0',
+            display: 'flex',
+            flexDirection: 'column',
+            paddingLeft: '8px',
+          },
+          // `@media (max-width: 800px) {
+          //     margin: 172px 0 0 0;
+          //     display: flex;
+          //     flex-direction: column;
+          //     padding-left: 8px;
+          // }`
+        },
       },
     },
     MuiPopover: {

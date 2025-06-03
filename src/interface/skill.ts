@@ -5,6 +5,7 @@ export interface ISkill {
   qnttyPoints: string;
   current: string;
   img: string;
+  order?: number;
   dependsOn?: {
     target: string;
     value: string;

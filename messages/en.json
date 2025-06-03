@@ -1,10 +1,9 @@
 {
+    "Header": {
+        "language": "language"
+    },
     "Home": {
         "principal": "Principal En"
-    },
-    "ChangeLang": {
-        "en": "English",
-        "pt": "Portuguese"
     },
     "Equip": {
         "pha_pho": "Phantom Phoenix",

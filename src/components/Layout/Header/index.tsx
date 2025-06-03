@@ -15,8 +15,8 @@ import Typography from '@mui/material/Typography';
 import LanguageSwitcher from '../ChangeLang';
 import styled from './styled.module.scss';
 import TextField from '@/components/Form/Textfield';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { clearAllRedux } from '@/store/user';
+import { useLogout } from '@/hooks/login/useLogout';
+import { useUser } from '@/hooks/login/useUser';
 
 const NotificationBadge = styleMui(Badge)`
   & .${badgeClasses.badge} {
@@ -31,8 +31,8 @@ interface IProps {
 
 export default function Header({ setOpenDrawer }: IProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user.data);
+  const { data: user } = useUser();
+  const logout = useLogout();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -43,7 +43,6 @@ export default function Header({ setOpenDrawer }: IProps) {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
   return (
     <header className={styled.header}>
@@ -57,7 +56,6 @@ export default function Header({ setOpenDrawer }: IProps) {
           </Typography>
         </div>
 
-        <LanguageSwitcher />
         <div className={styled.userContainer}>
           <IconButton style={{ marginRight: 16 }}>
             <NotificationsIcon />
@@ -68,11 +66,14 @@ export default function Header({ setOpenDrawer }: IProps) {
             />
           </IconButton>
           <IconButton
-            aria-describedby={id}
             onClick={handleClick}
-            onMouseOver={handleClick}
+            aria-owns={open ? 'mouse-over-popover' : undefined}
+            aria-haspopup="true"
+            onMouseEnter={handleClick}
           >
-            <Avatar>{user?.username?.at(0)?.toLocaleUpperCase() || 'C'}</Avatar>
+            <Avatar>
+              {user?.user.username?.at(0)?.toLocaleUpperCase() || 'C'}
+            </Avatar>
           </IconButton>
           <IconButton
             onClick={() => {
@@ -89,8 +90,8 @@ export default function Header({ setOpenDrawer }: IProps) {
 
           <Popover
             sx={{ zIndex: 999 }}
-            id={id}
             open={open}
+            aria-hidden={!open}
             anchorEl={anchorEl}
             onClose={handleClose}
             anchorOrigin={{
@@ -98,43 +99,51 @@ export default function Header({ setOpenDrawer }: IProps) {
               horizontal: 'left',
             }}
           >
-            {user?.id ? (
-              <div>
-                <Button
-                  fullWidth
-                  onClick={() => {
-                    dispatch(clearAllRedux());
-                  }}
-                >
-                  Sair
-                </Button>
-              </div>
-            ) : (
-              <div className={styled.popover}>
-                <Link
-                  href="/auth/login"
-                  onClick={() => {
-                    handleClose();
-                  }}
-                >
-                  <Typography variant="h4" style={{ color: 'black' }}>
-                    Login
-                  </Typography>
-                  <Button></Button>
-                </Link>
+            <div
+              onPointerLeave={() => {
+                handleClose();
+              }}
+            >
+              <LanguageSwitcher />
 
-                <Link
-                  onClick={() => {
-                    handleClose();
-                  }}
-                  href="/auth/register"
-                >
-                  <Typography variant="h4" style={{ color: 'black' }}>
-                    Registrar
-                  </Typography>
-                </Link>
-              </div>
-            )}
+              {user?.user.id ? (
+                <div className={styled.popover}>
+                  <Button
+                    fullWidth
+                    onClick={() => {
+                      logout();
+                    }}
+                  >
+                    Sair
+                  </Button>
+                </div>
+              ) : (
+                <div className={styled.popover}>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => {
+                      handleClose();
+                    }}
+                  >
+                    <Typography variant="h4" style={{ color: 'black' }}>
+                      Login
+                    </Typography>
+                    <Button></Button>
+                  </Link>
+
+                  <Link
+                    onClick={() => {
+                      handleClose();
+                    }}
+                    href="/auth/register"
+                  >
+                    <Typography variant="h4" style={{ color: 'black' }}>
+                      Registrar
+                    </Typography>
+                  </Link>
+                </div>
+              )}
+            </div>
           </Popover>
         </div>
       </div>

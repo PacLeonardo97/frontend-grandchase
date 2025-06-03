@@ -1,0 +1,112 @@
+'use client';
+
+import { useSearchParams } from 'next/navigation';
+import { Fragment, useEffect, useMemo, useState } from 'react';
+
+import { Box } from '@mui/material';
+
+import CardEquip from '../CardEquip';
+import styled from './styled.module.scss';
+import Select from '@/components/Form/Select';
+import TextField from '@/components/Form/Textfield';
+import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
+import { createEmptyArray } from '@/helper/array';
+import { capitalizeFirstLetter } from '@/helper/capitalize';
+import { useAllChars } from '@/hooks/allChars/useAllChars';
+import { useCharByName } from '@/hooks/allChars/useCharByName';
+import { useUpdateChar } from '@/hooks/allChars/useUpdateChar';
+import { useUser } from '@/hooks/login/useUser';
+import type { IChar } from '@/interface/char';
+
+const levelChar = createEmptyArray(85).map((item) => ({
+  label: `${item}`,
+  value: `${item}`,
+}));
+
+export default function CharLeft() {
+  const [isClient, setIsClient] = useState(false);
+  const [chasePoints, setChasePoints] = useState('');
+  const searchParams = useSearchParams();
+  const charName = searchParams.get('charName') as string;
+
+  const { isLoading } = useAllChars();
+  const { mutate: updateChar } = useUpdateChar();
+  const { data: user } = useUser();
+
+  const charByName = useCharByName();
+  const charSelected = charByName(charName);
+
+  const handleChangeLevel = async (level: number) => {
+    updateChar({ name: charName, level } as IChar);
+  };
+
+  useEffect(() => {
+    setChasePoints(
+      user?.user?.chaser_level ? `${user?.user?.chaser_level}` : '',
+    );
+  }, [user?.user?.chaser_level]);
+
+  const allEquips = useMemo(() => {
+    return Object.keys(ETypeEquips) as ETypeEquips[];
+  }, []);
+
+  useEffect(() => setIsClient(true), []);
+
+  return (
+    <Box
+      padding={1}
+      maxWidth={420}
+      maxHeight={536}
+      borderRadius={1}
+      sx={{ background: '#7B7575' }}
+    >
+      <div
+        className={styled.containerSkills}
+        style={{
+          backgroundImage:
+            isClient && charSelected?.name
+              ? `url(/char/${capitalizeFirstLetter(charSelected?.name || '')}_${
+                  charSelected?.class_char
+                }.webp)`
+              : 'none',
+        }}
+      >
+        {sortEquip(allEquips).map((equip) => (
+          <Fragment key={equip}>
+            <CardEquip
+              equip={charSelected?.equips?.find((item) => item.type === equip)}
+              type={equip as ETypeEquips}
+            />
+          </Fragment>
+        ))}
+      </div>
+      <Box
+        justifyContent="space-between"
+        marginTop={2}
+        sx={{ display: 'flex' }}
+      >
+        <Box width={80}>
+          <Select
+            disabled={isClient && !charSelected?.name}
+            list={levelChar}
+            value={(isClient && charSelected?.level) || '1'}
+            id="level_char"
+            onChange={(e) => {
+              handleChangeLevel(Number(e.target.value));
+            }}
+            label="Nivel"
+          />
+        </Box>
+
+        <Box width={120}>
+          <TextField
+            disabled={isLoading}
+            label="Nivel Chase"
+            onChange={(e) => e.target.value}
+            value={chasePoints ? chasePoints : ''}
+          />
+        </Box>
+      </Box>
+    </Box>
+  );
+}
