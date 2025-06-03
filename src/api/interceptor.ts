@@ -1,17 +1,14 @@
 'use client';
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import Cookies from 'js-cookie';
-
 import api from '.';
-import { EParams } from '@/enum/params.enum';
-import type { AppStore } from '@/store';
-import { logout, userRefreshToken } from '@/store/user';
+import type { IUserState } from '@/interface/user';
+import { QueryClient } from '@tanstack/react-query';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-export default function setUpInterceptor(store: AppStore) {
+export default function setUpInterceptor(queryClient: QueryClient) {
   let isAlreadyFetchingToken = false;
 
   let subscribers: any[] = [];
-  const state = store.getState();
+
   const onAccessTokenFetched = (access_token: string) => {
     subscribers = subscribers.filter((callback) => callback(access_token));
   };
@@ -61,9 +58,10 @@ export default function setUpInterceptor(store: AppStore) {
       return Promise.reject(err);
     },
   );
+  const user = queryClient.getQueryData<IUserState>(['user']);
 
   api.interceptors.request.use((req) => {
-    const token = state.user.accessToken;
+    const token = user?.accessToken;
     if (token && !req.url?.endsWith('/api/auth/local')) {
       req.headers.Authorization = `Bearer ${token}`;
     }
@@ -81,24 +79,27 @@ export default function setUpInterceptor(store: AppStore) {
   });
 
   async function fetchRefreshToken() {
+    if (!user?.refreshToken) throw new Error('Not have refreshToken');
     try {
       const req = await api.post<{ accessToken: string; refreshToken: string }>(
         '/users-permissions/refresh_token',
         {
-          refreshToken: state.user.refreshToken,
+          refreshToken: user?.refreshToken,
         },
       );
-      store.dispatch(
-        userRefreshToken({
-          accessToken: req.data.accessToken,
-          refreshToken: req.data.refreshToken,
-        }),
-      );
+
+      const newTokens = {
+        ...user,
+        accessToken: req.data.accessToken,
+        refreshToken: req.data.refreshToken,
+      };
+
+      queryClient.setQueryData(['user'], newTokens);
 
       return req.data.accessToken;
     } catch {
-      store.dispatch(logout());
-      window.location.href = '/login';
+      queryClient.clear();
+      window.location.href = '/auth/login';
     }
   }
 }

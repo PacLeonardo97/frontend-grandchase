@@ -7,17 +7,20 @@ interface IProps {
   handlePopoverClose: () => void;
   anchorEl: HTMLElement | null;
   currentSkill: ISkill;
+  className: string;
 }
 
 export default function PopoverSkill({
   handlePopoverClose,
   anchorEl,
   currentSkill,
+  className,
 }: IProps) {
   return (
     <Popover
       open={Boolean(anchorEl)}
       disableScrollLock
+      disableRestoreFocus
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'top',
@@ -28,9 +31,10 @@ export default function PopoverSkill({
         horizontal: 'left',
       }}
       onClose={handlePopoverClose}
-      disableRestoreFocus
       sx={{ pointerEvents: 'none' }}
     >
+      <Typography variant="body1">{className.replaceAll('_', ' ')}</Typography>
+      <Typography variant="body2">PT: {currentSkill.qnttyPoints}</Typography>
       <Typography variant="body2">
         Requer:{' '}
         {currentSkill.dependsOn?.target.replaceAll('_', ' ') || 'Nenhum'}
