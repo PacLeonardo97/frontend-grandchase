@@ -68,9 +68,6 @@ export const useUpdateChar = () => {
       queryClient.setQueryData<IChar[]>(['allChars'], (oldChars) => {
         if (!oldChars) return [mergedChar];
         const newChars = oldChars.map((char) => {
-          console.log('char.name: ', char.name);
-          console.log('mergedChar.name: ', mergedChar.name);
-
           if (char.name === mergedChar.name) {
             const hasSkillPayload = !!(
               mergedChar.skills && Object.keys(mergedChar.skills).length
@@ -80,23 +77,15 @@ export const useUpdateChar = () => {
             if (!hasSkillPayload && !hasSkillState) {
               const skills = getMockFromChar(char.name || mergedChar.name);
               const foo = { ...char, ...mergedChar, skills };
-              console.log('foo ->', foo);
               return foo;
             }
-            console.log('mergedChar 2 ->', mergedChar);
-            console.log('char 2 ->', char);
             return { ...char, ...mergedChar };
           }
           return char;
         });
-        console.log('newChars ->', newChars);
 
         return newChars;
       });
-    },
-    onError: (error) => {
-      // queryClient.invalidateQueries({ queryKey: ['getChar'] });
-      console.log('error', error);
     },
   });
 };

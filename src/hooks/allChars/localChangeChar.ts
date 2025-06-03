@@ -15,7 +15,6 @@ export const useLocalChageChar = () => {
   return useMutation({
     mutationKey: ['localChanges'],
     mutationFn: async (data: Partial<IChar>): Promise<IChar> => {
-      console.log('entrou nessa caralha de useUpdateChar?');
       await waitForCacheRestore(() => isRestored);
 
       const allChars = queryClient.getQueryData<IChar[]>(['allChars']);
@@ -49,9 +48,8 @@ export const useLocalChageChar = () => {
         });
       });
     },
-    onError: (error) => {
+    onError: () => {
       queryClient.invalidateQueries({ queryKey: ['getChar'] });
-      console.log('error', error);
     },
   });
 };
