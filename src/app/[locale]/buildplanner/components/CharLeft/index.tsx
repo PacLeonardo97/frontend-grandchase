@@ -1,6 +1,5 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import { Fragment, useEffect, useMemo, useState } from 'react';
 
 import { Box } from '@mui/material';
@@ -15,7 +14,8 @@ import { capitalizeFirstLetter } from '@/helper/capitalize';
 import { useAllChars } from '@/hooks/allChars/useAllChars';
 import { useCharByName } from '@/hooks/allChars/useCharByName';
 import { useUpdateChar } from '@/hooks/allChars/useUpdateChar';
-import { useUser } from '@/hooks/login/useUser';
+import { useUpdateUser } from '@/hooks/user/updateUser';
+import { useUser } from '@/hooks/user/useUser';
 import type { IChar } from '@/interface/char';
 
 const levelChar = createEmptyArray(85).map((item) => ({
@@ -25,26 +25,27 @@ const levelChar = createEmptyArray(85).map((item) => ({
 
 export default function CharLeft() {
   const [isClient, setIsClient] = useState(false);
-  const [chasePoints, setChasePoints] = useState('');
-  const searchParams = useSearchParams();
-  const charName = searchParams.get('charName') as string;
 
   const { isLoading } = useAllChars();
   const { mutate: updateChar } = useUpdateChar();
   const { data: user } = useUser();
 
-  const charByName = useCharByName();
-  const charSelected = charByName(charName);
+  const { data: charSelected } = useCharByName();
+  const { mutate: userMutate } = useUpdateUser();
+
+  const imageUrl = useMemo(() => {
+    console.log('name ->', charSelected?.name);
+    console.log('class_char ->', charSelected?.class_char);
+    return isClient && charSelected?.name
+      ? `url(/char/${capitalizeFirstLetter(charSelected?.name || '')}_${
+          charSelected.class_char
+        }.webp)`
+      : 'none';
+  }, [charSelected, isClient]);
 
   const handleChangeLevel = async (level: number) => {
-    updateChar({ name: charName, level } as IChar);
+    updateChar({ name: charSelected?.name, level } as IChar);
   };
-
-  useEffect(() => {
-    setChasePoints(
-      user?.user?.chaser_level ? `${user?.user?.chaser_level}` : '',
-    );
-  }, [user?.user?.chaser_level]);
 
   const allEquips = useMemo(() => {
     return Object.keys(ETypeEquips) as ETypeEquips[];
@@ -56,19 +57,20 @@ export default function CharLeft() {
     <Box
       padding={1}
       maxWidth={420}
+      sx={(theme) => ({
+        background: '#7B7575',
+        maxWidth: 420,
+        [theme.breakpoints.down('sm')]: {
+          maxWidth: '100%',
+        },
+      })}
       maxHeight={536}
       borderRadius={1}
-      sx={{ background: '#7B7575' }}
     >
       <div
         className={styled.containerSkills}
         style={{
-          backgroundImage:
-            isClient && charSelected?.name
-              ? `url(/char/${capitalizeFirstLetter(charSelected?.name || '')}_${
-                  charSelected?.class_char
-                }.webp)`
-              : 'none',
+          backgroundImage: imageUrl,
         }}
       >
         {sortEquip(allEquips).map((equip) => (
@@ -102,8 +104,10 @@ export default function CharLeft() {
           <TextField
             disabled={isLoading}
             label="Nivel Chase"
-            onChange={(e) => e.target.value}
-            value={chasePoints ? chasePoints : ''}
+            onChange={(e) => {
+              userMutate({ user: { chaser_level: Number(e.target.value) } });
+            }}
+            value={user?.user.chaser_level ? user?.user.chaser_level : ''}
           />
         </Box>
       </Box>

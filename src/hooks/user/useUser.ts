@@ -18,5 +18,6 @@ export const useUser = () => {
     },
     enabled: isRestored, // só executa quando isRestored for true
     staleTime: 0,
+    notifyOnChangeProps: 'all',
   });
 };

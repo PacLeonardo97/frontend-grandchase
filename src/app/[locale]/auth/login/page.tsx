@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 
 import TextField from '@/components/Form/Textfield';
-import { useLogin } from '@/hooks/login/useLogin';
+import { useLogin } from '@/hooks/auth/useLogin';
 
 export default function Login() {
   const [email, setEmail] = useState('');

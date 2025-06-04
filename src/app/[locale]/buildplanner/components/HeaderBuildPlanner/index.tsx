@@ -19,6 +19,7 @@ export default function HeaderBuildPlanner() {
   const tChar = useTranslations('Char');
 
   const [isClient, setIsClient] = useState(false);
+
   const { mutate: updateLocalChar } = useLocalChageChar();
   const { mutate: updateChar } = useUpdateChar();
 
@@ -27,8 +28,7 @@ export default function HeaderBuildPlanner() {
   const router = useRouter();
   const charName = searchParams.get('charName') as string;
 
-  const charByName = useCharByName();
-  const charSelected = charByName(charName);
+  const { data: charSelected } = useCharByName();
 
   const OptionClassChar = useMemo(() => {
     const classes = getClassByChar(charSelected?.name as EChar);

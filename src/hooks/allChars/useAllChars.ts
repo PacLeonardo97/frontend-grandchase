@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 
-import { useUser } from '../login/useUser';
+import { useUser } from '../user/useUser';
 import api from '@/api';
 import { EChar, EClassChar } from '@/enum/char.enum';
 import { ETypeEquips } from '@/enum/equips.enum';
@@ -25,6 +25,7 @@ const initializeChars = Object.keys(EChar).map((name) => ({
 export const useAllChars = () => {
   const queryClient = useQueryClient();
   const { data: user, isPending } = useUser();
+
   return useQuery<IChar[]>({
     queryKey: ['allChars'],
     queryFn: async () => {
@@ -33,12 +34,12 @@ export const useAllChars = () => {
         const data = _.merge(initializeChars, allChars);
         if (!user?.accessToken) return data;
         const response = await api.get('/chars');
-        return _.merge(data, response.data); // mesma lógica do redux
+        return _.merge(response.data, data);
       } catch {
         queryClient.invalidateQueries({ queryKey: ['allChars'] });
       }
     },
-    enabled: !isPending, // só executa quando isRestored for true
+    enabled: !isPending,
     staleTime: 0,
   });
 };

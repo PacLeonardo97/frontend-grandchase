@@ -34,13 +34,13 @@ export default function SkillTree() {
 
   const searchParams = useSearchParams();
   const charName = searchParams.get('charName') as string;
-  const charByName = useCharByName();
-  const charSelected = charByName(charName);
+  const { data: charSelected } = useCharByName();
 
   const skillTreeSelected = useMemo(
     () => charSelected?.skills?.[stSelected],
     [charSelected?.skills, stSelected],
   );
+
   const { mutate: updateChar } = useUpdateChar();
 
   const [anchorEl, setAnchorEl] = useState({
@@ -95,7 +95,13 @@ export default function SkillTree() {
 
   return (
     <>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box
+        sx={(theme) => ({
+          [theme.breakpoints.down('sm')]: {
+            maxWidth: '100%',
+          },
+        })}
+      >
         <Typography variant="h4">
           Quantidade de pontos:
           {isClient ? ` ${getAllPoints}/${charSelected?.total_points_st}` : ''}

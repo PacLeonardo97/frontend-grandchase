@@ -15,8 +15,8 @@ import Typography from '@mui/material/Typography';
 import LanguageSwitcher from '../ChangeLang';
 import styled from './styled.module.scss';
 import TextField from '@/components/Form/Textfield';
-import { useLogout } from '@/hooks/login/useLogout';
-import { useUser } from '@/hooks/login/useUser';
+import { useLogout } from '@/hooks/auth/useLogout';
+import { useUser } from '@/hooks/user/useUser';
 
 const NotificationBadge = styleMui(Badge)`
   & .${badgeClasses.badge} {

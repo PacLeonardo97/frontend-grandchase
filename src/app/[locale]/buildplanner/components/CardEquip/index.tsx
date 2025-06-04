@@ -2,7 +2,6 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, type MouseEvent } from 'react';
 
 import { Autocomplete, Box, Tooltip } from '@mui/material';
@@ -31,10 +30,8 @@ export default function CardEquip({ equip, type }: IProps) {
 
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [selectedEquip, setSelectedEquip] = useState({} as IOptions);
-  const searchParams = useSearchParams();
-  const charName = searchParams.get('charName') as string;
-  const charByName = useCharByName();
-  const charSelected = charByName(charName);
+  const { data: charSelected } = useCharByName();
+
   const { mutate: updateChar } = useUpdateChar();
   const t = useTranslations('Equip');
 
