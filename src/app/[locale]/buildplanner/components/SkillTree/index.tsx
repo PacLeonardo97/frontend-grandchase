@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { Typography, IconButton } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -203,12 +203,13 @@ export default function SkillTree() {
                 sx={{
                   padding: '2px',
                   borderRadius: '4px',
-                  background:
-                    currentSkill.current === currentSkill.maxValue
-                      ? '#fecb00'
-                      : 'red',
                   maxWidth: '64px',
                   height: '80px',
+                  background:
+                    !decrementDisabled || Number(currentSkill.current) > 0
+                      ? '#fecb00'
+                      : '',
+                  border: '2px, solid #8a4b8a',
                 }}
               >
                 <Image
@@ -227,24 +228,36 @@ export default function SkillTree() {
                     justifyContent: 'space-around',
                   }}
                 >
-                  <IconButton
-                    sx={{ padding: 0 }}
+                  <Button
+                    sx={{
+                      padding: 0,
+                      margin: 0,
+                      background: !incrementDisabled ? '#22b0f2' : '#576972',
+                      minWidth: '24px',
+                      height: '16px',
+                    }}
                     onClick={() =>
                       handleUpdate(skillName, sectionSelected, 'increment')
                     }
                     disabled={incrementDisabled}
                   >
                     <AddIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    sx={{ padding: 0 }}
+                  </Button>
+                  <Button
+                    sx={{
+                      padding: 0,
+                      margin: 0,
+                      minWidth: '24px',
+                      height: '16px',
+                      background: !decrementDisabled ? '#22b0f2' : '#576972',
+                    }}
                     onClick={() =>
                       handleUpdate(skillName, sectionSelected, 'decrement')
                     }
                     disabled={decrementDisabled}
                   >
                     <RemoveIcon fontSize="small" />
-                  </IconButton>
+                  </Button>
                 </div>
               </Box>
             );

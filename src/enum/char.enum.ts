@@ -40,4 +40,6 @@ export enum ESkillsSection {
   Passiva = 'Passiva',
   Forca_Maligna = 'Força_Maligna',
   Arsenal_Demoniaco = 'Arsenal_Demoniaco',
+  luz = 'luz',
+  trevas = 'trevas',
 }

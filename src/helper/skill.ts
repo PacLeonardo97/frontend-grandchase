@@ -12,8 +12,8 @@ export const canDecrementSkill = (
   const current = parseInt(skillData.current);
   if (current <= 0) return false;
 
-  const isBlocked = Object.entries(sectionSkills).some(([, s]) => {
-    return s.dependsOn?.target === skillName && parseInt(s.current) > 0;
+  const isBlocked = Object.entries(sectionSkills).some(([, skill]) => {
+    return skill.dependsOn?.target === skillName && parseInt(skill.current) > 0;
   });
 
   return !isBlocked;

@@ -110,7 +110,6 @@ export default function CardEquip({ equip, type }: IProps) {
               width={64}
               height={60}
               alt={equip?.img}
-              data-fooo={equip?.img}
               style={{ borderRadius: 4 }}
               src={equip?.img ? `/equips/${equip?.img}.png` : ''}
             />
