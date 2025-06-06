@@ -31,3 +31,15 @@ export enum EClassChar {
   class_4 = 'class_4',
   class_5 = 'class_5',
 }
+
+export enum ESkillsSection {
+  Ataques_Normais = 'Ataques_Normais',
+  Ataques_Especiais = 'Ataques_Especiais',
+  Habilidades_Compartilhadas = 'Habilidades_Compartilhadas',
+  Ativa = 'Ativa',
+  Passiva = 'Passiva',
+  Forca_Maligna = 'Força_Maligna',
+  Arsenal_Demoniaco = 'Arsenal_Demoniaco',
+  luz = 'luz',
+  trevas = 'trevas',
+}

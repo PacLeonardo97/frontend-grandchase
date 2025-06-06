@@ -2,9 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo } from 'react';
 
-import { Autocomplete, Box, CircularProgress } from '@mui/material';
+import { Autocomplete, Box, Button, CircularProgress } from '@mui/material';
 
 import TextField from '@/components/Form/Textfield';
 import { EChar, EClassChar } from '@/enum/char.enum';
@@ -13,22 +13,21 @@ import { useLocalChageChar } from '@/hooks/allChars/localChangeChar';
 import { useAllChars } from '@/hooks/allChars/useAllChars';
 import { useCharByName } from '@/hooks/allChars/useCharByName';
 import { useUpdateChar } from '@/hooks/allChars/useUpdateChar';
+import { useUser } from '@/hooks/user/useUser';
 import type { IChar } from '@/interface/char';
 
 export default function HeaderBuildPlanner() {
   const tChar = useTranslations('Char');
 
-  const [isClient, setIsClient] = useState(false);
   const { mutate: updateLocalChar } = useLocalChageChar();
   const { mutate: updateChar } = useUpdateChar();
-
+  const { data: user } = useUser();
   const searchParams = useSearchParams();
   const { isLoading } = useAllChars();
   const router = useRouter();
   const charName = searchParams.get('charName') as string;
 
-  const charByName = useCharByName();
-  const charSelected = charByName(charName);
+  const { data: charSelected } = useCharByName();
 
   const OptionClassChar = useMemo(() => {
     const classes = getClassByChar(charSelected?.name as EChar);
@@ -47,12 +46,15 @@ export default function HeaderBuildPlanner() {
 
   const allChar = useMemo(() => Object.keys(EChar), []);
 
-  const handleChangeChar = async (name: string) => {
+  const handleChangeChar = (name: string) => {
     router.replace(`buildplanner?charName=${name}`);
-    updateChar({ name } as IChar);
   };
 
-  useEffect(() => setIsClient(true), []);
+  useEffect(() => {
+    if (charSelected?.name) {
+      updateChar({ name: charName } as IChar);
+    }
+  }, [charSelected?.name, charName, updateChar]);
 
   return (
     <div
@@ -66,8 +68,8 @@ export default function HeaderBuildPlanner() {
       <Autocomplete
         sx={{ width: 140 }}
         options={allChar}
-        value={(isClient && charName) || ''}
-        loading={isClient && isLoading}
+        value={charName || ''}
+        loading={isLoading}
         disableClearable
         onChange={(_, value) => handleChangeChar(value as string)}
         renderInput={(params) => (
@@ -79,7 +81,7 @@ export default function HeaderBuildPlanner() {
                 ...params.InputProps,
                 endAdornment: (
                   <Fragment>
-                    {isClient && isLoading ? (
+                    {isLoading ? (
                       <CircularProgress color="inherit" size={20} />
                     ) : null}
                     {params.InputProps.endAdornment}
@@ -93,7 +95,7 @@ export default function HeaderBuildPlanner() {
       <Autocomplete
         sx={{ width: 216, marginLeft: '40px' }}
         value={
-          isClient && charSelected?.class_char
+          charSelected?.class_char
             ? {
                 label: tChar.raw(charSelected?.class_char as string),
                 value: charSelected?.class_char as string,
@@ -102,9 +104,9 @@ export default function HeaderBuildPlanner() {
         }
         onChange={(_, value) => handleChangeClass(value?.value as EClassChar)}
         disableClearable
-        options={isClient ? OptionClassChar : []}
-        disabled={isClient && !charSelected?.name}
-        loading={isClient && isLoading}
+        options={OptionClassChar}
+        disabled={!charSelected?.name}
+        loading={isLoading}
         renderOption={(props, option) => {
           const { key, ...optionProps } = props;
 
@@ -128,7 +130,7 @@ export default function HeaderBuildPlanner() {
                 ...params.InputProps,
                 endAdornment: (
                   <Fragment>
-                    {isClient && isLoading ? (
+                    {isLoading ? (
                       <CircularProgress color="inherit" size={20} />
                     ) : null}
                     {params.InputProps.endAdornment}
@@ -139,6 +141,18 @@ export default function HeaderBuildPlanner() {
           />
         )}
       />
+      {user?.accessToken ? (
+        <Button
+          variant="contained"
+          sx={(theme) => ({
+            fontWeight: 700,
+            marginLeft: 'auto',
+            marginRight: theme.spacing(2),
+          })}
+        >
+          Salvar tudo
+        </Button>
+      ) : null}
     </div>
   );
 }

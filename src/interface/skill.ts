@@ -1,4 +1,4 @@
-import type { EClassChar } from '@/enum/char.enum';
+import type { EClassChar, ESkillsSection } from '@/enum/char.enum';
 
 export interface ISkill {
   maxValue: string;
@@ -13,5 +13,7 @@ export interface ISkill {
 }
 
 export type ICharSkills = {
-  [className in EClassChar]?: { [skillName: string]: ISkill };
+  [className in EClassChar]?: {
+    [skillSection in ESkillsSection]?: { [skillName: string]: ISkill };
+  };
 };
