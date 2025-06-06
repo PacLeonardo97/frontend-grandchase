@@ -117,7 +117,7 @@ export default function App() {
       <div className={styled.mainArticlesContainer}>
         {images.map((image) => (
           <ImageButton key={image.id}>
-            <Link href="/pt/grandchase/guides/bory">
+            <Link href="/grandchase/guides/bory">
               <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
               <ImageBackdrop className="MuiImageBackdrop-root" />
               <SpanImage>

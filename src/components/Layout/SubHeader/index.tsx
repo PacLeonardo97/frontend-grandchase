@@ -11,7 +11,7 @@ export default function SubHeader() {
   const [isSiteHome, setIsSiteHome] = useState(false);
 
   useEffect(() => {
-    if (pathName === '/pt' || pathName === '/en') {
+    if (pathName === '/') {
       setIsSiteHome(true);
     }
   }, [pathName]);
@@ -24,16 +24,16 @@ export default function SubHeader() {
         ) : (
           <>
             <div className={styled.menu}>
-              <Link href="/pt/grandchase">
+              <Link href="/grandchase">
                 <Typography variant="h4">Home</Typography>
               </Link>
-              <Link href="/pt/grandchase/guides">
+              <Link href="/grandchase/guides">
                 <Typography variant="h4">Guias Jogo</Typography>
               </Link>
-              <Link href="/pt/grandchase/guides">
+              <Link href="/grandchase/guides">
                 <Typography variant="h4">Guias Personagens</Typography>
               </Link>
-              <Link href="/pt/buildplanner">
+              <Link href="/buildplanner">
                 <Typography variant="h4">Build Planner</Typography>
               </Link>
             </div>

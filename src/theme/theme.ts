@@ -2,6 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
   typography: {
+    fontFamily: ['Roboto', 'Arial'].join(','),
     h1: {
       fontSize: 24,
     },
@@ -28,6 +29,10 @@ export const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
+        '.sun-editor-editable': {
+          padding: '0px!important',
+          background: 'none',
+        },
         '.ellipsis': {
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
