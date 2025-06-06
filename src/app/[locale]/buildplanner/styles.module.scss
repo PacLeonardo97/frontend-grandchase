@@ -1,0 +1,7 @@
+.section_char_skill {
+    display: flex;
+    gap: 16px;
+    @media (max-width: 800px) {
+        flex-wrap: wrap;
+    }
+}

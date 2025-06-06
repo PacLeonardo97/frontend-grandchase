@@ -3,12 +3,10 @@
 import _ from 'lodash';
 
 import api from '@/api';
-import { waitForCacheRestore } from '@/helper/chacheRestore';
 import { getMockFromChar } from '@/helper/skill';
 import { IChar } from '@/interface/char';
 import type { IEquips } from '@/interface/equip';
 import { IUserState } from '@/interface/user';
-import { useCacheRestored } from '@/providers/tanstack';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 function mergeEquips(localEquips: IEquips[] = [], apiEquips: IEquips[] = []) {
@@ -29,13 +27,10 @@ function mergeEquips(localEquips: IEquips[] = [], apiEquips: IEquips[] = []) {
 export const useUpdateChar = () => {
   const queryClient = useQueryClient();
   const user = queryClient.getQueryData<IUserState>(['user']);
-  const isRestored = useCacheRestored();
 
   return useMutation({
-    mutationKey: ['getChar'],
+    mutationKey: ['updateChar'],
     mutationFn: async (data: Partial<IChar>): Promise<IChar> => {
-      await waitForCacheRestore(() => isRestored);
-
       const allChars = queryClient.getQueryData<IChar[]>(['allChars']);
       const localData = allChars?.find((char) => char.name === data.name);
       const mergeData = _.merge(localData, data);
@@ -63,8 +58,7 @@ export const useUpdateChar = () => {
         ),
       };
     },
-
-    onSuccess: (mergedChar: IChar) => {
+    onMutate: (mergedChar: IChar) => {
       queryClient.setQueryData<IChar[]>(['allChars'], (oldChars) => {
         if (!oldChars) return [mergedChar];
         const newChars = oldChars.map((char) => {
@@ -76,8 +70,8 @@ export const useUpdateChar = () => {
 
             if (!hasSkillPayload && !hasSkillState) {
               const skills = getMockFromChar(char.name || mergedChar.name);
-              const foo = { ...char, ...mergedChar, skills };
-              return foo;
+
+              return { ...char, ...mergedChar, skills };
             }
             return { ...char, ...mergedChar };
           }

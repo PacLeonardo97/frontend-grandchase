@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { type Dispatch, type SetStateAction, useState } from 'react';
 
 import DehazeIcon from '@mui/icons-material/Dehaze';
@@ -15,8 +16,8 @@ import Typography from '@mui/material/Typography';
 import LanguageSwitcher from '../ChangeLang';
 import styled from './styled.module.scss';
 import TextField from '@/components/Form/Textfield';
-import { useLogout } from '@/hooks/login/useLogout';
-import { useUser } from '@/hooks/login/useUser';
+import { useLogout } from '@/hooks/auth/useLogout';
+import { useUser } from '@/hooks/user/useUser';
 
 const NotificationBadge = styleMui(Badge)`
   & .${badgeClasses.badge} {
@@ -30,6 +31,7 @@ interface IProps {
 }
 
 export default function Header({ setOpenDrawer }: IProps) {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const { data: user } = useUser();
   const logout = useLogout();
@@ -112,6 +114,7 @@ export default function Header({ setOpenDrawer }: IProps) {
                     fullWidth
                     onClick={() => {
                       logout();
+                      router.refresh();
                     }}
                   >
                     Sair

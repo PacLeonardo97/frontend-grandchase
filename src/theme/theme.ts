@@ -49,13 +49,8 @@ export const theme = createTheme({
             display: 'flex',
             flexDirection: 'column',
             paddingLeft: '8px',
+            paddingRight: '8px',
           },
-          // `@media (max-width: 800px) {
-          //     margin: 172px 0 0 0;
-          //     display: flex;
-          //     flex-direction: column;
-          //     padding-left: 8px;
-          // }`
         },
       },
     },
@@ -72,6 +67,13 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderBottomWidth: '2px',
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
         },
       },
     },

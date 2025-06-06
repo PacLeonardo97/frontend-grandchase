@@ -2,54 +2,45 @@
 
 import _ from 'lodash';
 
-import { waitForCacheRestore } from '@/helper/chacheRestore';
 import { getMockFromChar } from '@/helper/skill';
 import { IChar } from '@/interface/char';
-import { useCacheRestored } from '@/providers/tanstack';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useLocalChageChar = () => {
   const queryClient = useQueryClient();
-  const isRestored = useCacheRestored();
 
   return useMutation({
-    mutationKey: ['localChanges'],
-    mutationFn: async (data: Partial<IChar>): Promise<IChar> => {
-      await waitForCacheRestore(() => isRestored);
-
+    mutationKey: ['updateLocalChar'],
+    mutationFn: async (data: Partial<IChar>): Promise<IChar[] | undefined> => {
       const allChars = queryClient.getQueryData<IChar[]>(['allChars']);
       const localData = allChars?.find((char) => char.name === data.name);
-      const mergeData = _.merge(localData, data);
 
-      return mergeData as IChar;
-    },
+      const mergeData = _.merge({}, localData, data);
 
-    onSuccess: (mergedChar: IChar) => {
-      queryClient.setQueryData<IChar[]>(['allChars'], (oldChars) => {
-        if (!oldChars) return [mergedChar];
+      return queryClient.setQueryData<IChar[]>(['allChars'], (oldChars) => {
+        if (!oldChars) return [mergeData];
 
-        return oldChars.map((char) => {
-          if (char.name === mergedChar.name) {
+        return oldChars?.map((char) => {
+          if (char.name === mergeData.name) {
             const hasSkillPayload = !!(
-              mergedChar.skills && Object.keys(mergedChar.skills).length
+              mergeData.skills && Object.keys(mergeData.skills).length
             );
             const hasSkillState = !!Object.keys(char.skills).length;
 
             if (!hasSkillPayload && !hasSkillState) {
-              const skills = getMockFromChar(char.name || mergedChar.name);
+              const skills = getMockFromChar(char.name || mergeData.name);
               return {
                 ...char,
                 skills,
               };
             }
-            return mergedChar;
+
+            return mergeData;
           }
+
           return char;
         });
       });
-    },
-    onError: () => {
-      queryClient.invalidateQueries({ queryKey: ['getChar'] });
     },
   });
 };
