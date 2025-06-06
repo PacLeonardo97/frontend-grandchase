@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, type ReactNode, useContext, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import { get, set, del } from 'idb-keyval';
 
@@ -28,34 +28,25 @@ export function createIDBPersister(
   } as Persister;
 }
 
-const CacheRestoredContext = createContext(false);
-export const useCacheRestored = () => useContext(CacheRestoredContext);
-
 export default function ProviderTanStack({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [isRestored, setIsRestored] = useState(false);
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <CacheRestoredContext.Provider value={isRestored}>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{
-          persister: createIDBPersister(),
-          maxAge: Infinity,
-        }}
-        onSuccess={async () => {
-          setIsRestored(true);
-          setUpInterceptor(queryClient);
-        }}
-      >
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      </PersistQueryClientProvider>
-    </CacheRestoredContext.Provider>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister: createIDBPersister(),
+        maxAge: Infinity,
+      }}
+      onSuccess={async () => {
+        setUpInterceptor(queryClient);
+      }}
+    >
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }

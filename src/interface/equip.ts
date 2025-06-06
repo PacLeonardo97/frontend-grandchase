@@ -1,4 +1,9 @@
-import type { ETypeEquips, EEquipSet, ERarityItem } from '@/enum/equips.enum';
+import type {
+  ETypeEquips,
+  EEquipSet,
+  ERarityItem,
+  ESTEquip,
+} from '@/enum/equips.enum';
 
 export interface IEquips {
   id?: number;
@@ -6,4 +11,5 @@ export interface IEquips {
   equip_set?: EEquipSet;
   rarity?: ERarityItem;
   img?: string;
+  st?: ESTEquip;
 }

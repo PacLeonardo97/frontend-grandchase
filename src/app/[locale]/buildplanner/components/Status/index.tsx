@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 
 import { Typography } from '@mui/material';
@@ -12,6 +13,7 @@ import { schemaCharStatus } from '@/validation/charStatus';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function StatusChar() {
+  const t = useTranslations('Status');
   const { data: charSelected } = useCharByName();
 
   const { mutate: updateLocalChar } = useLocalChageChar();
@@ -32,8 +34,7 @@ export default function StatusChar() {
     <form
       onSubmit={handleSubmit(onSubmit)}
       style={{
-        maxWidth: '300px',
-
+        maxWidth: '416px',
         marginTop: 16,
       }}
     >
@@ -50,15 +51,17 @@ export default function StatusChar() {
       >
         <TextField
           value={charSelected?.total_atk ? charSelected.total_atk : ''}
-          label="total_atk"
+          label={t.raw('total_atk')}
           {...register('total_atk')}
+          type="number"
           onChange={(e) => {
             onChange(e.target.value, e.target.name);
           }}
         />
         <TextField
           value={charSelected?.attack ? charSelected.attack : ''}
-          label="attack"
+          label={t.raw('attack')}
+          type="number"
           {...register('attack')}
           onChange={(e) => {
             onChange(e.target.value, e.target.name);
@@ -66,7 +69,8 @@ export default function StatusChar() {
         />
         <TextField
           value={charSelected?.def ? charSelected.def : ''}
-          label="def"
+          label={t.raw('def')}
+          type="number"
           {...register('def')}
           onChange={(e) => {
             onChange(e.target.value, e.target.name);
@@ -74,7 +78,8 @@ export default function StatusChar() {
         />
         <TextField
           value={charSelected?.crit_chance ? charSelected.crit_chance : ''}
-          label="crit_chance"
+          label={t.raw('crit_chance')}
+          type="number"
           {...register('crit_chance')}
           onChange={(e) => {
             onChange(e.target.value, e.target.name);
@@ -82,7 +87,8 @@ export default function StatusChar() {
         />
         <TextField
           value={charSelected?.hp ? charSelected.hp : ''}
-          label="hp"
+          label={t.raw('hp')}
+          type="number"
           {...register('hp')}
           onChange={(e) => {
             onChange(e.target.value, e.target.name);
@@ -90,7 +96,8 @@ export default function StatusChar() {
         />
         <TextField
           value={charSelected?.crit_damage ? charSelected.crit_damage : ''}
-          label="crit_damage"
+          label={t.raw('crit_damage')}
+          type="number"
           {...register('crit_damage')}
           onChange={(e) => {
             onChange(e.target.value, e.target.name);
@@ -98,7 +105,8 @@ export default function StatusChar() {
         />
         <TextField
           value={charSelected?.spec_attack ? charSelected.spec_attack : ''}
-          label="spec_attack"
+          label={t.raw('spec_attack')}
+          type="number"
           {...register('spec_attack')}
           onChange={(e) => {
             onChange(e.target.value, e.target.name);
@@ -106,7 +114,8 @@ export default function StatusChar() {
         />
         <TextField
           value={charSelected?.spec_def ? charSelected.spec_def : ''}
-          label="spec_def"
+          label={t.raw('spec_def')}
+          type="number"
           {...register('spec_def')}
           onChange={(e) => {
             onChange(e.target.value, e.target.name);
@@ -114,7 +123,8 @@ export default function StatusChar() {
         />
         <TextField
           value={charSelected?.rec_mp ? charSelected.rec_mp : ''}
-          label="rec_mp"
+          label={t.raw('rec_mp')}
+          type="number"
           {...register('rec_mp')}
           onChange={(e) => {
             onChange(e.target.value, e.target.name);
@@ -122,7 +132,8 @@ export default function StatusChar() {
         />
         <TextField
           value={charSelected?.rec_hp ? charSelected.rec_hp : ''}
-          label="rec_hp"
+          label={t.raw('rec_hp')}
+          type="number"
           {...register('rec_hp')}
           onChange={(e) => {
             onChange(e.target.value, e.target.name);

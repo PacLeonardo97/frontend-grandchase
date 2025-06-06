@@ -2,25 +2,25 @@ import { EChar } from '@/enum/char.enum';
 import type { ISkill, ICharSkills } from '@/interface/skill';
 import { mockElesisSkill } from '@/mock/charsSkills.mock';
 
-type PersonagemData = Record<string, ISkill>;
+type SkillSectionData = Record<string, ISkill>;
 
 export const canDecrementSkill = (
   skillName: string,
-  etapas: PersonagemData,
-  etapa: ISkill,
+  sectionSkills: SkillSectionData,
+  skillData: ISkill,
 ): boolean => {
-  const current = parseInt(etapa.current);
+  const current = parseInt(skillData.current);
   if (current <= 0) return false;
 
-  const isBlocked = Object.entries(etapas).some(([, e]) => {
-    return e.dependsOn?.target === skillName && parseInt(e.current) > 0;
+  const isBlocked = Object.entries(sectionSkills).some(([, s]) => {
+    return s.dependsOn?.target === skillName && parseInt(s.current) > 0;
   });
 
   return !isBlocked;
 };
 
 export const canIncrementSkill = (
-  allSkills: PersonagemData,
+  sectionSkills: SkillSectionData,
   currentSkill: ISkill,
   allPoints: number,
   currentAllPoints: number,
@@ -38,7 +38,8 @@ export const canIncrementSkill = (
   if (!currentSkill.dependsOn?.target) {
     return true;
   }
-  const target = allSkills[currentSkill.dependsOn.target];
+
+  const target = sectionSkills[currentSkill.dependsOn.target];
   return target?.current === currentSkill.dependsOn.value;
 };
 
@@ -46,7 +47,11 @@ export function getTotalCurrent(skillsData: ICharSkills): number {
   if (!skillsData) return 0;
 
   return Object.values(skillsData)
-    .flatMap((skillsGroup) => Object.values(skillsGroup || {}))
+    .flatMap((sections) =>
+      Object.values(sections || {}).flatMap((skills) =>
+        Object.values(skills || {}),
+      ),
+    )
     .reduce((total, skill) => {
       const current = Number(skill.current);
       const points = Number(skill.qnttyPoints);

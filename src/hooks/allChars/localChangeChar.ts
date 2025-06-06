@@ -10,7 +10,7 @@ export const useLocalChageChar = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['localChanges'],
+    mutationKey: ['updateLocalChar'],
     mutationFn: async (data: Partial<IChar>): Promise<IChar[] | undefined> => {
       const allChars = queryClient.getQueryData<IChar[]>(['allChars']);
       const localData = allChars?.find((char) => char.name === data.name);
@@ -20,7 +20,7 @@ export const useLocalChageChar = () => {
       return queryClient.setQueryData<IChar[]>(['allChars'], (oldChars) => {
         if (!oldChars) return [mergeData];
 
-        return oldChars.map((char) => {
+        return oldChars?.map((char) => {
           if (char.name === mergeData.name) {
             const hasSkillPayload = !!(
               mergeData.skills && Object.keys(mergeData.skills).length

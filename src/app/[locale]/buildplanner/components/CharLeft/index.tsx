@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useMemo } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -11,9 +11,9 @@ import TextField from '@/components/Form/Textfield';
 import { ETypeEquips, sortEquip } from '@/enum/equips.enum';
 import { createEmptyArray } from '@/helper/array';
 import { capitalizeFirstLetter } from '@/helper/capitalize';
+import { useLocalChageChar } from '@/hooks/allChars/localChangeChar';
 import { useAllChars } from '@/hooks/allChars/useAllChars';
 import { useCharByName } from '@/hooks/allChars/useCharByName';
-import { useUpdateChar } from '@/hooks/allChars/useUpdateChar';
 import { useUpdateUser } from '@/hooks/user/updateUser';
 import { useUser } from '@/hooks/user/useUser';
 import type { IChar } from '@/interface/char';
@@ -24,24 +24,20 @@ const levelChar = createEmptyArray(85).map((item) => ({
 }));
 
 export default function CharLeft() {
-  const [isClient, setIsClient] = useState(false);
-
   const { isLoading } = useAllChars();
-  const { mutate: updateChar } = useUpdateChar();
+  const { mutate: updateChar } = useLocalChageChar();
   const { data: user } = useUser();
 
   const { data: charSelected } = useCharByName();
   const { mutate: userMutate } = useUpdateUser();
 
   const imageUrl = useMemo(() => {
-    console.log('name ->', charSelected?.name);
-    console.log('class_char ->', charSelected?.class_char);
-    return isClient && charSelected?.name
+    return charSelected?.name
       ? `url(/char/${capitalizeFirstLetter(charSelected?.name || '')}_${
           charSelected.class_char
         }.webp)`
       : 'none';
-  }, [charSelected, isClient]);
+  }, [charSelected]);
 
   const handleChangeLevel = async (level: number) => {
     updateChar({ name: charSelected?.name, level } as IChar);
@@ -50,8 +46,6 @@ export default function CharLeft() {
   const allEquips = useMemo(() => {
     return Object.keys(ETypeEquips) as ETypeEquips[];
   }, []);
-
-  useEffect(() => setIsClient(true), []);
 
   return (
     <Box
@@ -89,9 +83,9 @@ export default function CharLeft() {
       >
         <Box width={80}>
           <Select
-            disabled={isClient && !charSelected?.name}
+            disabled={!charSelected?.name}
             list={levelChar}
-            value={(isClient && charSelected?.level) || '1'}
+            value={charSelected?.level || '1'}
             id="level_char"
             onChange={(e) => {
               handleChangeLevel(Number(e.target.value));

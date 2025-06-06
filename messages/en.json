@@ -5,30 +5,6 @@
     "Home": {
         "principal": "Principal En"
     },
-    "Equip": {
-        "pha_pho": "Phantom Phoenix",
-        "true_dragon": "True Iron Dragon",
-        "dragon": "Iron Dragon",
-        "void": "Void",
-        "helm": "Helm",
-        "top": "Top",
-        "lower_armor": "Lower Armor",
-        "gloves": "Gloves",
-        "shoes": "Shoes",
-        "cloak": "Cloak",
-        "weapon_j1": "Weapon 1",
-        "weapon_j2": "Weapon 2",
-        "circlet": "Circlet",
-        "mask": "Mask",
-        "wing": "Wing",
-        "stompers": "Stompers",
-        "shield": "Shield",
-        "ring": "Ring",
-        "necklace": "Necklace",
-        "anklet": "Anklet",
-        "earring1": "Earring 1",
-        "earring2": "Earring 2"
-    },
     "Char": {
         "class_1": "First Class",
         "class_2": "Second Class",
@@ -41,6 +17,25 @@
         "class_2": "2º",
         "class_3": "3º",
         "class_4": "4º",
-        "class_5": "Awakening"
+        "class_5": "Awakening",
+        "Ataques_Normais": "Ataques Normais",
+        "Ataques_Especiais": "Ataques Especiais",
+        "Habilidades_Compartilhadas": "Habilidades Compartilhadas",
+        "Ativa": "Ativa",
+        "Passiva": "Passiva",
+        "Forca_Maligna": "Forca Maligna",
+        "Arsenal_Demoniaco": "Arsenal Demoniaco"
+    },
+    "Status": {
+        "total_atk": "Ataque Total",
+        "attack": "Ataque",
+        "def": "Defesa",
+        "crit_chance": "Chance de Crítico",
+        "hp": "HP",
+        "crit_damage": "Dano Crítico",
+        "spec_attack": "Ataque Especial",
+        "spec_def": "Defesa Especial",
+        "rec_mp": "Recuperação de MP",
+        "rec_hp": "Recuperação de HP"
     }
 }

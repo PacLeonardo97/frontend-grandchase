@@ -5,8 +5,8 @@ export enum ETypeEquips {
   gloves = 'gloves',
   shoes = 'shoes',
   cloak = 'cloak',
-  weapon_j1 = 'weapon_j1',
-  weapon_j2 = 'weapon_j2',
+  weapon_1 = 'weapon_1',
+  weapon_2 = 'weapon_2',
   circlet = 'circlet',
   mask = 'mask',
   wing = 'wing',
@@ -22,8 +22,8 @@ export enum ETypeEquips {
 export function sortEquip(list: string[]) {
   return [
     'helm',
-    'weapon_j1',
-    'weapon_j2',
+    'weapon_1',
+    'weapon_2',
     'top',
     'circlet',
     'ring',
@@ -55,4 +55,11 @@ export enum EEquipSet {
   true_dragon = 'true_dragon',
   dragon = 'dragon',
   void = 'void',
+}
+
+export enum ESTEquip {
+  class_1 = 'class_1',
+  class_2 = 'class_2',
+  class_3 = 'class_3',
+  class_4 = 'class_4',
 }

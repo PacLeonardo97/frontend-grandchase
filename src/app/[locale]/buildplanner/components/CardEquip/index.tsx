@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useEffect, useState, type MouseEvent } from 'react';
+import { useEffect, useMemo, useState, type MouseEvent } from 'react';
 
 import { Autocomplete, Box, Tooltip } from '@mui/material';
 import Popover from '@mui/material/Popover';
@@ -11,9 +10,11 @@ import styled from './styles.module.scss';
 import TextField from '@/components/Form/Textfield';
 import Image from '@/components/Image';
 import { ETypeEquips, EEquipSet, ERarityItem } from '@/enum/equips.enum';
+import { getImageOptions, getNameImage, isWeapon } from '@/helper/equips';
+import { useLocalChageChar } from '@/hooks/allChars/localChangeChar';
 import { useCharByName } from '@/hooks/allChars/useCharByName';
-import { useUpdateChar } from '@/hooks/allChars/useUpdateChar';
 import { IEquips } from '@/interface/equip';
+import { equipsOptions } from '@/mock/equip.mock';
 
 interface IOptions {
   label: string;
@@ -26,22 +27,25 @@ interface IProps {
 }
 
 export default function CardEquip({ equip, type }: IProps) {
-  const [isClient, setIsClient] = useState(false);
+  const t = useTranslations('Equip');
 
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const [selectedEquip, setSelectedEquip] = useState({} as IOptions);
   const { data: charSelected } = useCharByName();
 
-  const { mutate: updateChar } = useUpdateChar();
-  const t = useTranslations('Equip');
+  const { mutate: updateChar } = useLocalChageChar();
+
+  const options = useMemo(() => {
+    if (charSelected) {
+      return equipsOptions(type, charSelected).map((item) => ({
+        label: isWeapon(type) ? t(`weapon.${item}`) : t(item),
+        value: item,
+      }));
+    }
+    return [{ value: '', label: '' }];
+  }, [charSelected, t, type]);
 
   useEffect(() => {
-    if (equip?.equip_set) {
-      setSelectedEquip({
-        value: equip.equip_set,
-        label: t(equip.equip_set),
-      } as IOptions);
-    }
     return () => {
       setSelectedEquip({ label: '', value: '' });
     };
@@ -53,8 +57,14 @@ export default function CardEquip({ equip, type }: IProps) {
   };
 
   const handleChangeEquip = async (equip_set: EEquipSet) => {
-    const img =
-      `${charSelected?.name}_${equip?.type}_${equip_set}`.toLowerCase();
+    setSelectedEquip({
+      value: equip_set,
+      label: isWeapon(type) ? t(`weapon.${equip_set}`) : t(equip_set),
+    } as IOptions);
+    const img = getNameImage(
+      { type: equip!.type, equip_set: equip_set },
+      charSelected!,
+    );
     const data = {
       equip_set: equip_set,
       charId: charSelected?.id,
@@ -62,6 +72,7 @@ export default function CardEquip({ equip, type }: IProps) {
       type,
       img,
     };
+
     const equips = charSelected?.equips?.map((item) =>
       item.type === data.type
         ? {
@@ -70,36 +81,32 @@ export default function CardEquip({ equip, type }: IProps) {
         : item,
     );
 
-    updateChar({ name: charSelected?.name, equips });
-    setSelectedEquip({
-      value: data.equip_set,
-      label: t(data.equip_set),
-    } as IOptions);
+    updateChar({ ...charSelected, equips });
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  useEffect(() => setIsClient(true), []);
-
   const typeTranslate = equip?.type ? t.raw(equip?.type as string) : '';
+
   return (
     <>
-      <Tooltip title={isClient ? typeTranslate : ''}>
+      <Tooltip title={typeTranslate}>
         <div
           onClick={handleClick}
           className={styled.square}
-          data-char={isClient && !!charSelected?.name}
-          data-label={isClient && typeTranslate}
+          data-char={!!charSelected?.name}
+          data-label={typeTranslate}
         >
-          {isClient && equip?.img ? (
+          {equip?.img ? (
             <Image
               width={64}
               height={60}
               alt={equip?.img}
+              data-fooo={equip?.img}
               style={{ borderRadius: 4 }}
-              src={equip?.img ? `/${equip?.img}.png` : ''}
+              src={equip?.img ? `/equips/${equip?.img}.png` : ''}
             />
           ) : null}
         </div>
@@ -117,12 +124,9 @@ export default function CardEquip({ equip, type }: IProps) {
         >
           <Autocomplete
             sx={{ width: 300 }}
-            options={Object.keys(EEquipSet).map((item) => ({
-              label: item ? t(item) : item,
-              value: item,
-            }))}
+            options={options}
             getOptionLabel={(option) => {
-              return option.label || '';
+              return option.label;
             }}
             disableClearable
             value={selectedEquip}
@@ -132,6 +136,8 @@ export default function CardEquip({ equip, type }: IProps) {
             }}
             renderOption={(props, option) => {
               const { key, ...optionProps } = props;
+
+              const img = getImageOptions(option.value, type);
               return (
                 <Box
                   key={key}
@@ -139,12 +145,15 @@ export default function CardEquip({ equip, type }: IProps) {
                   sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
                   {...optionProps}
                 >
-                  <img
-                    loading="lazy"
-                    width="20"
-                    src="https://i.imgur.com/FErjbNu.png"
-                    alt=""
-                  />
+                  {img ? (
+                    <Image
+                      width={24}
+                      height={24}
+                      alt={img}
+                      src={img ? `/equips/${img}.png` : ''}
+                    />
+                  ) : null}
+
                   {option.label}
                 </Box>
               );

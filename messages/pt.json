@@ -5,30 +5,6 @@
     "Home": {
         "principal": "principal PT"
     },
-    "Equip": {
-        "pha_pho": "Fenix Fantasma",
-        "true_dragon": "Verdadeiro Dragão de Ferro",
-        "dragon": "Dragão de Ferro",
-        "void": "Vazio",
-        "helm": "Capacete",
-        "top": "Cota",
-        "lower_armor": "Calças",
-        "gloves": "Luvas",
-        "shoes": "Botas",
-        "cloak": "Capa",
-        "weapon_j1": "Arma 1",
-        "weapon_j2": "Arma 2",
-        "circlet": "Diadema",
-        "mask": "Máscara",
-        "wing": "Asas",
-        "stompers": "Facas",
-        "shield": "Escudos",
-        "ring": "Anel",
-        "necklace": "Colar",
-        "anklet": "Tornozeleira",
-        "earring1": "Brinco 1",
-        "earring2": "Brinco 2"
-    },
     "Char": {
         "class_1": "Primeira Classe",
         "class_2": "Segunda Classe",
@@ -41,6 +17,25 @@
         "class_2": "2º",
         "class_3": "3º",
         "class_4": "4º",
-        "class_5": "Despertar"
+        "class_5": "Despertar",
+        "Ataques_Normais": "Ataques Normais",
+        "Ataques_Especiais": "Ataques Especiais",
+        "Habilidades_Compartilhadas": "Habilidades Compartilhadas",
+        "Ativa": "Ativa",
+        "Passiva": "Passiva",
+        "Forca_Maligna": "Forca Maligna",
+        "Arsenal_Demoniaco": "Arsenal Demoniaco"
+    },
+    "Status": {
+        "total_atk": "Ataque Total",
+        "attack": "Ataque",
+        "def": "Defesa",
+        "crit_chance": "Chance de Crítico",
+        "hp": "HP",
+        "crit_damage": "Dano Crítico",
+        "spec_attack": "Ataque Especial",
+        "spec_def": "Defesa Especial",
+        "rec_mp": "Recuperação de MP",
+        "rec_hp": "Recuperação de HP"
     }
 }
