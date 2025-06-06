@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import CharLeft from './components/CharLeft';
 import HeaderBuildPlanner from './components/HeaderBuildPlanner';
-// import SkillTree from './components/SkillTree';
+import SkillTree from './components/SkillTree';
 import StatusChar from './components/Status';
 import styled from './styles.module.scss';
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: 'Build Planner Grand Chase Classic',
 };
 
-export default function Page() {
+export default async function Page() {
   return (
     <>
       <HeaderBuildPlanner />
@@ -19,7 +19,7 @@ export default function Page() {
         <CharLeft />
         <StatusChar />
       </div>
-      {/* <SkillTree /> */}
+      <SkillTree />
     </>
   );
 }

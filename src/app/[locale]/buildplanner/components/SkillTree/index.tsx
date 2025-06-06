@@ -130,129 +130,135 @@ export default function SkillTree() {
   }, [skillTreeSelected, sectionSelected]);
 
   return (
-    <>
-      <Box
-        sx={(theme) => ({
-          [theme.breakpoints.down('sm')]: {
-            maxWidth: '100%',
-          },
-        })}
+    <Box
+      sx={(theme) => ({
+        background: '#9D9898',
+        marginTop: theme.spacing(1),
+        padding: theme.spacing(2),
+        borderRadius: theme.spacing(0.5),
+        marginRight: theme.spacing(2),
+        minHeight: theme.spacing(50),
+        [theme.breakpoints.down('sm')]: {
+          maxWidth: '100%',
+          marginRight: 0,
+          minHeight: theme.spacing(80),
+        },
+      })}
+    >
+      <Typography variant="h4">
+        Quantidade de pontos:
+        {`${getAllPoints}/${charSelected?.total_points_st}`}
+      </Typography>
+      <Tabs onChange={handleChangeClass} value={stSelected || 'class_1'}>
+        {qnttClassesChar?.map((classes) => (
+          <Tab key={classes} label={t.raw(classes)} value={classes} />
+        ))}
+      </Tabs>
+
+      <Tabs
+        variant="scrollable"
+        onChange={handleChangeSection}
+        value={sectionSelected || Object.keys(skillTreeSelected || {})[0]}
       >
-        <Typography variant="h4">
-          Quantidade de pontos:
-          {`${getAllPoints}/${charSelected?.total_points_st}`}
-        </Typography>
-        <Tabs onChange={handleChangeClass} value={stSelected || 'class_1'}>
-          {qnttClassesChar?.map((classes) => (
-            <Tab key={classes} label={t.raw(classes)} value={classes} />
-          ))}
-        </Tabs>
+        {Object.keys(skillTreeSelected || {}).map((section) => (
+          <Tab key={section} label={t.raw(section)} value={section} />
+        ))}
+      </Tabs>
 
-        <Tabs
-          variant="scrollable"
-          onChange={handleChangeSection}
-          value={sectionSelected || Object.keys(skillTreeSelected || {})[0]}
-        >
-          {Object.keys(skillTreeSelected || {}).map((section) => (
-            <Tab key={section} label={t.raw(section)} value={section} />
-          ))}
-        </Tabs>
+      <Box
+        sx={{
+          marginTop: '8px',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '8px',
+        }}
+      >
+        {Object.entries(skillSectionSelected || {}).map(
+          ([skillName, currentSkill]) => {
+            const incrementDisabled = !canIncrementSkill(
+              skillSectionSelected!,
+              currentSkill,
+              charSelected?.total_points_st as number,
+              getAllPoints,
+            );
 
-        <Box
-          sx={{
-            marginTop: '8px',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '8px',
-          }}
-        >
-          {Object.entries(skillSectionSelected || {}).map(
-            ([skillName, currentSkill]) => {
-              const incrementDisabled = !canIncrementSkill(
-                skillSectionSelected!,
-                currentSkill,
-                charSelected?.total_points_st as number,
-                getAllPoints,
-              );
+            const decrementDisabled = !canDecrementSkill(
+              skillName,
+              skillSectionSelected!,
+              currentSkill,
+            );
 
-              const decrementDisabled = !canDecrementSkill(
-                skillName,
-                skillSectionSelected!,
-                currentSkill,
-              );
-
-              return (
-                <Box
-                  aria-owns={
-                    Boolean(anchorEl.anchor) ? 'mouse-over-popover' : undefined
-                  }
-                  aria-hidden={!Boolean(anchorEl.anchor)}
-                  aria-haspopup="true"
-                  onMouseEnter={(e) =>
-                    handlePopoverOpen(e, currentSkill, skillName)
-                  }
-                  onMouseLeave={handlePopoverClose}
-                  key={`${sectionSelected}-${skillName}`}
-                  sx={{
-                    padding: '2px',
-                    borderRadius: '4px',
-                    background:
-                      currentSkill.current === currentSkill.maxValue
-                        ? '#fecb00'
-                        : 'red',
-                    maxWidth: '64px',
-                    height: '80px',
+            return (
+              <Box
+                aria-owns={
+                  Boolean(anchorEl.anchor) ? 'mouse-over-popover' : undefined
+                }
+                aria-hidden={!Boolean(anchorEl.anchor)}
+                aria-haspopup="true"
+                onMouseEnter={(e) =>
+                  handlePopoverOpen(e, currentSkill, skillName)
+                }
+                onMouseLeave={handlePopoverClose}
+                key={`${sectionSelected}-${skillName}`}
+                sx={{
+                  padding: '2px',
+                  borderRadius: '4px',
+                  background:
+                    currentSkill.current === currentSkill.maxValue
+                      ? '#fecb00'
+                      : 'red',
+                  maxWidth: '64px',
+                  height: '80px',
+                }}
+              >
+                <Image
+                  width={56}
+                  height={56}
+                  alt={currentSkill?.img}
+                  style={{
+                    borderRadius: 4,
+                    justifySelf: 'center',
+                  }}
+                  src={'/NoImage.svg'}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-around',
                   }}
                 >
-                  <Image
-                    width={56}
-                    height={56}
-                    alt={currentSkill?.img}
-                    style={{
-                      borderRadius: 4,
-                      justifySelf: 'center',
-                    }}
-                    src={'/NoImage.svg'}
-                  />
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-around',
-                    }}
+                  <IconButton
+                    sx={{ padding: 0 }}
+                    onClick={() =>
+                      handleUpdate(skillName, sectionSelected, 'increment')
+                    }
+                    disabled={incrementDisabled}
                   >
-                    <IconButton
-                      sx={{ padding: 0 }}
-                      onClick={() =>
-                        handleUpdate(skillName, sectionSelected, 'increment')
-                      }
-                      disabled={incrementDisabled}
-                    >
-                      <AddIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      sx={{ padding: 0 }}
-                      onClick={() =>
-                        handleUpdate(skillName, sectionSelected, 'decrement')
-                      }
-                      disabled={decrementDisabled}
-                    >
-                      <RemoveIcon fontSize="small" />
-                    </IconButton>
-                  </div>
-                </Box>
-              );
-            },
-          )}
-        </Box>
-        {anchorEl.anchor ? (
-          <PopoverSkill
-            className={anchorEl.className}
-            anchorEl={anchorEl.anchor}
-            currentSkill={anchorEl.currentSkill}
-            handlePopoverClose={handlePopoverClose}
-          />
-        ) : null}
+                    <AddIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    sx={{ padding: 0 }}
+                    onClick={() =>
+                      handleUpdate(skillName, sectionSelected, 'decrement')
+                    }
+                    disabled={decrementDisabled}
+                  >
+                    <RemoveIcon fontSize="small" />
+                  </IconButton>
+                </div>
+              </Box>
+            );
+          },
+        )}
       </Box>
-    </>
+      {anchorEl.anchor ? (
+        <PopoverSkill
+          className={anchorEl.className}
+          anchorEl={anchorEl.anchor}
+          currentSkill={anchorEl.currentSkill}
+          handlePopoverClose={handlePopoverClose}
+        />
+      ) : null}
+    </Box>
   );
 }

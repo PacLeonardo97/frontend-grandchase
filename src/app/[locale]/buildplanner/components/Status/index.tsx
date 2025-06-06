@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Typography } from '@mui/material';
 import z from 'zod';
 
+import styled from './styles.module.scss';
 import TextField from '@/components/Form/Textfield';
 import { useLocalChageChar } from '@/hooks/allChars/localChangeChar';
 import { useCharByName } from '@/hooks/allChars/useCharByName';
@@ -31,15 +32,10 @@ export default function StatusChar() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      style={{
-        maxWidth: '416px',
-        marginTop: 16,
-      }}
-    >
-      <Typography variant="h3">Status</Typography>
-      <Typography variant="h4">Atributos Principais</Typography>
+    <form onSubmit={handleSubmit(onSubmit)} className={styled.form}>
+      <Typography variant="h3" fontWeight={700} marginBottom={2}>
+        Adicionar Poder
+      </Typography>
 
       <div
         style={{
