@@ -88,16 +88,22 @@ export default function CardEquip({ equip, type }: IProps) {
     setAnchorEl(null);
   };
 
-  const typeTranslate = equip?.type ? t.raw(equip?.type as string) : '';
+  const typeTranslate = () => {
+    if (equip?.equip_set) {
+      if (isWeapon(type)) return t(`weapon.${equip?.equip_set}`);
+      return t.raw(equip?.type as string);
+    }
+    return equip?.type ? t.raw(equip?.type as string) : '';
+  };
 
   return (
     <>
-      <Tooltip title={typeTranslate}>
+      <Tooltip title={typeTranslate()}>
         <div
           onClick={handleClick}
           className={styled.square}
           data-char={!!charSelected?.name}
-          data-label={typeTranslate}
+          data-label={typeTranslate()}
         >
           {equip?.img ? (
             <Image
@@ -161,7 +167,7 @@ export default function CardEquip({ equip, type }: IProps) {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={typeTranslate}
+                label={typeTranslate()}
                 slotProps={{
                   htmlInput: {
                     ...params.inputProps,
