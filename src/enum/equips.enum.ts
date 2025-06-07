@@ -55,6 +55,16 @@ export enum EEquipSet {
   true_dragon = 'true_dragon',
   dragon = 'dragon',
   void = 'void',
+  tornozeleira_zoro = 'tornozeleira_zoro',
+  tornozeleira_real = 'tornozeleira_real',
+  tornozeleira_magica = 'tornozeleira_magica',
+}
+
+export enum EEquipWeapon {
+  pha_pho = 'pha_pho',
+  true_dragon = 'true_dragon',
+  dragon = 'dragon',
+  void = 'void',
 }
 
 export enum ESTEquip {
