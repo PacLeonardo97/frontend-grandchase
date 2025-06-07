@@ -9,7 +9,7 @@ import Popover from '@mui/material/Popover';
 import styled from './styles.module.scss';
 import TextField from '@/components/Form/Textfield';
 import Image from '@/components/Image';
-import { ETypeEquips, EEquipSet, ERarityItem } from '@/enum/equips.enum';
+import { EEquipSet, ERarityItem, ETypeEquips } from '@/enum/equips.enum';
 import { getImageOptions, getNameImage, isWeapon } from '@/helper/equips';
 import { useLocalChageChar } from '@/hooks/allChars/localChangeChar';
 import { useCharByName } from '@/hooks/allChars/useCharByName';
@@ -22,32 +22,45 @@ interface IOptions {
 }
 
 interface IProps {
-  equip: IEquips | undefined;
+  // equip: IEquips;
   type: ETypeEquips;
 }
 
-export default function CardEquip({ equip, type }: IProps) {
+export default function CardEquip({ type }: IProps) {
   const t = useTranslations('Equip');
-
-  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
-  const [selectedEquip, setSelectedEquip] = useState({} as IOptions);
   const { data: charSelected } = useCharByName();
+  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+
+  const equip = charSelected?.equips?.find(
+    (item) => item.type === type,
+  ) as IEquips;
+
+  // value = equip_set, label = tradução
+  const [selectedEquip, setSelectedEquip] = useState({} as IOptions);
 
   const { mutate: updateChar } = useLocalChageChar();
 
   const options = useMemo(() => {
     if (charSelected) {
-      return equipsOptions(type, charSelected).map((item) => ({
-        label: isWeapon(type) ? t(`weapon.${item}`) : t(item),
+      return equipsOptions(equip?.type, charSelected).map((item) => ({
+        label: isWeapon(equip?.type) ? t(`weapon.${item}`) : t(item),
         value: item,
       }));
     }
     return [{ value: '', label: '' }];
-  }, [charSelected, t, type]);
+  }, [charSelected, equip?.type, t]);
 
   useEffect(() => {
+    if (equip?.type && equip?.equip_set) {
+      setSelectedEquip({
+        value: equip?.equip_set || '',
+        label: isWeapon(equip?.type)
+          ? t(`weapon.${equip.equip_set}`)
+          : t(equip?.equip_set || ''),
+      });
+    }
     return () => {
-      setSelectedEquip({ label: '', value: '' });
+      setSelectedEquip({ value: '', label: '' });
     };
   }, [equip, t]);
 
@@ -55,12 +68,13 @@ export default function CardEquip({ equip, type }: IProps) {
     if (!charSelected?.name) return;
     setAnchorEl(event.currentTarget);
   };
-
   const handleChangeEquip = async (equip_set: EEquipSet) => {
     setSelectedEquip({
       value: equip_set,
-      label: isWeapon(type) ? t(`weapon.${equip_set}`) : t(equip_set),
+      // label: isWeapon(equip.type) ? t(`weapon.${equip_set}`) : t(equip_set),
+      label: t(equip_set),
     } as IOptions);
+
     const img = getNameImage(
       { type: equip!.type, equip_set: equip_set },
       charSelected!,
@@ -69,7 +83,7 @@ export default function CardEquip({ equip, type }: IProps) {
       equip_set: equip_set,
       charId: charSelected?.id,
       rarity: ERarityItem.common,
-      type,
+      type: equip.type,
       img,
     };
 
@@ -90,7 +104,7 @@ export default function CardEquip({ equip, type }: IProps) {
 
   const typeTranslate = () => {
     if (equip?.equip_set) {
-      if (isWeapon(type)) return t(`weapon.${equip?.equip_set}`);
+      if (isWeapon(equip.type)) return t(`weapon.${equip?.equip_set}`);
       return t.raw(equip?.type as string);
     }
     return equip?.type ? t.raw(equip?.type as string) : '';
@@ -137,12 +151,12 @@ export default function CardEquip({ equip, type }: IProps) {
             value={selectedEquip}
             autoHighlight
             onChange={(_, value) => {
-              handleChangeEquip(value?.value as EEquipSet);
+              handleChangeEquip(value.value as EEquipSet);
             }}
             renderOption={(props, option) => {
               const { key, ...optionProps } = props;
+              const img = getImageOptions(option.value, equip.type);
 
-              const img = getImageOptions(option.value, type);
               return (
                 <Box
                   key={key}
@@ -166,7 +180,7 @@ export default function CardEquip({ equip, type }: IProps) {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={typeTranslate()}
+                label={equip?.type ? t.raw(equip?.type as string) : ''}
                 slotProps={{
                   htmlInput: {
                     ...params.inputProps,

@@ -17,6 +17,7 @@ import { useCharByName } from '@/hooks/allChars/useCharByName';
 import { useUpdateUser } from '@/hooks/user/updateUser';
 import { useUser } from '@/hooks/user/useUser';
 import type { IChar } from '@/interface/char';
+import { IEquips } from '@/interface/equip';
 
 const levelChar = createEmptyArray(85).map((item) => ({
   label: `${item}`,
@@ -67,12 +68,9 @@ export default function CharLeft() {
           backgroundImage: imageUrl,
         }}
       >
-        {sortEquip(allEquips).map((equip) => (
-          <Fragment key={equip}>
-            <CardEquip
-              equip={charSelected?.equips?.find((item) => item.type === equip)}
-              type={equip as ETypeEquips}
-            />
+        {sortEquip(allEquips).map((type) => (
+          <Fragment key={type}>
+            <CardEquip type={type as ETypeEquips} />
           </Fragment>
         ))}
       </div>
