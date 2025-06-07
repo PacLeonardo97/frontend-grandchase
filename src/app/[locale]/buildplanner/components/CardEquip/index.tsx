@@ -22,7 +22,6 @@ interface IOptions {
 }
 
 interface IProps {
-  // equip: IEquips;
   type: ETypeEquips;
 }
 
