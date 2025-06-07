@@ -71,8 +71,7 @@ export default function CardEquip({ type }: IProps) {
   const handleChangeEquip = async (equip_set: EEquipSet) => {
     setSelectedEquip({
       value: equip_set,
-      // label: isWeapon(equip.type) ? t(`weapon.${equip_set}`) : t(equip_set),
-      label: t(equip_set),
+      label: isWeapon(equip.type) ? t(`weapon.${equip_set}`) : t(equip_set),
     } as IOptions);
 
     const img = getNameImage(
