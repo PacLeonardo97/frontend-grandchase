@@ -17,7 +17,6 @@ import { useCharByName } from '@/hooks/allChars/useCharByName';
 import { useUpdateUser } from '@/hooks/user/updateUser';
 import { useUser } from '@/hooks/user/useUser';
 import type { IChar } from '@/interface/char';
-import { IEquips } from '@/interface/equip';
 
 const levelChar = createEmptyArray(85).map((item) => ({
   label: `${item}`,
@@ -82,7 +81,7 @@ export default function CharLeft() {
         <Box width={80}>
           <Select
             disabled={!charSelected?.name}
-            list={levelChar}
+            list={levelChar?.toReversed()}
             value={charSelected?.level || '1'}
             id="level_char"
             onChange={(e) => {

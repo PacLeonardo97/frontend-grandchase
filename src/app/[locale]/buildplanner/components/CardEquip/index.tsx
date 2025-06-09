@@ -9,8 +9,13 @@ import Popover from '@mui/material/Popover';
 import styled from './styles.module.scss';
 import TextField from '@/components/Form/Textfield';
 import Image from '@/components/Image';
-import { EEquipSet, ERarityItem, ETypeEquips } from '@/enum/equips.enum';
-import { getImageOptions, getNameImage, isWeapon } from '@/helper/equips';
+import { EEquipSet, ETypeEquips } from '@/enum/equips.enum';
+import {
+  colorEquip,
+  getImageOptions,
+  getNameImage,
+  isWeapon,
+} from '@/helper/equips';
 import { useLocalChageChar } from '@/hooks/allChars/localChangeChar';
 import { useCharByName } from '@/hooks/allChars/useCharByName';
 import { IEquips } from '@/interface/equip';
@@ -19,6 +24,7 @@ import { equipsOptions } from '@/mock/equip.mock';
 interface IOptions {
   label: string;
   value: string;
+  rarity?: string;
 }
 
 interface IProps {
@@ -41,12 +47,19 @@ export default function CardEquip({ type }: IProps) {
 
   const options = useMemo(() => {
     if (charSelected) {
-      return equipsOptions(equip?.type, charSelected).map((item) => ({
-        label: isWeapon(equip?.type) ? t(`weapon.${item}`) : t(item),
-        value: item,
-      }));
+      return equipsOptions(equip?.type, charSelected).map((item) => {
+        return {
+          label: isWeapon(equip?.type)
+            ? t(`weapon.${item.name}`)
+            : item.name
+            ? t(item.name)
+            : '',
+          value: item.name,
+          rarity: item.rarity,
+        };
+      });
     }
-    return [{ value: '', label: '' }];
+    return [{ value: '', label: '', rarity: '' }];
   }, [charSelected, equip?.type, t]);
 
   useEffect(() => {
@@ -56,6 +69,7 @@ export default function CardEquip({ type }: IProps) {
         label: isWeapon(equip?.type)
           ? t(`weapon.${equip.equip_set}`)
           : t(equip?.equip_set || ''),
+        rarity: equip.rarity,
       });
     }
     return () => {
@@ -67,10 +81,14 @@ export default function CardEquip({ type }: IProps) {
     if (!charSelected?.name) return;
     setAnchorEl(event.currentTarget);
   };
-  const handleChangeEquip = async (equip_set: EEquipSet) => {
+  const handleChangeEquip = async (
+    equip_set: EEquipSet,
+    rarityParam: string,
+  ) => {
     setSelectedEquip({
       value: equip_set,
       label: isWeapon(equip.type) ? t(`weapon.${equip_set}`) : t(equip_set),
+      rarity: rarityParam,
     } as IOptions);
 
     const img = getNameImage(
@@ -80,7 +98,7 @@ export default function CardEquip({ type }: IProps) {
     const data = {
       equip_set: equip_set,
       charId: charSelected?.id,
-      rarity: ERarityItem.common,
+      rarity: rarityParam,
       type: equip.type,
       img,
     };
@@ -91,7 +109,7 @@ export default function CardEquip({ type }: IProps) {
             ...data,
           }
         : item,
-    );
+    ) as IEquips[];
 
     updateChar({ ...charSelected, equips });
   };
@@ -105,7 +123,7 @@ export default function CardEquip({ type }: IProps) {
       if (isWeapon(equip.type)) return t(`weapon.${equip?.equip_set}`);
       return t.raw(equip?.type as string);
     }
-    return equip?.type ? t.raw(equip?.type as string) : '';
+    return equip?.type ? t.raw(equip?.type) : '';
   };
 
   return (
@@ -122,8 +140,8 @@ export default function CardEquip({ type }: IProps) {
               width={64}
               height={60}
               alt={equip?.img}
-              style={{ borderRadius: 4 }}
-              src={equip?.img ? `/equips/${equip?.img}.png` : ''}
+              style={{ borderRadius: 4, background: `${colorEquip(equip)}` }}
+              src={equip?.img ? `/equips/${equip?.img}.webp` : ''}
             />
           ) : null}
         </div>
@@ -149,7 +167,10 @@ export default function CardEquip({ type }: IProps) {
             value={selectedEquip}
             autoHighlight
             onChange={(_, value) => {
-              handleChangeEquip(value.value as EEquipSet);
+              handleChangeEquip(
+                value.value as EEquipSet,
+                value.rarity as string,
+              );
             }}
             renderOption={(props, option) => {
               const { key, ...optionProps } = props;
@@ -164,10 +185,10 @@ export default function CardEquip({ type }: IProps) {
                 >
                   {img ? (
                     <Image
-                      width={24}
-                      height={24}
+                      width={32}
+                      height={32}
                       alt={img}
-                      src={img ? `/equips/${img}.png` : ''}
+                      src={img ? `/equips/${img}.webp` : ''}
                     />
                   ) : null}
 

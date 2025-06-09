@@ -7,6 +7,7 @@ import { Fragment, useEffect, useMemo } from 'react';
 import { Autocomplete, Box, Button, CircularProgress } from '@mui/material';
 
 import TextField from '@/components/Form/Textfield';
+import Image from '@/components/Image';
 import { EChar, EClassChar } from '@/enum/char.enum';
 import { getClassByChar } from '@/helper/char';
 import { useLocalChageChar } from '@/hooks/allChars/localChangeChar';
@@ -72,25 +73,47 @@ export default function HeaderBuildPlanner() {
         loading={isLoading}
         disableClearable
         onChange={(_, value) => handleChangeChar(value as string)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Personagens"
-            slotProps={{
-              input: {
-                ...params.InputProps,
-                endAdornment: (
-                  <Fragment>
-                    {isLoading ? (
-                      <CircularProgress color="inherit" size={20} />
-                    ) : null}
-                    {params.InputProps.endAdornment}
-                  </Fragment>
-                ),
-              },
-            }}
-          />
-        )}
+        renderOption={(props, option) => {
+          const { key, ...optionProps } = props;
+
+          return (
+            <Box
+              key={key}
+              sx={{ '& > img': { mr: 1, flexShrink: 0 } }}
+              component="li"
+              {...optionProps}
+            >
+              <Image
+                width={24}
+                height={24}
+                alt={option}
+                src={`/char/miniatura/${option}.webp`}
+              />
+              {option}
+            </Box>
+          );
+        }}
+        renderInput={(params) => {
+          return (
+            <TextField
+              {...params}
+              label="Personagens"
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  endAdornment: (
+                    <Fragment>
+                      {isLoading ? (
+                        <CircularProgress color="inherit" size={20} />
+                      ) : null}
+                      {params.InputProps.endAdornment}
+                    </Fragment>
+                  ),
+                },
+              }}
+            />
+          );
+        }}
       />
       <Autocomplete
         sx={{ width: 216, marginLeft: '40px' }}

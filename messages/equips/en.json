@@ -22,9 +22,9 @@
         "anklet": "Anklet",
         "earring1": "Earring 1",
         "earring2": "Earring 2",
-        "tornozeleira_zoro": "Tornozeleira do Zoro",
-        "tornozeleira_real": "Tornozeleira Real",
-        "tornozeleira_magica": "Tornozeleira Mágica",
+        "anklet_zoro": "Tornozeleira do Zoro",
+        "anklet_real": "Tornozeleira Real",
+        "anklet_magica": "Tornozeleira Mágica",
         "weapon": {
             "arme_class_1_void": "Cetro Do Devorador Do Vazio",
             "arme_class_2_void": "2 Do Devorador Do Vazio",

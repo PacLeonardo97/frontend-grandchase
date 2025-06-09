@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 
+import FlashOnIcon from '@mui/icons-material/FlashOn';
 import { Typography } from '@mui/material';
 import z from 'zod';
 
@@ -33,8 +34,9 @@ export default function StatusChar() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styled.form}>
-      <Typography variant="h3" fontWeight={700} marginBottom={2}>
-        Adicionar Poder
+      <Typography variant="h3" marginBottom={2}>
+        <FlashOnIcon />
+        Distribuir Atributos
       </Typography>
 
       <div
