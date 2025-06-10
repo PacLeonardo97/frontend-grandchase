@@ -49,7 +49,7 @@ function renderMuiTypographyFromHtml(htmlString: string) {
               className={attribs?.class || undefined}
               style={attribs?.style ? parseStyle(attribs.style) : undefined}
             >
-              {domToReact(children as unknown as ChildNode[], options)}7
+              {domToReact(children as unknown as ChildNode[], options)}
             </Typography>
           );
         }
@@ -64,9 +64,11 @@ type ContentProps = {
   data: IArticle;
 };
 
+// TODO: visualização para servidor
 export default function ArticleRenderer({ data }: ContentProps) {
   return (
     <div className="sun-editor-editable">
+      <Typography variant="h3">{data.title}</Typography>
       {renderMuiTypographyFromHtml(data.content)}
     </div>
   );

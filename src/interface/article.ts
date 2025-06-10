@@ -13,4 +13,5 @@ export interface IArticle {
   content: string;
   author: IAuthor;
   category: string;
+  cover: string;
 }

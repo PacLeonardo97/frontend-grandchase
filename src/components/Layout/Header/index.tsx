@@ -52,11 +52,13 @@ export default function Header({ setOpenDrawer }: IProps) {
         <div>
           <TextField size="small" variant="standard" />
         </div>
-        <div>
-          <Typography className={styled.title} variant="h2">
-            MinMaxed
-          </Typography>
-        </div>
+        <Link href="/">
+          <div>
+            <Typography className={styled.title} variant="h2">
+              MinMaxed
+            </Typography>
+          </div>
+        </Link>
 
         <div className={styled.userContainer}>
           <IconButton style={{ marginRight: 16 }}>

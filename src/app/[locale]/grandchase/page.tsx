@@ -1,11 +1,14 @@
-'use client';
-import ButtonBase from '@mui/material/ButtonBase';
-import { styled as styledMui } from '@mui/material/styles';
+import Link from 'next/link';
+
 import Typography from '@mui/material/Typography';
 
+import ImageBackdrop from './_components/ImageBackdrop';
+import ImageButton from './_components/ImageButton';
+import ImageSrc from './_components/ImageSrc';
+import SpanImage from './_components/SpanImage';
 import styled from './styled.module.scss';
 import ArticlesList from '@/components/ArticlesList';
-import Layout from '@/components/Layout';
+import { IArticle } from '@/interface/article';
 
 const images = [
   {
@@ -39,74 +42,62 @@ const images = [
     title: 'Próximos SR',
   },
 ];
+interface PageProps {
+  params: Promise<{
+    slug: string;
+    locale: string;
+  }>;
+}
 
-// TODO: criar pasta components para colocar esses componentes
-const ImageButton = styledMui(ButtonBase)(({ theme }) => ({
-  position: 'relative',
-  height: 200,
-  [theme.breakpoints.down('sm')]: {
-    width: '100% !important', // Overrides inline-style
-    height: 100,
-  },
-  '&:hover, &.Mui-focusVisible': {
-    zIndex: 1,
-    '& .MuiImageBackdrop-root': {
-      opacity: 0.15,
+// const revalidate = 60 * 60 * 2; // 2 days
+
+export default async function Page({ params }: PageProps) {
+  console.log(params);
+
+  const locale = (await params).locale === 'pt' ? 'pt-BR' : 'en';
+
+  const response = await fetch(
+    `${process.env.NEXT_BASEURL_BACKEND}/articles?category=Grand Chase Classic&type=news&locale=${locale}`,
+    {
+      // cache: 'force-cache',
+      // next: { revalidate },
     },
-    '& .MuiImageMarked-root': {
-      opacity: 0,
-    },
-  },
-}));
+  );
+  const news = await response.json();
 
-const ImageSrc = styledMui('span')({
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  top: 0,
-  bottom: 0,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center 40%',
-});
+  // response = await fetch(
+  //   `${process.env.NEXT_BASEURL_BACKEND}/articles?category=Grand Chase Classic&type=game_guides&locale=${locale}`,
+  //   {
+  //     // cache: 'force-cache',
+  //     // next: { revalidate },
+  //   },
+  // );
+  // const guides = await response.json();
 
-const SpanImage = styledMui('span')(({ theme }) => ({
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  top: 0,
-  bottom: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: theme.palette.common.white,
-}));
-
-const ImageBackdrop = styledMui('span')(({ theme }) => ({
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  top: 0,
-  bottom: 0,
-  backgroundColor: theme.palette.common.black,
-  opacity: 0.4,
-  transition: theme.transitions.create('opacity'),
-}));
-
-export default function App() {
+  console.log(news);
   return (
     <div className={styled.container}>
       <Typography variant="h3">Notícias mais recentes</Typography>
 
       <div className={styled.articlesContainer}>
-        {images.map((image) => (
-          <ImageButton key={image.id}>
-            <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
-            <ImageBackdrop className="MuiImageBackdrop-root" />
-            <SpanImage>
-              <Typography component="span" variant="subtitle1" color="inherit">
-                {image.title}
-              </Typography>
-            </SpanImage>
+        {news.map((article: IArticle) => (
+          <ImageButton key={article.id}>
+            <Link href={`/grandchase/gameguides/${article.documentId}`}>
+              <ImageSrc
+                url={article.cover}
+                backgroundPositionType={undefined}
+              />
+              <ImageBackdrop />
+              <SpanImage>
+                <Typography
+                  component="span"
+                  variant="subtitle1"
+                  color="inherit"
+                >
+                  {article.title}
+                </Typography>
+              </SpanImage>
+            </Link>
           </ImageButton>
         ))}
       </div>
@@ -114,7 +105,7 @@ export default function App() {
       <Typography marginTop={2} marginBottom={1} variant="h3">
         Guias mais recentes
       </Typography>
-      <ArticlesList category="Grand Chase" />
+      <ArticlesList category="Grand Chase Classic" />
     </div>
   );
 }

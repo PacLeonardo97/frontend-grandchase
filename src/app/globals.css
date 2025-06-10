@@ -23,11 +23,11 @@ body {
   margin:0;
   padding:0;
   color: var(--foreground);
-  font-family: Roboto, Arial;
+  font-family: Roboto, Arial!important;
 }
 
-p, h1, h2, h3, h4, h5, h6, span {
-  font-family: Roboto, Arial;
+p, h1, h2, h3, h4, h5, h6, span, div, section {
+  font-family: Roboto, Arial!important;
 }
 
 input::-webkit-outer-spin-button,

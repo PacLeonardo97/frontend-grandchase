@@ -57,7 +57,7 @@ export default function ArticlesList(props: ArticleProps) {
 
   return (
     <List style={{ padding: 0 }}>
-      <Link href="/pt/grandchase/guides">
+      <Link href="grandchase/guides">
         <ListItem
           alignItems="flex-start"
           sx={{

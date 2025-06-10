@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -9,10 +10,13 @@ import styled from './styled.module.scss';
 export default function SubHeader() {
   const pathName = usePathname();
   const [isSiteHome, setIsSiteHome] = useState(false);
+  const t = useTranslations('SubHeader');
 
   useEffect(() => {
     if (pathName === '/') {
       setIsSiteHome(true);
+    } else {
+      setIsSiteHome(false);
     }
   }, [pathName]);
 
@@ -20,21 +24,21 @@ export default function SubHeader() {
     <div className={styled.container}>
       <div className={styled.content}>
         {isSiteHome ? (
-          <Typography variant="h1">Bem vindo ao MinMaxed!</Typography>
+          <Typography variant="h1">{t('welcome_message')}</Typography>
         ) : (
           <>
             <div className={styled.menu}>
               <Link href="/grandchase">
-                <Typography variant="h4">Home</Typography>
+                <Typography variant="h4">{t('home')}</Typography>
               </Link>
-              <Link href="/grandchase/guides">
-                <Typography variant="h4">Guias Jogo</Typography>
+              <Link href="/grandchase/gameguides">
+                <Typography variant="h4">{t('game_guides')}</Typography>
               </Link>
-              <Link href="/grandchase/guides">
-                <Typography variant="h4">Guias Personagens</Typography>
+              <Link href="/grandchase/characterguides">
+                <Typography variant="h4">{t('character_guides')}</Typography>
               </Link>
               <Link href="/buildplanner">
-                <Typography variant="h4">Build Planner</Typography>
+                <Typography variant="h4">{t('build_planner')}</Typography>
               </Link>
             </div>
           </>

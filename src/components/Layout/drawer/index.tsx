@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { type Dispatch, type SetStateAction } from 'react';
 
 import MailIcon from '@mui/icons-material/Mail';
@@ -113,25 +114,24 @@ export default function Drawer({ openDrawer, setOpenDrawer }: IProps) {
     >
       <Toolbar />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+        {['Grand Chase Classic'].map((text, index) => (
           <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
+            <Link href="/grandchase">
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: 3,
-                  justifyContent: 'center',
+                  minHeight: 48,
+                  px: 2.5,
                 }}
               >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
+                <img
+                  width={25}
+                  height={25}
+                  src="https://static.wikia.nocookie.net/grandchase/images/e/e6/Site-logo.png"
+                  style={{ marginRight: 8 }}
+                />
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </Link>
           </ListItem>
         ))}
       </List>

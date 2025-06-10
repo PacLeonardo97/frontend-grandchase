@@ -29,31 +29,27 @@ import { IArticle } from '@/interface/article';
 //   };
 // }
 
-// export const revalidate = Infinity;
+// const revalidate = 60 * 60 * 24 * 30; // 60 minutes * 60 seconds * 1 day * 1 month
 
 interface PageProps {
   params: Promise<{
     slug: string;
+    locale: string;
   }>;
 }
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params;
-  console.log(slug);
-  const response = await fetch(`http://localhost:1337/api/articles/${slug}`, {
-    cache: 'default',
-    next: { revalidate: 3600 },
-  });
-  const resJson = (await response.json()) as IArticle;
-  // useEffect(() => {
-  //   if (pathName === '/') {
-  //     setIsSiteHome(true);
-  //   }
-  // }, [pathName]);
+  const locale = (await params).locale === 'pt' ? 'pt-BR' : 'en';
+  const response = await fetch(
+    `${process.env.NEXT_BASEURL_BACKEND}/articles/${slug}?locale=${locale}`,
+    // { cache: 'force-cache', next: { revalidate } },
+  );
+  const resJson = await response.json();
 
   return (
     <div className={styled.container}>
-      <ArticleRenderer data={resJson} />
+      <ArticleRenderer data={resJson as unknown as IArticle} />
     </div>
   );
 }

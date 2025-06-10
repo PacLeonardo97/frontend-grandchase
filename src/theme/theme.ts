@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
   typography: {
-    fontFamily: ['Roboto', 'Arial'].join(','),
+    fontFamily: `${['Roboto', 'Arial'].join(',')}!important`,
     h1: {
       fontSize: 24,
     },
@@ -31,7 +31,7 @@ export const theme = createTheme({
       styleOverrides: {
         '.sun-editor-editable': {
           padding: '0px!important',
-          background: 'none',
+          background: 'none!important',
         },
         '.ellipsis': {
           display: '-webkit-box',

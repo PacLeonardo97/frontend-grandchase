@@ -3,7 +3,21 @@
         "language": "language"
     },
     "Home": {
-        "principal": "Principal En"
+        "recent_news": "Recent News",
+        "recent_guides": "Recent Guides"
+    },
+    "SubHeader": {
+        "welcome_message": "Welcome to MinMaxed!",
+        "home": "Home",
+        "game_guides": "Game Guides",
+        "character_guides": "Character Guides",
+        "build_planner": "Build Planner"
+    },
+    "GameGuides": {
+        "title": "Game Guides"
+    },
+    "CharacterGuides": {
+        "title": "Character Guides"
     },
     "Char": {
         "class_1": "First Class",
