@@ -55,3 +55,31 @@ export function getClassByChar(char: EChar) {
     Uno: ['class_1', 'class_2', 'class_5'],
   }[char];
 }
+
+export function getWeaponsByChar(char: EChar) {
+  return {
+    Elesis: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Lire: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Arme: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Lass: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Ryan: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Ronan: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Amy: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Jin: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Sieghart: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Mari: ['class_1', 'class_2', 'class_3', 'class_4'],
+    Dio: ['class_1'],
+    Zero: ['class_1'],
+    Rey: ['class_1'],
+    Lupus: ['class_1'],
+    Lin: ['class_1'],
+    Azin: ['class_1'],
+    Holy: ['class_1'],
+    Edel: ['class_1'],
+    Veigas: ['class_1'],
+    Decane: ['class_1'],
+    AI: ['class_1'],
+    Kallia: ['class_1'],
+    Uno: ['class_1'],
+  }[char];
+}

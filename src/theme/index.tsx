@@ -24,7 +24,6 @@ export default function ThemeProvider({ children }: IProps) {
           autoClose={3000}
           newestOnTop
           closeOnClick
-          pauseOnFocusLoss
           draggable
           theme="dark"
           transition={Bounce}

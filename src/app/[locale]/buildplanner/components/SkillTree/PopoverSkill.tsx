@@ -19,8 +19,10 @@ export default function PopoverSkill({
   return (
     <Popover
       open={Boolean(anchorEl)}
+      aria-hidden={!Boolean(anchorEl)}
       disableScrollLock
-      disableRestoreFocus
+      disableAutoFocus
+      autoFocus={false}
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: 'top',

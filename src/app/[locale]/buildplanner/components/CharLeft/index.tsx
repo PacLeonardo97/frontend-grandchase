@@ -67,12 +67,9 @@ export default function CharLeft() {
           backgroundImage: imageUrl,
         }}
       >
-        {sortEquip(allEquips).map((equip) => (
-          <Fragment key={equip}>
-            <CardEquip
-              equip={charSelected?.equips?.find((item) => item.type === equip)}
-              type={equip as ETypeEquips}
-            />
+        {sortEquip(allEquips).map((type) => (
+          <Fragment key={type}>
+            <CardEquip type={type as ETypeEquips} />
           </Fragment>
         ))}
       </div>
@@ -84,7 +81,7 @@ export default function CharLeft() {
         <Box width={80}>
           <Select
             disabled={!charSelected?.name}
-            list={levelChar}
+            list={levelChar?.toReversed()}
             value={charSelected?.level || '1'}
             id="level_char"
             onChange={(e) => {

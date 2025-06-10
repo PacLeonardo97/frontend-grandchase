@@ -38,7 +38,6 @@ export default function Login() {
         theme: 'dark',
         autoClose: 3000,
         closeOnClick: true,
-        pauseOnFocusLoss: true,
         draggable: true,
         isLoading: false,
       });
@@ -51,7 +50,6 @@ export default function Login() {
           type: 'error',
           autoClose: 3000,
           closeOnClick: true,
-          pauseOnFocusLoss: true,
           draggable: true,
           isLoading: false,
         });
