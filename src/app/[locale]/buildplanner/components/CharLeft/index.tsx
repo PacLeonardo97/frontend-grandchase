@@ -81,7 +81,7 @@ export default function CharLeft() {
         <Box width={80}>
           <Select
             disabled={!charSelected?.name}
-            list={levelChar?.toReversed()}
+            list={levelChar?.reverse()}
             value={charSelected?.level || '1'}
             id="level_char"
             onChange={(e) => {

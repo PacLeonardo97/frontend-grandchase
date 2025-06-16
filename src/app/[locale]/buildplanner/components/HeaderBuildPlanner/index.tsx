@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Fragment, useEffect, useMemo } from 'react';
 
 import { Autocomplete, Box, Button, CircularProgress } from '@mui/material';
@@ -25,9 +25,9 @@ export default function HeaderBuildPlanner() {
   const { data: user } = useUser();
   const searchParams = useSearchParams();
   const { isLoading } = useAllChars();
-  const router = useRouter();
+  const { replace } = useRouter();
+  const pathname = usePathname();
   const charName = searchParams.get('charName') as string;
-
   const { data: charSelected } = useCharByName();
 
   const OptionClassChar = useMemo(() => {
@@ -48,14 +48,26 @@ export default function HeaderBuildPlanner() {
   const allChar = useMemo(() => Object.keys(EChar), []);
 
   const handleChangeChar = (name: string) => {
-    router.replace(`buildplanner?charName=${name}`);
+    replace(`buildplanner?charName=${name}`);
   };
 
   useEffect(() => {
+    if (!charName) {
+      const params = new URLSearchParams(searchParams);
+      params.set('charName', 'Elesis');
+      replace(`${pathname}?${params.toString()}`);
+    }
     if (charSelected?.name) {
       updateChar({ name: charName } as IChar);
     }
-  }, [charSelected?.name, charName, updateChar]);
+  }, [
+    charSelected?.name,
+    charName,
+    updateChar,
+    replace,
+    searchParams,
+    pathname,
+  ]);
 
   return (
     <div
