@@ -52,7 +52,7 @@ export default function CharLeft() {
       padding={1}
       maxWidth={420}
       sx={(theme) => ({
-        background: '#7B7575',
+        background: theme.palette.grey[800],
         maxWidth: 420,
         [theme.breakpoints.down('sm')]: {
           maxWidth: '100%',
@@ -81,11 +81,18 @@ export default function CharLeft() {
         <Box width={80}>
           <Select
             disabled={!charSelected?.name}
-            list={levelChar?.reverse()}
+            list={levelChar}
             value={charSelected?.level || '1'}
             id="level_char"
             onChange={(e) => {
               handleChangeLevel(Number(e.target.value));
+            }}
+            MenuProps={{
+              sx: {
+                '& .MuiPaper-root': {
+                  maxHeight: '200px',
+                },
+              },
             }}
             label="Nivel"
           />

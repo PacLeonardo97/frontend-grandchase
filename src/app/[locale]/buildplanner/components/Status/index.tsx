@@ -4,10 +4,9 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 
 import FlashOnIcon from '@mui/icons-material/FlashOn';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import z from 'zod';
 
-import styled from './styles.module.scss';
 import TextField from '@/components/Form/Textfield';
 import { useLocalChageChar } from '@/hooks/allChars/localChangeChar';
 import { useCharByName } from '@/hooks/allChars/useCharByName';
@@ -33,7 +32,27 @@ export default function StatusChar() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styled.form}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={(theme) => ({
+        backgroundColor: theme.palette.grey[800],
+        width: '100%',
+        marginRight: '16px',
+        padding: '8px',
+        borderRadius: '12px',
+        height: 'fit-content',
+        position: 'sticky',
+        top: '10rem',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+
+        [theme.breakpoints.down('sm')]: {
+          marginRight: 0,
+          position: 'relative',
+          top: 0,
+        },
+      })}
+    >
       <Typography variant="h3" marginBottom={2}>
         <FlashOnIcon />
         Distribuir Atributos
@@ -138,6 +157,6 @@ export default function StatusChar() {
           }}
         />
       </div>
-    </form>
+    </Box>
   );
 }

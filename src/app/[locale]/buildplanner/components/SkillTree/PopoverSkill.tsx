@@ -33,7 +33,12 @@ export default function PopoverSkill({
         horizontal: 'left',
       }}
       onClose={handlePopoverClose}
-      sx={{ pointerEvents: 'none' }}
+      sx={(theme) => ({
+        pointerEvents: 'none',
+        '& .MuiPaper-root': {
+          backgroundColor: theme.palette.grey[700],
+        },
+      })}
     >
       <Typography variant="body1">{className.replaceAll('_', ' ')}</Typography>
       <Typography variant="body2">PT: {currentSkill.qnttyPoints}</Typography>

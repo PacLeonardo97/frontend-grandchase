@@ -132,7 +132,7 @@ export default function SkillTree() {
   return (
     <Box
       sx={(theme) => ({
-        background: '#9D9898',
+        background: theme.palette.grey[800],
         marginTop: theme.spacing(1),
         padding: theme.spacing(2),
         borderRadius: theme.spacing(0.5),

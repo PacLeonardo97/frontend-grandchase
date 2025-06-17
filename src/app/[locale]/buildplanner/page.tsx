@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   description: 'Build Planner Grand Chase Classic',
 };
 
+export async function generateStaticParams() {
+  return [{ game: 'grand_chase' }];
+}
+
 export default async function Page() {
   return (
     <>

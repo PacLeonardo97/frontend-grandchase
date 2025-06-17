@@ -3,7 +3,6 @@
     position: fixed;
     height: 72px;
     z-index: 2;
-    background-color: blue;
     top: 0;
     left: $ml;
     width: calc(100% - $ml);
@@ -46,4 +45,6 @@
 .popover {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
 }
