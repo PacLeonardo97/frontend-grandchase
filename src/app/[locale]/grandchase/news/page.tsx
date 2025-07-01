@@ -22,27 +22,27 @@ export default async function Page({ params }: PageProps) {
   console.log(params);
 
   const locale = (await params).locale === 'pt' ? 'pt-BR' : 'en';
-  console.log(locale);
 
   const response = await fetch(
-    `${process.env.NEXT_BASEURL_BACKEND}/articles?type=character_guide&locale=${locale}&category=Grand Chase Classic&page=1&per_page=23`,
+    `${process.env.NEXT_BASEURL_BACKEND}/articles?category=Grand Chase Classic&type=news&locale=${locale}&page=1&per_page=10`,
     {
       // cache: 'force-cache',
       // next: { revalidate },
     },
   );
-  const articles = await response.json();
+  const news = await response.json();
 
+  console.log(news);
   return (
     <div className={styled.container}>
-      <Typography variant="h3">Guias Personagens</Typography>
+      <Typography variant="h3">Notícias</Typography>
 
       <div className={styled.mainArticlesContainer}>
-        {articles.data.map((article: IArticle) => (
+        {news.data.map((article: IArticle) => (
           <ImageButton key={article.id}>
-            <Link href={`/grandchase/characterguides/${article.documentId}`}>
+            <Link href={`/grandchase/news/${article.documentId}`}>
               <ImageSrc
-                url={`/char/${article.title}_class_5.webp`}
+                url={article.cover}
                 backgroundPositionType="character"
               />
               <ImageBackdrop />

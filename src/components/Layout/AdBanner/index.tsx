@@ -7,14 +7,14 @@ export default function AdBanner() {
       style={{
         width: '192px',
         height: '100vh',
-        background: 'grey',
+        background: '#2b2b2b',
         position: 'fixed',
         right: 0,
         top: '72px',
         padding: '16px',
       }}
     >
-      <p style={{ color: 'red' }}>anuncio caralho</p>
+      <p style={{ color: '#e53935' }}>anuncio caralho</p>
     </div>
   );
 }

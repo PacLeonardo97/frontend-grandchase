@@ -20,14 +20,24 @@ export default async function Page({ params }: PageProps) {
 
   const locale = (await params).locale === 'pt' ? 'pt-BR' : 'en';
 
-  const response = await fetch(
-    `${process.env.NEXT_BASEURL_BACKEND}/articles?locale=${locale}`,
+  let response = await fetch(
+    `${process.env.NEXT_BASEURL_BACKEND}/articles?locale=${locale}&type=news&page=1&per_page=6`,
     {
       // cache: 'force-cache',
       // next: { revalidate },
     },
   );
-  const articles = await response.json();
+  const news = await response.json();
+
+  response = await fetch(
+    `${process.env.NEXT_BASEURL_BACKEND}/articles?locale=${locale}&type=game_guide&page=1&per_page=10`,
+    {
+      // cache: 'force-cache',
+      // next: { revalidate },
+    },
+  );
+
+  const guides = await response.json();
 
   return (
     <>
@@ -35,7 +45,7 @@ export default async function Page({ params }: PageProps) {
         <Typography variant="h3">Notícias mais recentes</Typography>
 
         <div className={styled.articlesContainer}>
-          {articles.map((article: IArticle) => (
+          {news.data.map((article: IArticle) => (
             <ImageButton key={article.id}>
               <ImageSrc
                 url={article.cover}
@@ -58,7 +68,7 @@ export default async function Page({ params }: PageProps) {
         <Typography marginTop={2} marginBottom={1} variant="h3">
           Guias mais recentes
         </Typography>
-        <ArticlesList category="" />
+        <ArticlesList content={guides.data} />
       </div>
     </>
   );

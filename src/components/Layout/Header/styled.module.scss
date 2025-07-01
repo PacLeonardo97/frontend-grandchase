@@ -3,7 +3,8 @@
     position: fixed;
     height: 72px;
     z-index: 2;
-    background-color: blue;
+    border-bottom: 1px solid #333;
+    background-color: #1f1f1f;
     top: 0;
     left: $ml;
     width: calc(100% - $ml);

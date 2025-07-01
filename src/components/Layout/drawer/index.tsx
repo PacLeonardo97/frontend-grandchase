@@ -16,6 +16,8 @@ import Toolbar from '@mui/material/Toolbar';
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme) => ({
+  background: '#2b2b2b',
+  color: 'white',
   width: drawerWidth as never,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -31,6 +33,8 @@ const openedMixin = (theme: Theme) => ({
 });
 
 const closedMixin = (theme: Theme) => ({
+  background: '#2b2b2b',
+  color: 'white',
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,

@@ -12,6 +12,12 @@ export interface IArticle {
   type: EArticleType;
   content: string;
   author: IAuthor;
-  category: string;
+  category: IArticleCategory;
   cover: string;
+}
+
+export interface IArticleCategory {
+  id: number;
+  documentId: string;
+  name: string;
 }

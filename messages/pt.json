@@ -9,6 +9,7 @@
     "SubHeader": {
         "welcome_message": "Bem vindo ao MinMaxed!",
         "home": "Home",
+        "news": "Notícias",
         "game_guides": "Guias Jogo",
         "character_guides": "Guias Personagens",
         "build_planner": "Planejador de Builds"
@@ -18,6 +19,9 @@
     },
     "CharacterGuides": {
         "title": "Guias Personagens"
+    },
+    "News": {
+        "title": "Notícias"
     },
     "Char": {
         "class_1": "Primeira Classe",

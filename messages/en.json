@@ -9,6 +9,7 @@
     "SubHeader": {
         "welcome_message": "Welcome to MinMaxed!",
         "home": "Home",
+        "news": "News",
         "game_guides": "Game Guides",
         "character_guides": "Character Guides",
         "build_planner": "Build Planner"
@@ -18,6 +19,9 @@
     },
     "CharacterGuides": {
         "title": "Character Guides"
+    },
+    "News": {
+        "title": "News"
     },
     "Char": {
         "class_1": "First Class",

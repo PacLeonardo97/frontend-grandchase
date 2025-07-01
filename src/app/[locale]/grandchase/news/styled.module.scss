@@ -1,11 +1,9 @@
 .container {
     padding: 20px;
-    margin-right: 16px;
-    background: #1e1e1e;
-    color: white;
+    background: yellow;
 }
 
-.articlesContainer {
+.mainArticlesContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;

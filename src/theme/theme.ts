@@ -5,9 +5,11 @@ export const theme = createTheme({
     fontFamily: `${['Roboto', 'Arial'].join(',')}!important`,
     h1: {
       fontSize: 24,
+      color: 'white',
     },
     h2: {
       fontSize: 24,
+      color: 'white',
     },
     h3: {
       fontSize: 22,
@@ -15,8 +17,12 @@ export const theme = createTheme({
     h4: {
       fontSize: 20,
     },
+    subtitle1: {
+      fontColor: '#e0e0e0',
+    },
     body1: {
       fontSize: 16,
+      fontColor: '#e0e0e0',
     },
     body2: {
       // '&>span': {
@@ -39,9 +45,12 @@ export const theme = createTheme({
           WebkitLineClamp: 2 /* Limits the text to 2 lines */,
           overflow: 'hidden',
         },
+        '.raleway_18c3f832-module__1bzI6q__variable': {
+          background: '	#121212',
+        },
         '.main': {
           margin: '172px 192px 0 144px',
-          background: 'white',
+          background: '	#121212',
           position: 'relative',
           paddingBottom: '40px',
           ['@media (max-width: 800px)']: {

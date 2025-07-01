@@ -31,6 +31,9 @@ export default function SubHeader() {
               <Link href="/grandchase">
                 <Typography variant="h4">{t('home')}</Typography>
               </Link>
+              <Link href="/grandchase/news">
+                <Typography variant="h4">{t('news')}</Typography>
+              </Link>
               <Link href="/grandchase/gameguides">
                 <Typography variant="h4">{t('game_guides')}</Typography>
               </Link>

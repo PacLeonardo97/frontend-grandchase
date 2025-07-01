@@ -8,9 +8,10 @@ import { styled as styledMui } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import styled from './styled.module.scss';
+import { IArticle } from '@/interface/article';
 
 type ArticleProps = {
-  category: string | null;
+  content: IArticle[];
 };
 
 const ImageContainer = styledMui('span')({
@@ -53,61 +54,68 @@ const ImageBackdrop = styledMui('span')(({ theme }) => ({
 }));
 
 export default function ArticlesList(props: ArticleProps) {
-  console.log(`Articles category: ${props.category}`);
-
   return (
     <List style={{ padding: 0 }}>
-      <Link href="grandchase/guides">
-        <ListItem
-          alignItems="flex-start"
-          sx={{
-            outline: '3px solid white',
-            borderRadius: 1,
-            padding: 0,
-            '&:hover': {
-              outlineColor: 'red!important',
-              transition: 'outline-color 0.4s',
-            },
-            '&:hover .MuiImageBackdrop-root': {
-              opacity: 0.15,
-            },
-          }}
-        >
-          <ImageContainer>
-            <ImageSrc
-              style={{
-                backgroundImage: `url('https://www.nucleodoconhecimento.com.br/blog/wp-content/webp-express/webp-images/uploads/2021/07/Importancia-Da-Citacao-Gaficos-Tabelas-696x464.jpg.webp')`,
-              }}
-            />
-            <ImageBackdrop className="MuiImageBackdrop-root" />
-          </ImageContainer>
-          <div className={styled.authorContainer}>
-            <Typography variant="h4">Como virar o Bory em 1 dia</Typography>
-            <Typography variant="body1" className="ellipsis">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              volutpat pharetra molestie. Maecenas rhoncus posuere dui. Donec
-              efficitur, odio vel dictum pellentesque, diam felis ornare enim,
-              et posuere purus odio in mi. Praesent consectetur consequat dolor,
-              ut suscipit purus pellentesque a. Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Curabitur volutpat pharetra molestie.
-              Maecenas rhoncus posuere dui. Donec efficitur, odio vel dictum
-              pellentesque, diam felis ornare enim, et posuere purus odio in mi.
-              Praesent consectetur consequat dolor, ut suscipit purus
-              pellentesque a. Lorem ipsum dolor sit amet, consectetur adipiscing
-              elit. Curabitur volutpat pharetra molestie. Maecenas rhoncus
-              posuere dui. Donec efficitur, odio vel dictum pellentesque, diam
-              felis ornare enim, et posuere purus odio in mi. Praesent
-              consectetur consequat dolor, ut suscipit purus pellentesque a.
-            </Typography>
-            <div>
-              <Typography variant="body2">
-                Autor: <span>Andrew Las Casas</span>
+      {props.content.map((article: IArticle) => (
+        <Link href="grandchase/guides" key={article.id}>
+          <ListItem
+            alignItems="flex-start"
+            sx={{
+              outline: '3px solid white',
+              borderRadius: 1,
+              padding: 0,
+              '&:hover': {
+                outlineColor: 'red!important',
+                transition: 'outline-color 0.4s',
+              },
+              '&:hover .MuiImageBackdrop-root': {
+                opacity: 0.15,
+              },
+            }}
+          >
+            <ImageContainer>
+              <ImageSrc
+                style={{
+                  backgroundImage: `url('${article.cover}')`,
+                }}
+              />
+              <ImageBackdrop className="MuiImageBackdrop-root" />
+            </ImageContainer>
+            <div className={styled.authorContainer}>
+              <Typography variant="h4">{article.title}</Typography>
+              <Typography variant="body1" className="ellipsis">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur volutpat pharetra molestie. Maecenas rhoncus posuere
+                dui. Donec efficitur, odio vel dictum pellentesque, diam felis
+                ornare enim, et posuere purus odio in mi. Praesent consectetur
+                consequat dolor, ut suscipit purus pellentesque a. Lorem ipsum
+                dolor sit amet, consectetur adipiscing elit. Curabitur volutpat
+                pharetra molestie. Maecenas rhoncus posuere dui. Donec
+                efficitur, odio vel dictum pellentesque, diam felis ornare enim,
+                et posuere purus odio in mi. Praesent consectetur consequat
+                dolor, ut suscipit purus pellentesque a. Lorem ipsum dolor sit
+                amet, consectetur adipiscing elit. Curabitur volutpat pharetra
+                molestie. Maecenas rhoncus posuere dui. Donec efficitur, odio
+                vel dictum pellentesque, diam felis ornare enim, et posuere
+                purus odio in mi. Praesent consectetur consequat dolor, ut
+                suscipit purus pellentesque a.
               </Typography>
-              <Typography variant="body2">Atualizado dia 02/02/2025</Typography>
+              <div>
+                <Typography variant="body2">
+                  Autor:{' '}
+                  <span>
+                    {article.author.firstname} {article.author.lastname}
+                  </span>
+                </Typography>
+                <Typography variant="body2">
+                  Atualizado dia{' '}
+                  {new Date(article.updatedAt).toLocaleDateString('pt-BR')}
+                </Typography>
+              </div>
             </div>
-          </div>
-        </ListItem>
-      </Link>
+          </ListItem>
+        </Link>
+      ))}
     </List>
   );
 }

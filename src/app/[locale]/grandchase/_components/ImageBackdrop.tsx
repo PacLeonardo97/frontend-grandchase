@@ -8,7 +8,8 @@ const Element = styled('span')(({ theme }) => ({
   right: 0,
   top: 0,
   bottom: 0,
-  backgroundColor: theme.palette.common.black,
+  backgroundColor: '#121212',
+  // backgroundColor: theme.palette.common.black,
   opacity: 0.4,
   transition: theme.transitions.create('opacity'),
 }));
