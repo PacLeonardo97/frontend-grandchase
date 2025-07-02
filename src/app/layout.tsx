@@ -1,6 +1,6 @@
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { Raleway } from 'next/font/google';
-import Script from 'next/script';
+import Head from 'next/head';
 import { type ReactNode } from 'react';
 
 import Layout from '@/components/Layout';
@@ -29,13 +29,9 @@ export default function RootLayout({ children }: Readonly<IProps>) {
 
   return (
     <html lang="pt">
-      <head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2641808103356301"
-          crossOrigin="anonymous"
-        />
-      </head>
+      <Head>
+        <meta name="google-adsense-account" content="ca-pub-2641808103356301" />
+      </Head>
       <body className={`${raleway.variable}`}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
