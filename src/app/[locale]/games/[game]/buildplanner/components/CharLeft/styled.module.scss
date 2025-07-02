@@ -1,0 +1,14 @@
+.containerSkills {
+    display: grid;
+    grid-template-columns: 57% 19% 0%;
+    width: 400px;
+    gap: 16px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+
+    @media (max-width:800px ) {
+        grid-template-columns: 44% 18% 0%;
+        max-width: 100%;
+    }
+}

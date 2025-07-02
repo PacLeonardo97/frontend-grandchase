@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 import { locales, pathnames, defaultLocale, host } from '@/i18n/config';
-import { getPathname } from '@/navigation';
+import { getPathname } from '@/i18n/navigation';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const keys = Object.keys(pathnames) as Array<keyof typeof pathnames>;
@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     locale: (typeof locales)[number],
   ) {
     const pathname = getPathname({ locale, href: key });
-    return `${host}/${locale}${pathname === '/' ? '' : pathname}`;
+    return `${host}/${pathname === '/' ? '' : pathname}`;
   }
 
   return keys.map((key) => ({

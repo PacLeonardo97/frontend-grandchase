@@ -1,5 +1,41 @@
 {
+    "Header": {
+        "language": "language"
+    },
     "Home": {
         "principal": "Principal En"
+    },
+    "Char": {
+        "class_1": "First Class",
+        "class_2": "Second Class",
+        "class_3": "third Class",
+        "class_4": "Fourth Class",
+        "class_5": "Awakening"
+    },
+    "Skills": {
+        "class_1": "1º",
+        "class_2": "2º",
+        "class_3": "3º",
+        "class_4": "4º",
+        "class_5": "Awakening",
+        "Ataques_Normais": "Ataques Normais",
+        "Ataques_Especiais": "Ataques Especiais",
+        "Habilidades_Compartilhadas": "Habilidades Compartilhadas",
+        "Ativa": "Ativa",
+        "Passiva": "Passiva",
+        "Forca_Maligna": "Forca Maligna",
+        "Arsenal_Demoniaco": "Arsenal Demoniaco"
+    },
+    "Status": {
+        "total_atk": "Ataque Total",
+        "attack": "Ataque",
+        "def": "Defesa",
+        "crit_chance": "Chance de Crítico",
+        "hp": "HP",
+        "crit_damage": "Dano Crítico",
+        "spec_attack": "Ataque Especial",
+        "spec_def": "Defesa Especial",
+        "rec_mp": "Recuperação de MP",
+        "rec_hp": "Recuperação de HP"
     }
 }

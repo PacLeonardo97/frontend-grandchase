@@ -1,0 +1,22 @@
+
+.container {
+    position: fixed;
+    z-index: 9;
+    $ml: 65px;
+    $adWidth: 192px;
+    height: 72px;
+    width: calc(100% - $adWidth - $ml);
+    margin-left: $ml;
+    top: 72px;
+
+    @media (max-width: 800px) {
+        display: none;
+    }
+}
+
+.content {
+    display: flex;
+    margin-left: 32px;
+    color: white;
+    padding: 24px;
+}

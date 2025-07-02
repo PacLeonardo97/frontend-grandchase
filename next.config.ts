@@ -1,8 +1,6 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
-const nextConfig: NextConfig = {};
-
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
@@ -15,6 +13,11 @@ const nextConfig: NextConfig = {
         pathname: '/uploads/**',
       },
     ],
+  },
+  webpack: (config) => {
+    config.experiments = { ...config.experiments, topLevelAwait: true };
+
+    return config;
   },
 };
 
