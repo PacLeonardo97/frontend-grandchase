@@ -1,6 +1,6 @@
+import { Metadata } from 'next';
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { Raleway } from 'next/font/google';
-import Head from 'next/head';
 import { type ReactNode } from 'react';
 
 import Layout from '@/components/Layout';
@@ -8,7 +8,6 @@ import { locales } from '@/i18n/config';
 import Providers from '@/providers';
 
 import './globals.css';
-import { Metadata } from 'next';
 
 type IProps = {
   children: ReactNode;
