@@ -58,6 +58,9 @@ const DrawerComponent = styled(MuiDrawer, {
   // shouldForwardProp: (prop) => prop !== 'open',
 })<DrawerProps>(({ theme, open }) => {
   return {
+    '& .MuiDrawer-paper': {
+      backgroundColor: theme.palette.grey[900],
+    },
     [theme.breakpoints.up('sm')]: {
       height: `100%`,
       flexShrink: 0,

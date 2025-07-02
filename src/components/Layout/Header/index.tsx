@@ -5,7 +5,7 @@ import { type Dispatch, type SetStateAction, useState } from 'react';
 
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Badge, { badgeClasses } from '@mui/material/Badge';
 import IconButton from '@mui/material/IconButton';
@@ -47,7 +47,13 @@ export default function Header({ setOpenDrawer }: IProps) {
   const open = Boolean(anchorEl);
 
   return (
-    <header className={styled.header}>
+    <Box
+      sx={(theme) => ({
+        background: theme.palette.grey[900],
+      })}
+      component="header"
+      className={styled.header}
+    >
       <div className={styled.content}>
         <div>
           <TextField size="small" variant="standard" />
@@ -104,9 +110,9 @@ export default function Header({ setOpenDrawer }: IProps) {
             }}
           >
             <div
-              onPointerLeave={() => {
-                handleClose();
-              }}
+            // onPointerLeave={() => {
+            //   handleClose();
+            // }}
             >
               <LanguageSwitcher />
 
@@ -124,34 +130,33 @@ export default function Header({ setOpenDrawer }: IProps) {
                 </div>
               ) : (
                 <div className={styled.popover}>
-                  <Link
-                    href="/auth/login"
-                    onClick={() => {
-                      handleClose();
-                    }}
-                  >
-                    <Typography variant="h4" style={{ color: 'black' }}>
+                  <Typography variant="h4">
+                    <Link
+                      href="/auth/login"
+                      onClick={() => {
+                        handleClose();
+                      }}
+                    >
                       Login
-                    </Typography>
-                    <Button></Button>
-                  </Link>
+                    </Link>
+                  </Typography>
 
-                  <Link
-                    onClick={() => {
-                      handleClose();
-                    }}
-                    href="/auth/register"
-                  >
-                    <Typography variant="h4" style={{ color: 'black' }}>
+                  <Typography variant="h4">
+                    <Link
+                      onClick={() => {
+                        handleClose();
+                      }}
+                      href="/auth/register"
+                    >
                       Registrar
-                    </Typography>
-                  </Link>
+                    </Link>
+                  </Typography>
                 </div>
               )}
             </div>
           </Popover>
         </div>
       </div>
-    </header>
+    </Box>
   );
 }

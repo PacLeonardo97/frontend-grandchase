@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #2c2c2c;
   --foreground: #171717;
+  --typography-color: #E8E8E8;
 }
 
 ::-webkit-scrollbar {
@@ -19,20 +20,21 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --typography-color: #E8E8E8;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #2c2c2c;
+    --foreground: #171717;
+    --typography-color: #E8E8E8;
   }
 }
 
 body {
   margin:0;
   padding:0;
+  background: var(--background) !important;
   color: var(--foreground);
   font-family: Roboto, Arial!important;
 }
@@ -46,6 +48,10 @@ input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+p, h1, h2, h3, h4,h5, h6, li {
+  color: var(--typography-color)
 }
 
 input[type=number] {
