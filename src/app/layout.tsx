@@ -34,7 +34,8 @@ export default function RootLayout({ children }: Readonly<IProps>) {
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2641808103356301"
           crossOrigin="anonymous"
-        ></Script>
+        />
+
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <Layout />
