@@ -1,5 +1,6 @@
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { Raleway } from 'next/font/google';
+import Script from 'next/script';
 import { type ReactNode } from 'react';
 
 import Layout from '@/components/Layout';
@@ -7,7 +8,6 @@ import { locales } from '@/i18n/config';
 import Providers from '@/providers';
 
 import './globals.css';
-import Script from 'next/script';
 
 type IProps = {
   children: ReactNode;
@@ -29,13 +29,14 @@ export default function RootLayout({ children }: Readonly<IProps>) {
 
   return (
     <html lang="pt">
-      <body className={`${raleway.variable}`}>
+      <head>
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2641808103356301"
           crossOrigin="anonymous"
         />
-
+      </head>
+      <body className={`${raleway.variable}`}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <Layout />
