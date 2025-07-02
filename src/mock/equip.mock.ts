@@ -1,141 +1,97 @@
-import { ETypeEquips, EEquipSet, ESTEquip } from '@/enum/equips.enum';
+import {
+  ETypeEquips,
+  EEquipSet,
+  ESTEquip,
+  EEquipWeapon,
+  ERarityItem,
+} from '@/enum/equips.enum';
+import { getWeaponsByChar } from '@/helper/char';
 import { IChar } from '@/interface/char';
 
+interface IEquipLocal {
+  name: string;
+  rarity: string;
+}
+
+const earring = [{ name: EEquipSet.pha_pho, rarity: ERarityItem.relic }];
+
+const defaultEquip = [
+  { name: EEquipSet.dragon, rarity: ERarityItem.epic },
+  { name: EEquipSet.pha_pho, rarity: ERarityItem.epic },
+  { name: EEquipSet.true_dragon, rarity: ERarityItem.relic },
+  { name: EEquipSet.void, rarity: ERarityItem.ancient },
+];
+
+const defaultAcessories = [
+  { name: EEquipSet.dragon, rarity: ERarityItem.epic },
+  { name: EEquipSet.pha_pho, rarity: ERarityItem.epic },
+  { name: EEquipSet.true_dragon, rarity: ERarityItem.relic },
+];
+
 export const equipsOptions = (type: ETypeEquips, char?: IChar) => {
+  const qnttWeaponClasses = char?.name ? getWeaponsByChar(char.name) : null;
   const charName = char?.name.toLowerCase();
+
+  const weapons = qnttWeaponClasses?.reduce<IEquipLocal[]>((acc, classChar) => {
+    const equips = Object.values(ESTEquip).filter(
+      (equip) => equip === classChar,
+    );
+
+    if (equips.length) {
+      const entries = Object.values(EEquipWeapon).map((equipSet) => {
+        const rarity = {
+          [EEquipSet.dragon]: ERarityItem.epic,
+          [EEquipSet.pha_pho]: ERarityItem.epic,
+          [EEquipSet.true_dragon]: ERarityItem.relic,
+          [EEquipSet.void]: ERarityItem.ancient,
+        }[equipSet];
+
+        return {
+          name: `${charName}_${equips}_${equipSet}`,
+          rarity,
+        };
+      });
+      acc.push(...entries);
+    }
+
+    return acc;
+  }, []) as IEquipLocal[];
+
   return {
-    helm: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    top: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    lower_armor: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    gloves: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    shoes: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    cloak: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    weapon_1: [
-      //   `${charName}_${ESTEquip.class_1}_${EEquipSet.dragon}`,
-      //   `${charName}_${ESTEquip.class_2}_${EEquipSet.dragon}`,
-      //   `${charName}_${ESTEquip.class_3}_${EEquipSet.dragon}`,
-      //   `${charName}_${ESTEquip.class_4}_${EEquipSet.dragon}`,
-
-      //   `${charName}_${ESTEquip.class_1}_${EEquipSet.pha_pho}`,
-      //   `${charName}_${ESTEquip.class_2}_${EEquipSet.pha_pho}`,
-      //   `${charName}_${ESTEquip.class_3}_${EEquipSet.pha_pho}`,
-      //   `${charName}_${ESTEquip.class_4}_${EEquipSet.pha_pho}`,
-
-      //   `${charName}_${ESTEquip.class_1}_${EEquipSet.true_dragon}`,
-      //   `${charName}_${ESTEquip.class_2}_${EEquipSet.true_dragon}`,
-      //   `${charName}_${ESTEquip.class_3}_${EEquipSet.true_dragon}`,
-      //   `${charName}_${ESTEquip.class_4}_${EEquipSet.true_dragon}`,
-
-      `${charName}_${ESTEquip.class_1}_${EEquipSet.void}`,
-      `${charName}_${ESTEquip.class_2}_${EEquipSet.void}`,
-      `${charName}_${ESTEquip.class_3}_${EEquipSet.void}`,
-      `${charName}_${ESTEquip.class_4}_${EEquipSet.void}`,
-    ],
-    weapon_2: [
-      //   `${charName}_${ESTEquip.class_1}_${EEquipSet.dragon}`,
-      //   `${charName}_${ESTEquip.class_2}_${EEquipSet.dragon}`,
-      //   `${charName}_${ESTEquip.class_3}_${EEquipSet.dragon}`,
-      //   `${charName}_${ESTEquip.class_4}_${EEquipSet.dragon}`,
-
-      //   `${charName}_${ESTEquip.class_1}_${EEquipSet.pha_pho}`,
-      //   `${charName}_${ESTEquip.class_2}_${EEquipSet.pha_pho}`,
-      //   `${charName}_${ESTEquip.class_3}_${EEquipSet.pha_pho}`,
-      //   `${charName}_${ESTEquip.class_4}_${EEquipSet.pha_pho}`,
-
-      //   `${charName}_${ESTEquip.class_1}_${EEquipSet.true_dragon}`,
-      //   `${charName}_${ESTEquip.class_2}_${EEquipSet.true_dragon}`,
-      //   `${charName}_${ESTEquip.class_3}_${EEquipSet.true_dragon}`,
-      //   `${charName}_${ESTEquip.class_4}_${EEquipSet.true_dragon}`,
-
-      `${charName}_${ESTEquip.class_1}_${EEquipSet.void}`,
-      `${charName}_${ESTEquip.class_2}_${EEquipSet.void}`,
-      `${charName}_${ESTEquip.class_3}_${EEquipSet.void}`,
-      `${charName}_${ESTEquip.class_4}_${EEquipSet.void}`,
-    ],
-    circlet: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    mask: [EEquipSet.dragon, EEquipSet.true_dragon, EEquipSet.void],
-    wing: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    stompers: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    shield: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    ring: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
+    helm: defaultEquip,
+    top: defaultEquip,
+    lower_armor: defaultEquip,
+    gloves: defaultEquip,
+    shoes: defaultEquip,
+    cloak: defaultEquip,
+    weapon_1: weapons,
+    weapon_2: weapons,
+    circlet: defaultAcessories,
+    mask: [EEquipSet.dragon, EEquipSet.true_dragon],
+    wing: defaultAcessories,
+    stompers: defaultAcessories,
+    shield: defaultAcessories,
+    ring: defaultAcessories,
     necklace: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
+      { name: EEquipSet.black_dragon_blue, rarity: ERarityItem.relic },
+      { name: EEquipSet.black_dragon_red, rarity: ERarityItem.relic },
+      { name: EEquipSet.death, rarity: ERarityItem.epic },
+      { name: EEquipSet.destiny, rarity: ERarityItem.epic },
+      { name: EEquipSet.fire, rarity: ERarityItem.epic },
+      { name: EEquipSet.grand_chase, rarity: ERarityItem.epic },
+      { name: EEquipSet.halloween, rarity: ERarityItem.epic },
+      { name: EEquipSet.heart, rarity: ERarityItem.epic },
+      { name: EEquipSet.ice, rarity: ERarityItem.epic },
+      { name: EEquipSet.lifeblood, rarity: ERarityItem.epic },
+      { name: EEquipSet.light, rarity: ERarityItem.epic },
+      { name: EEquipSet.lightning, rarity: ERarityItem.epic },
+      { name: EEquipSet.rose, rarity: ERarityItem.epic },
+      { name: EEquipSet.shadow, rarity: ERarityItem.epic },
+      { name: EEquipSet.unicorn, rarity: ERarityItem.epic },
+      { name: EEquipSet.wind, rarity: ERarityItem.common },
     ],
-    anklet: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    earring1: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-    earring2: [
-      EEquipSet.dragon,
-      EEquipSet.pha_pho,
-      EEquipSet.true_dragon,
-      EEquipSet.void,
-    ],
-  }[type];
+    anklet: defaultAcessories,
+    earring1: earring,
+    earring2: earring,
+  }[type] as unknown as IEquipLocal[];
 };
