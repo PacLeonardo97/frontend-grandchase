@@ -8,6 +8,7 @@ import { locales } from '@/i18n/config';
 import Providers from '@/providers';
 
 import './globals.css';
+import { Metadata } from 'next';
 
 type IProps = {
   children: ReactNode;
@@ -24,14 +25,21 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+export const generateMetadata = (): Metadata => {
+  return {
+    title: 'Wiki Minmaxed',
+    description: 'Wiki para jogos',
+    other: {
+      'google-adsense-account': 'ca-pub-2641808103356301',
+    },
+  };
+};
+
 export default function RootLayout({ children }: Readonly<IProps>) {
   const messages = useMessages(); // Mensagens carregadas automaticamente pelo next-intl
 
   return (
     <html lang="pt">
-      <Head>
-        <meta name="google-adsense-account" content="ca-pub-2641808103356301" />
-      </Head>
       <body className={`${raleway.variable}`}>
         <NextIntlClientProvider messages={messages}>
           <Providers>
