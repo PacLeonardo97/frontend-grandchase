@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
@@ -9,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import styled from './styled.module.scss';
 
 export default function SubHeader() {
+  const { game } = useParams<{ game: string }>();
   const pathName = usePathname();
   const [isSiteHome, setIsSiteHome] = useState(false);
   const t = useTranslations('SubHeader');
@@ -29,31 +31,39 @@ export default function SubHeader() {
       })}
       className={styled.container}
     >
-      <div className={styled.content}>
+      <>
         {isSiteHome ? (
-          <Typography variant="h1">{t('welcome_message')}</Typography>
+          <div className={styled.contentHome}>
+            <Typography variant="h1">{t('welcome_message')}</Typography>
+          </div>
         ) : (
-          <>
-            <div className={styled.menu}>
-              <Link href="/grandchase">
-                <Typography variant="h4">{t('home')}</Typography>
-              </Link>
-              <Link href="/grandchase/news">
-                <Typography variant="h4">{t('news')}</Typography>
-              </Link>
-              <Link href="/grandchase/gameguides">
-                <Typography variant="h4">{t('game_guides')}</Typography>
-              </Link>
-              <Link href="/grandchase/characterguides">
-                <Typography variant="h4">{t('character_guides')}</Typography>
-              </Link>
-              <Link href="/buildplanner">
+          <div className={styled.wrapper}>
+            <Image
+              width={170}
+              height={80}
+              src={`/subheader/${game}.png`}
+              alt={game}
+            />
+            <Link href={`/games/${game}`}>
+              <Typography variant="h4">{t('home')}</Typography>
+            </Link>
+            <Link href={`/games/${game}/news`}>
+              <Typography variant="h4">{t('news')}</Typography>
+            </Link>
+            <Link href={`/games/${game}/gameguides`}>
+              <Typography variant="h4">{t('game_guides')}</Typography>
+            </Link>
+            <Link href={`/games/${game}/characterguides`}>
+              <Typography variant="h4">{t('character_guides')}</Typography>
+            </Link>
+            {game === 'grandchase' ? (
+              <Link href={`/games/${game}/buildplanner`}>
                 <Typography variant="h4">{t('build_planner')}</Typography>
               </Link>
-            </div>
-          </>
+            ) : null}
+          </div>
         )}
-      </div>
+      </>
     </Box>
   );
 }

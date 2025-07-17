@@ -1,7 +1,7 @@
 // import type { Metadata, ResolvingMetadata } from 'next';
 
-import styled from './styled.module.scss';
 import ArticleRenderer from '@/components/ArticleRenderer';
+import ContainerArticles from '@/components/ContainerArticles';
 import { IArticle } from '@/interface/article';
 
 // type Props = {
@@ -33,23 +33,23 @@ import { IArticle } from '@/interface/article';
 
 interface PageProps {
   params: Promise<{
-    slug: string;
+    articleId: string;
     locale: string;
   }>;
 }
 
 export default async function Page({ params }: PageProps) {
-  const { slug } = await params;
+  const { articleId } = await params;
   const locale = (await params).locale === 'pt' ? 'pt-BR' : 'en';
   const response = await fetch(
-    `${process.env.NEXT_BASEURL_BACKEND}/articles/${slug}?locale=${locale}`,
+    `${process.env.NEXT_BASEURL_BACKEND}/articles/${articleId}?locale=${locale}`,
     // { cache: 'force-cache', next: { revalidate } },
   );
   const resJson = await response.json();
 
   return (
-    <div className={styled.container}>
+    <ContainerArticles>
       <ArticleRenderer data={resJson as unknown as IArticle} />
-    </div>
+    </ContainerArticles>
   );
 }

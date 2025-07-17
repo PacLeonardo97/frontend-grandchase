@@ -45,10 +45,6 @@ export const theme = createTheme({
   components: {
     MuiTypography: {
       styleOverrides: {
-        '.sun-editor-editable': {
-          padding: '0px!important',
-          background: 'none!important',
-        },
         root: ({ theme }) => ({
           color: theme.palette.grey[400],
         }),
@@ -56,6 +52,11 @@ export const theme = createTheme({
     },
     MuiCssBaseline: {
       styleOverrides: (theme) => ({
+        '.sun-editor-editable': {
+          padding: '0px!important',
+          background: 'none!important',
+          backgroundColor: 'transparent!important',
+        },
         '.ellipsis': {
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
@@ -77,6 +78,23 @@ export const theme = createTheme({
             paddingLeft: theme.spacing(1),
             paddingRight: theme.spacing(1),
           },
+        },
+        '*::-webkit-scrollbar': {
+          height: '4px',
+          width: '6px',
+        },
+        '*::-webkit-scrollbar-thumb': {
+          backgroundColor: '#555',
+          borderRadius: 8,
+        },
+        '*::-webkit-scrollbar-thumb:hover': {
+          background: '#888',
+        },
+        '*::-webkit-scrollbar-track': {
+          background: 'transparent',
+        },
+        '*::-webkit-scrollbar-corner': {
+          background: 'transparent',
         },
       }),
     },

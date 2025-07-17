@@ -14,6 +14,7 @@ export interface IArticle {
   author: IAuthor;
   category: IArticleCategory;
   cover: string;
+  description: string;
 }
 
 export interface IArticleCategory {

@@ -31,6 +31,12 @@
   }
 }
 
+.sun-editor-editable {
+  padding: '0px!important';
+  background: 'none!important';
+  background-color: 'transparent!important';
+}
+
 body {
   margin:0;
   padding:0;

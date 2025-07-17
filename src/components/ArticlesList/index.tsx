@@ -8,16 +8,18 @@ import { styled as styledMui } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import styled from './styled.module.scss';
+import { getArticleTypeSlug, getGameSlug } from '@/helper/slugMap';
 import { IArticle } from '@/interface/article';
 
 type ArticleProps = {
   content: IArticle[];
 };
 
-const ImageContainer = styledMui('span')({
+const ImageContainer = styledMui('span')(({ theme }) => ({
   position: 'relative',
   height: 120,
   width: 300,
+  flexShrink: 0,
   borderRadius: '4px 0 0 4px',
   '&:hover, &.Mui-focusVisible': {
     zIndex: 1,
@@ -28,7 +30,12 @@ const ImageContainer = styledMui('span')({
       opacity: 0,
     },
   },
-});
+  [theme.breakpoints.down('sm')]: {
+    width: 100,
+    height: 120,
+    borderRadius: 4,
+  },
+}));
 
 const ImageSrc = styledMui('span')({
   position: 'absolute',
@@ -57,15 +64,21 @@ export default function ArticlesList(props: ArticleProps) {
   return (
     <List style={{ padding: 0 }}>
       {props.content.map((article: IArticle) => (
-        <Link href="grandchase/guides" key={article.id}>
+        <Link
+          href={`/games/${getGameSlug(
+            article.category.name,
+          )}/${getArticleTypeSlug(article.type)}/${article.documentId}`}
+          key={article.id}
+        >
           <ListItem
             alignItems="flex-start"
             sx={{
-              outline: '3px solid white',
+              outline: '3px solid #2b2b2b',
               borderRadius: 1,
+              marginBottom: 2,
               padding: 0,
               '&:hover': {
-                outlineColor: 'red!important',
+                outlineColor: '#ddd!important',
                 transition: 'outline-color 0.4s',
               },
               '&:hover .MuiImageBackdrop-root': {
@@ -84,31 +97,17 @@ export default function ArticlesList(props: ArticleProps) {
             <div className={styled.authorContainer}>
               <Typography variant="h4">{article.title}</Typography>
               <Typography variant="body1" className="ellipsis">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur volutpat pharetra molestie. Maecenas rhoncus posuere
-                dui. Donec efficitur, odio vel dictum pellentesque, diam felis
-                ornare enim, et posuere purus odio in mi. Praesent consectetur
-                consequat dolor, ut suscipit purus pellentesque a. Lorem ipsum
-                dolor sit amet, consectetur adipiscing elit. Curabitur volutpat
-                pharetra molestie. Maecenas rhoncus posuere dui. Donec
-                efficitur, odio vel dictum pellentesque, diam felis ornare enim,
-                et posuere purus odio in mi. Praesent consectetur consequat
-                dolor, ut suscipit purus pellentesque a. Lorem ipsum dolor sit
-                amet, consectetur adipiscing elit. Curabitur volutpat pharetra
-                molestie. Maecenas rhoncus posuere dui. Donec efficitur, odio
-                vel dictum pellentesque, diam felis ornare enim, et posuere
-                purus odio in mi. Praesent consectetur consequat dolor, ut
-                suscipit purus pellentesque a.
+                {article?.description}
               </Typography>
               <div>
                 <Typography variant="body2">
-                  Autor:{' '}
+                  Autor:&nbsp;
                   <span>
                     {article.author.firstname} {article.author.lastname}
                   </span>
                 </Typography>
                 <Typography variant="body2">
-                  Atualizado dia{' '}
+                  Atualizado dia&nbsp;
                   {new Date(article.updatedAt).toLocaleDateString('pt-BR')}
                 </Typography>
               </div>

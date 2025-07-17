@@ -1,11 +1,16 @@
+import Link from 'next/link';
+
 import Typography from '@mui/material/Typography';
 
-import ImageBackdrop from './grandchase/_components/ImageBackdrop';
-import ImageButton from './grandchase/_components/ImageButton';
-import ImageSrc from './grandchase/_components/ImageSrc';
-import SpanImage from './grandchase/_components/SpanImage';
+import ImageBackdrop from './games/[game]/_components/ImageBackdrop';
+import ImageButton from './games/[game]/_components/ImageButton';
+import ImageSrc from './games/[game]/_components/ImageSrc';
+import SpanImage from './games/[game]/_components/SpanImage';
 import styled from './styled.module.scss';
 import ArticlesList from '@/components/ArticlesList';
+import ContainerArticles from '@/components/ContainerArticles';
+import { allSettled } from '@/helper/promise';
+import { getArticleTypeSlug, getGameSlug } from '@/helper/slugMap';
 import { IArticle } from '@/interface/article';
 
 interface PageProps {
@@ -16,37 +21,37 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
-  console.log(params);
-
   const locale = (await params).locale === 'pt' ? 'pt-BR' : 'en';
 
-  let response = await fetch(
-    `${process.env.NEXT_BASEURL_BACKEND}/articles?locale=${locale}&type=news&page=1&per_page=6`,
-    {
-      // cache: 'force-cache',
-      // next: { revalidate },
-    },
-  );
-  const news = await response.json();
-
-  response = await fetch(
-    `${process.env.NEXT_BASEURL_BACKEND}/articles?locale=${locale}&type=game_guide&page=1&per_page=10`,
-    {
-      // cache: 'force-cache',
-      // next: { revalidate },
-    },
-  );
-
-  const guides = await response.json();
+  const [news, guides] = await allSettled([
+    fetch(
+      `${process.env.NEXT_BASEURL_BACKEND}/articles?locale=${locale}&type=news&page=1&per_page=6`,
+      {
+        // cache: 'force-cache',
+        // next: { revalidate },
+      },
+    ),
+    fetch(
+      `${process.env.NEXT_BASEURL_BACKEND}/articles?locale=${locale}&type=game_guide&type=character_guide&page=1&per_page=10&sort=updatedAt:desc`,
+      {
+        // cache: 'force-cache',
+        // next: { revalidate },
+      },
+    ),
+  ]);
 
   return (
-    <>
-      <div className={styled.container}>
-        <Typography variant="h3">Notícias mais recentes</Typography>
+    <ContainerArticles>
+      <Typography variant="h3">Notícias mais recentes</Typography>
 
-        <div className={styled.articlesContainer}>
-          {news.data.map((article: IArticle) => (
-            <ImageButton key={article.id}>
+      <div className={styled.articlesContainer}>
+        {news.data.map((article: IArticle) => (
+          <ImageButton key={article.id}>
+            <Link
+              href={`/games/${getGameSlug(
+                article.category.name,
+              )}/${getArticleTypeSlug(article.type)}/${article.documentId}`}
+            >
               <ImageSrc
                 url={article.cover}
                 backgroundPositionType={undefined}
@@ -61,15 +66,15 @@ export default async function Page({ params }: PageProps) {
                   {article.title}
                 </Typography>
               </SpanImage>
-            </ImageButton>
-          ))}
-        </div>
-
-        <Typography marginTop={2} marginBottom={1} variant="h3">
-          Guias mais recentes
-        </Typography>
-        <ArticlesList content={guides.data} />
+            </Link>
+          </ImageButton>
+        ))}
       </div>
-    </>
+
+      <Typography marginTop={2} marginBottom={1} variant="h3">
+        Guias mais recentes
+      </Typography>
+      <ArticlesList content={guides.data} />
+    </ContainerArticles>
   );
 }

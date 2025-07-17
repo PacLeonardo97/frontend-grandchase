@@ -1,17 +1,17 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { type Dispatch, type SetStateAction } from 'react';
 
-import MailIcon from '@mui/icons-material/Mail';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { useMediaQuery } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { styled, Theme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
+
+import { getGameSlug } from '@/helper/slugMap';
 
 const drawerWidth = 240;
 
@@ -121,22 +121,23 @@ export default function Drawer({ openDrawer, setOpenDrawer }: IProps) {
     >
       <Toolbar />
       <List>
-        {['Grand Chase Classic'].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <Link href="/grandchase">
+        {['Grand Chase Classic'].map((game) => (
+          <ListItem key={game} disablePadding sx={{ display: 'block' }}>
+            <Link href={`/games/${getGameSlug(game)}`}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
                   px: 2.5,
                 }}
               >
-                <img
-                  width={25}
-                  height={25}
-                  src="https://static.wikia.nocookie.net/grandchase/images/e/e6/Site-logo.png"
+                <Image
+                  width={24}
+                  height={24}
+                  src={`/drawer/${getGameSlug(game)}.webp`}
+                  alt={game}
                   style={{ marginRight: 8 }}
                 />
-                <ListItemText primary={text} />
+                <ListItemText primary={game} />
               </ListItemButton>
             </Link>
           </ListItem>

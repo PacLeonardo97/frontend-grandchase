@@ -1,7 +1,7 @@
 // import type { Metadata, ResolvingMetadata } from 'next';
 
-import styled from './styled.module.scss';
 import ArticleRenderer from '@/components/ArticleRenderer';
+import ContainerArticles from '@/components/ContainerArticles';
 import { IArticle } from '@/interface/article';
 
 // type Props = {
@@ -48,8 +48,8 @@ export default async function Page({ params }: PageProps) {
   const resJson = await response.json();
 
   return (
-    <div className={styled.container}>
+    <ContainerArticles>
       <ArticleRenderer data={resJson as unknown as IArticle} />
-    </div>
+    </ContainerArticles>
   );
 }

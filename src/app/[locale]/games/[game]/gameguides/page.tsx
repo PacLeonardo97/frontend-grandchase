@@ -7,44 +7,52 @@ import ImageButton from '../_components/ImageButton';
 import ImageSrc from '../_components/ImageSrc';
 import SpanImage from '../_components/SpanImage';
 import styled from './styled.module.scss';
+import { getGameCategory } from '@/helper/slugMap';
 import { IArticle } from '@/interface/article';
 
 interface PageProps {
   params: Promise<{
-    slug: string;
+    game: string;
     locale: string;
   }>;
+}
+
+export function generateStaticParams() {
+  return [
+    { game: 'grandchase', locale: 'en' },
+    { game: 'grandchase', locale: 'pt' },
+    { game: 'nightreign', locale: 'en' },
+    { game: 'nightreign', locale: 'pt' },
+  ];
 }
 
 // const revalidate = 60 * 60 * 2; // 2 days
 
 export default async function Page({ params }: PageProps) {
-  console.log(params);
+  const param = await params;
+  const locale = param.locale === 'pt' ? 'pt-BR' : 'en';
+  const game = param.game;
+  const category = getGameCategory(game);
 
-  const locale = (await params).locale === 'pt' ? 'pt-BR' : 'en';
-
+  // TODO: ver jeito de, caso não tenha o artigo no idioma selecionado, buscar no outro idioma
   const response = await fetch(
-    `${process.env.NEXT_BASEURL_BACKEND}/articles?category=Grand Chase Classic&type=news&locale=${locale}&page=1&per_page=10`,
+    `${process.env.NEXT_BASEURL_BACKEND}/articles?category=${category}&type=game_guide&locale=${locale}&page=1&per_page=15`,
     {
       // cache: 'force-cache',
-      // next: { revalidate },
+      // next: { revalidate,  tags: [`get_articles_${locale}`]},
     },
   );
-  const news = await response.json();
+  const articles = await response.json();
 
-  console.log(news);
   return (
     <div className={styled.container}>
-      <Typography variant="h3">Notícias</Typography>
+      <Typography variant="h3">Guias Jogo</Typography>
 
       <div className={styled.mainArticlesContainer}>
-        {news.data.map((article: IArticle) => (
+        {articles.data.map((article: IArticle) => (
           <ImageButton key={article.id}>
-            <Link href={`/grandchase/news/${article.documentId}`}>
-              <ImageSrc
-                url={article.cover}
-                backgroundPositionType="character"
-              />
+            <Link href={`/games/${game}/gameguides/${article.documentId}`}>
+              <ImageSrc url={article.cover} />
               <ImageBackdrop />
               <SpanImage>
                 <Typography

@@ -95,7 +95,7 @@ export default function Header({ setOpenDrawer }: IProps) {
               },
             })}
           >
-            <DehazeIcon />
+            <DehazeIcon style={{ color: '#fff' }} />
           </IconButton>
 
           <Popover

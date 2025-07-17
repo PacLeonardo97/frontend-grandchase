@@ -1,8 +1,8 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
-import { setCookie, useGetCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 
 import Select from '@/components/Form/Select';
 import { i18n } from '@/helper/i18n-config';
@@ -19,7 +19,7 @@ const listSelect = i18n.locales.map((item) => ({
 
 export default function LanguageSwitcher() {
   const router = useRouter();
-  const getCookie = useGetCookie();
+  const { locale } = useParams<{ locale: string }>();
   const t = useTranslations('Header');
 
   function switchTo(lang: 'pt' | 'en') {
@@ -35,10 +35,10 @@ export default function LanguageSwitcher() {
         onChange={(e) => {
           switchTo(e.target.value as 'pt' | 'en');
         }}
-        value={getCookie('NEXT_LOCALE') || i18n.defaultLocale}
+        value={locale || i18n.defaultLocale}
         list={listSelect}
       />
-      {getCookie('NEXT_LOCALE') === 'pt' ? (
+      {locale === 'pt' ? (
         <button onClick={() => switchTo('en')}></button>
       ) : (
         <button onClick={() => switchTo('pt')}></button>

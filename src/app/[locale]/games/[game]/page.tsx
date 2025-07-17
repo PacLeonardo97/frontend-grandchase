@@ -8,41 +8,50 @@ import ImageSrc from './_components/ImageSrc';
 import SpanImage from './_components/SpanImage';
 import styled from './styled.module.scss';
 import ArticlesList from '@/components/ArticlesList';
+import { allSettled } from '@/helper/promise';
+import { getGameCategory } from '@/helper/slugMap';
 import { IArticle } from '@/interface/article';
 
 interface PageProps {
   params: Promise<{
-    slug: string;
+    game: string;
     locale: string;
   }>;
+}
+
+export function generateStaticParams() {
+  return [
+    { game: 'grandchase', locale: 'en' },
+    { game: 'grandchase', locale: 'pt' },
+    { game: 'nightreign', locale: 'en' },
+    { game: 'nightreign', locale: 'pt' },
+  ];
 }
 
 // const revalidate = 60 * 60 * 2; // 2 days
 
 export default async function Page({ params }: PageProps) {
-  console.log(params);
+  const param = await params;
+  const locale = param.locale === 'pt' ? 'pt-BR' : 'en';
+  const game = param.game;
+  const category = getGameCategory(game);
+  const [news, guides] = await allSettled([
+    fetch(
+      `${process.env.NEXT_BASEURL_BACKEND}/articles?category=${category}&type=news&locale=${locale}&page=1&per_page=6`,
+      {
+        // cache: 'force-cache',
+        // next: { revalidate },
+      },
+    ),
+    fetch(
+      `${process.env.NEXT_BASEURL_BACKEND}/articles?category=${category}&type=character_guide&type=game_guide&locale=${locale}&page=1&per_page=10&sort=updatedAt:desc`,
+      {
+        // cache: 'force-cache',
+        // next: { revalidate },
+      },
+    ),
+  ]);
 
-  const locale = (await params).locale === 'pt' ? 'pt-BR' : 'en';
-
-  let response = await fetch(
-    `${process.env.NEXT_BASEURL_BACKEND}/articles?category=Grand Chase Classic&type=news&locale=${locale}&page=1&per_page=6`,
-    {
-      // cache: 'force-cache',
-      // next: { revalidate },
-    },
-  );
-  const news = await response.json();
-
-  response = await fetch(
-    `${process.env.NEXT_BASEURL_BACKEND}/articles?category=Grand Chase Classic&type=character_guide&locale=${locale}&page=1&per_page=10`,
-    {
-      // cache: 'force-cache',
-      // next: { revalidate },
-    },
-  );
-  const guides = await response.json();
-
-  console.log(news);
   return (
     <div className={styled.container}>
       <Typography variant="h3">Notícias mais recentes</Typography>
@@ -50,7 +59,7 @@ export default async function Page({ params }: PageProps) {
       <div className={styled.articlesContainer}>
         {news.data.map((article: IArticle) => (
           <ImageButton key={article.id}>
-            <Link href={`/grandchase/news/${article.documentId}`}>
+            <Link href={`/games/${game}/news/${article.documentId}`}>
               <ImageSrc
                 url={article.cover}
                 backgroundPositionType={undefined}

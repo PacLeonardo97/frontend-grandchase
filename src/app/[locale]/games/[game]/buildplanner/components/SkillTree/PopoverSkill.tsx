@@ -43,7 +43,7 @@ export default function PopoverSkill({
       <Typography variant="body1">{className.replaceAll('_', ' ')}</Typography>
       <Typography variant="body2">PT: {currentSkill.qnttyPoints}</Typography>
       <Typography variant="body2">
-        Requer:{' '}
+        Requer:&nbsp;
         {currentSkill.dependsOn?.target.replaceAll('_', ' ') || 'Nenhum'}
       </Typography>
     </Popover>

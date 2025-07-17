@@ -7,42 +7,52 @@ import ImageButton from '../_components/ImageButton';
 import ImageSrc from '../_components/ImageSrc';
 import SpanImage from '../_components/SpanImage';
 import styled from './styled.module.scss';
+import { getGameCategory } from '@/helper/slugMap';
 import { IArticle } from '@/interface/article';
 
 interface PageProps {
   params: Promise<{
-    slug: string;
+    game: string;
     locale: string;
   }>;
+}
+
+export function generateStaticParams() {
+  return [
+    { game: 'grandchase', locale: 'en' },
+    { game: 'grandchase', locale: 'pt' },
+    { game: 'nightreign', locale: 'en' },
+    { game: 'nightreign', locale: 'pt' },
+  ];
 }
 
 // const revalidate = 60 * 60 * 2; // 2 days
 
 export default async function Page({ params }: PageProps) {
-  console.log(params);
-
-  const locale = (await params).locale === 'pt' ? 'pt-BR' : 'en';
-  console.log(locale);
+  const param = await params;
+  const locale = param.locale === 'pt' ? 'pt-BR' : 'en';
+  const game = param.game;
+  const category = getGameCategory(game);
 
   const response = await fetch(
-    `${process.env.NEXT_BASEURL_BACKEND}/articles?type=character_guide&locale=${locale}&category=Grand Chase Classic&page=1&per_page=23`,
+    `${process.env.NEXT_BASEURL_BACKEND}/articles?category=${category}&type=news&locale=${locale}&page=1&per_page=10`,
     {
       // cache: 'force-cache',
       // next: { revalidate },
     },
   );
-  const articles = await response.json();
+  const news = await response.json();
 
   return (
     <div className={styled.container}>
-      <Typography variant="h3">Guias Personagens</Typography>
+      <Typography variant="h3">Notícias</Typography>
 
       <div className={styled.mainArticlesContainer}>
-        {articles.data.map((article: IArticle) => (
+        {news.data.map((article: IArticle) => (
           <ImageButton key={article.id}>
-            <Link href={`/grandchase/characterguides/${article.documentId}`}>
+            <Link href={`/games/${game}/news/${article.documentId}`}>
               <ImageSrc
-                url={`/char/${article.title}_class_5.webp`}
+                url={article.cover}
                 backgroundPositionType="character"
               />
               <ImageBackdrop />
