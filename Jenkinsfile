@@ -7,14 +7,18 @@ pipeline {
   }
 
   stages {
-    stage ('Clone Repository') {
-        checkout scm
+    stage('Checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/seuusuario/seu-frontend.git'
+      }
     }
 
-    stage ('Set Env') {
-        if (env.BRANCH_NAME =~ /(main)/) {
-            sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+    stage('Build Docker Image') {
+      steps {
+        script {
+           sh "docker build -t ${IMAGE_NAME}:${TAG} -f infra/Dockerfile ."
         }
+      }
     }
 
     stage('Build Docker Image') {
