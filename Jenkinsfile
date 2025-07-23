@@ -29,12 +29,6 @@ pipeline {
       }
     }
 
-   stage ('Build container') {
-        if (env.BRANCH_NAME =~ /(main)/) {
-            dockerImage = docker.build(IMAGE, "-f infra/Dockerfile .")
-        }
-    }
-
     // Descomente se quiser aplicar o terraform automaticamente
     /*
     stage('Deploy via Terraform') {
