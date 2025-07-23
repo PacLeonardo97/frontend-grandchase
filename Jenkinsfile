@@ -21,14 +21,6 @@ pipeline {
       }
     }
 
-    stage('Build Docker Image') {
-      steps {
-        script {
-          sh "docker build -t $IMAGE_NAME:$TAG ."
-        }
-      }
-    }
-
     // Descomente se quiser aplicar o terraform automaticamente
     /*
     stage('Deploy via Terraform') {
