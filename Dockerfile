@@ -3,10 +3,13 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
+
 # Copia apenas arquivos necessários para instalar dependências
 COPY package.json yarn.lock ./
 COPY public/ public/
 COPY messages/ messages/
+
+RUN echo ls
 
 RUN yarn install
 
