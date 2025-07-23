@@ -8,6 +8,7 @@ WORKDIR /app
 COPY ../ ./
 
 # Instala dependências e gera o build
+RUN echo ls
 RUN yarn install && yarn build
 
 # Etapa de produção
