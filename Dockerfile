@@ -31,9 +31,6 @@ COPY --from=builder /app/messages messages/
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/yarn.lock ./
 
-# Instala apenas as dependências de produção
-RUN yarn install --production
-
 EXPOSE 3000
 
 CMD ["yarn", "start"]
