@@ -10,7 +10,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-            def customImage = docker.build("${IMAGE_NAME}:${TAG}", "infra") // "infra" é o diretório com o Dockerfile
+            def customImage = docker.build("${IMAGE_NAME}:${TAG}")
         }
       }
     }
