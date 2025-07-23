@@ -3,14 +3,14 @@ pipeline {
 
   environment {
     IMAGE_NAME = "wiki/frontend"
-    TAG = "latest-${env.BUILD_NUMBER}"
+    TAG = "latest"
   }
 
   stages {
     stage('Build Docker Image') {
       steps {
         script {
-           sh "docker build -t ${IMAGE_NAME}:${TAG} -f infra/Dockerfile ."
+           sh "docker build -t ${IMAGE_NAME} -f infra/Dockerfile ."
         }
       }
     }
@@ -30,7 +30,7 @@ pipeline {
 
   post {
     success {
-      echo "Imagem '$IMAGE_NAME:$TAG' criada localmente com sucesso."
+      echo "Imagem '$IMAGE_NAME:$TAG-$env.BUILD_NUMBER' criada localmente com sucesso."
     }
     failure {
       echo "Falha ao construir imagem Docker."
